@@ -3,3 +3,4 @@
 *.zip
 .pylibs/
 slides/*/lib/
+references/
