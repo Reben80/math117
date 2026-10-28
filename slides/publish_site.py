@@ -19,6 +19,22 @@ DECKS = [
     ("1.4-experiments", "1.4", "Experiments and ethics", "An observational study, or a study that assigns the treatment."),
 ]
 
+# Dates and sections follow the Fall 2026 second-half calendar.
+# Homework, the unit test, and the discussion are due on the last day of each unit.
+WEEKS = [
+    ("October 28 – November 1", "Unit 1 · Sampling and Data", "OpenStax Introductory Statistics 2e, sections 1.1–1.4", "Homework, test, and discussion due November 1", True),
+    ("November 2 – 6", "Unit 2 · Descriptive Statistics", "OpenStax Introductory Statistics 2e, sections 2.1–2.7", "Homework, test, and discussion due November 6", False),
+    ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", False),
+    ("November 10 – 11", "Exam 1", "Units 1, 2, and 3", "", False),
+    ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", False),
+    ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", False),
+    ("November 20 – 21", "Unit S1 · Bootstrap Confidence Intervals", "Introduction to Modern Statistics, chapter 12", "Homework, test, and discussion due November 21", False),
+    ("November 22 – 23", "Exam 2", "Units 4 and 5. Unit S1 is not on this exam.", "", False),
+    ("November 24 – 28", "Unit 6 · Hypothesis Testing, introduction", "OpenStax Introductory Statistics 2e, sections 9.1–9.4", "Homework, test, and discussion due November 28", False),
+    ("November 29 – December 1", "Unit 7 · Hypothesis testing for proportions", "OpenStax Introductory Statistics 2e, sections 9.5 and 10.3", "Homework, test, and discussion due December 1", False),
+    ("December 2 – 5", "Unit 8 · Hypothesis testing for means", "OpenStax Introductory Statistics 2e, sections 9.5, 10.1, and 10.4", "Homework, test, and discussion due December 5", False),
+]
+
 
 def rewrite(html):
     return (
@@ -38,6 +54,25 @@ def landing():
             f'<p>{blurb}</p>'
             f'</a>'
         )
+    card_html = "".join(cards)
+    weeks = []
+    for dates, title, source, due, has_decks in WEEKS:
+        exam = title.startswith("Exam")
+        klass = "week exam" if exam else "week"
+        due_html = f'<p class="due">{due}</p>' if due else ""
+        decks_html = f'<div class="grid">{card_html}</div>' if has_decks else ""
+        weeks.append(
+            f'<li class="{klass}">'
+            f'<p class="dates">{dates}</p>'
+            f'<div>'
+            f'<h2>{title}</h2>'
+            f'<p class="src">{source}</p>'
+            f'{due_html}'
+            f'{decks_html}'
+            f'</div>'
+            f'</li>'
+        )
+    schedule = "".join(weeks)
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,20 +132,51 @@ def landing():
     letter-spacing: 0.14em;
     text-transform: uppercase;
   }}
-  .unit {{
+  .note {{
+    margin: 8px 0 0;
+    color: #5d6670;
+    font-size: 16px;
+  }}
+  .cal {{
+    list-style: none;
+    margin: 18px 0 0;
+    padding: 0;
+  }}
+  .week {{
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    gap: 8px 28px;
+    background: #fff;
+    border: 1px solid #e4e1da;
+    border-radius: 18px;
+    padding: 22px 24px;
+    margin-top: 12px;
+  }}
+  .week.exam {{
+    background: #e7f3f4;
+  }}
+  .dates {{
+    margin: 4px 0 0;
+    color: #2a6f7a;
+    font-size: 15px;
+    font-weight: 700;
+  }}
+  .week h2 {{
     margin: 0;
-    font-size: 28px;
+    font-size: 22px;
     letter-spacing: -0.03em;
   }}
-  .when {{
+  .src, .due {{
     margin: 6px 0 0;
     color: #5d6670;
+    font-size: 15px;
+    line-height: 1.45;
   }}
   .grid {{
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
-    margin-top: 22px;
+    margin-top: 18px;
   }}
   .card {{
     display: block;
@@ -141,11 +207,6 @@ def landing():
     font-size: 16px;
     line-height: 1.4;
   }}
-  .next {{
-    margin-top: 28px;
-    color: #5d6670;
-    font-size: 16px;
-  }}
   footer {{
     margin-top: 64px;
     padding-top: 8px;
@@ -169,7 +230,7 @@ def landing():
   }}
   @media (max-width: 720px) {{
     h1 {{ font-size: 40px; }}
-    .grid {{ grid-template-columns: 1fr; }}
+    .week, .grid {{ grid-template-columns: 1fr; }}
   }}
 </style>
 </head>
@@ -177,21 +238,21 @@ def landing():
 <main>
   <p><span class="badge">MATH 117</span><span class="course">Elements of Statistics</span></p>
   <h1>Lecture decks</h1>
-  <p class="lead">Open a section to follow along in class.</p>
-  <p class="who">Prof. Rebin Muhammad · Montgomery College · Fall 2026, second half</p>
-  <h3>Now</h3>
-  <p class="unit">Unit 1 · Sampling and Data</p>
-  <p class="when">October 28 – November 1 · OpenStax Introductory Statistics 2e, sections 1.1–1.4</p>
-  <div class="grid">
-    {"".join(cards)}
-  </div>
-  <p class="next">Unit 2, descriptive statistics, will be added here for November 2–6.</p>
+  <p class="lead">Follow the calendar below. Open a section to follow along in class.</p>
+  <p class="who">Prof. Rebin Muhammad · Montgomery College · Fall 2026, second half · CRN 22470</p>
+  <p class="note">October 28 – December 20. Subject to changes announced on Blackboard.</p>
+  <h3>Calendar</h3>
+  <p class="note">A unit shows its sections once the decks are ready.</p>
+  <ol class="cal">
+    {schedule}
+  </ol>
   <footer>
     <h3>The college</h3>
     <p>Montgomery College is the public community college of Montgomery County, Maryland, with campuses in Rockville, Germantown, and Takoma Park/Silver Spring. This page holds the lecture decks for MATH 117, Elements of Statistics, CRN 22470, Fall 2026 second half, October 28–December 20. Prof. Rebin Muhammad. College information is at <a href="https://www.montgomerycollege.edu/">montgomerycollege.edu</a>. Homework, tests, and announcements stay on Blackboard.</p>
     <h3>The book</h3>
     <p>The decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a> by Barbara Illowsky and Susan Dean, published by OpenStax at Rice University. Examples, tables, and numbers come from that book. The diagrams are redrawn for class. Access for free at <a href="https://openstax.org">openstax.org</a>.</p>
     <p>Textbook content is © 2026 Rice University, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. These decks are shared for teaching under the same terms.</p>
+    <p>Unit S1 follows chapter 12 of <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>, second edition, by Mine Çetinkaya-Rundel and Johanna Hardin, OpenIntro. That book is free and licensed <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
   </footer>
 </main>
 </body>
