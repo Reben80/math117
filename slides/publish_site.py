@@ -263,7 +263,6 @@ def landing():
     <p>Unit S1 follows chapter 12 of <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>, second edition, by Mine Çetinkaya-Rundel and Johanna Hardin, OpenIntro. That book is free and licensed <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
   </footer>
   <p class="note" style="margin-top:28px"><a href="calculator/">Calculator</a> for a list or a table from chapters 1 and 2. One, two, or three columns, then one result. It opens on its own page.</p>
-  <p class="note" style="margin-top:12px"><a href="toolkit/">Stats Toolkit</a>: calculators for chapters 1 to 4, with the steps shown.</p>
 </main>
 </body>
 </html>
@@ -281,9 +280,6 @@ def main():
     calc = DOCS / "calculator"
     calc.mkdir()
     shutil.copy2(SLIDES / "calculator" / "index.html", calc / "index.html")
-    tk = DOCS / "toolkit"
-    tk.mkdir()
-    shutil.copy2(SLIDES / "toolkit" / "index.html", tk / "index.html")
     for _unit, folder, _number, _name, _blurb in DECKS:
         source = SLIDES / folder
         if not (source / "index.html").is_file():
