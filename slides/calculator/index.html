@@ -187,12 +187,18 @@
 <main>
   <p><a class="badge" href="../">MATH 117</a></p>
   <h1>Calculator</h1>
-  <p class="lead">Chapters 1 and 2. Paste the list, then choose one thing. The page shows only that.</p>
-  <label class="field" for="data">The list</label>
+  <p class="lead">Chapters 1 and 2. Say how many columns the book gives you, paste them, then choose one thing.</p>
+  <p class="field" id="shape-label">How many columns?</p>
+  <div class="choices" id="shapes" role="group" aria-labelledby="shape-label">
+    <button type="button" data-shape="one" aria-pressed="true">One column</button>
+    <button type="button" data-shape="two" aria-pressed="false">Two columns</button>
+    <button type="button" data-shape="three" aria-pressed="false">Three columns</button>
+  </div>
+  <p class="hint" id="shape-hint">One column. Each answer is one value.</p>
+  <label class="field" for="data">The data</label>
   <textarea id="data" spellcheck="false" placeholder="5, 6, 3, 3, 2, 4, 7, 5, 2, 3"></textarea>
-  <label class="check"><input id="freq" type="checkbox"> The second number on each line is the count. Example: 9.5 2</label>
   <p class="field" id="want-label">What do you want?</p>
-  <div class="choices" role="group" aria-labelledby="want-label">
+  <div class="choices" id="wants" role="group" aria-labelledby="want-label">
     <button type="button" data-pick="table" aria-pressed="false">Frequency table</button>
     <button type="button" data-pick="bar" aria-pressed="false">Bar graph</button>
     <button type="button" data-pick="hist" aria-pressed="false">Histogram</button>
@@ -218,12 +224,23 @@
 <script>
 (function () {
   var dataBox = document.getElementById("data");
-  var freqBox = document.getElementById("freq");
   var pctBox = document.getElementById("pct");
   var kBox = document.getElementById("k");
   var barsBox = document.getElementById("bars");
   var out = document.getElementById("out");
+  var shapeHint = document.getElementById("shape-hint");
   var pick = "";
+  var shape = "one";
+  var shapeText = {
+    one: "One column. Each answer is one value.",
+    two: "Two columns. Each line is the value, then how many. Example: 2  3",
+    three: "Three columns. Each line is where the bar starts, where it ends, then how many. Example: 59.95  61.95  5"
+  };
+  var shapePlaceholder = {
+    one: "5, 6, 3, 3, 2, 4, 7, 5, 2, 3",
+    two: "2  3\n3  5\n4  3",
+    three: "59.95  61.95  5\n61.95  63.95  3\n63.95  65.95  15"
+  };
 
   function esc(s) {
     return String(s).replace(/[&<>]/g, function (c) {
@@ -254,12 +271,32 @@
     });
   }
 
-  function parse(text, withFreq) {
+  function shortNum(x) {
+    var s = x.toFixed(6).replace(/\.?0+$/, "");
+    return s === "-0" ? "0" : s;
+  }
+
+  function parse(text, shape) {
     if (!text.trim()) return { empty: true };
     var rows = [];
     var places = 0;
     var numeric = true;
-    if (!withFreq) {
+    if (shape === "three") {
+      var lines3 = text.split(/\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+      for (var t = 0; t < lines3.length; t++) {
+        var bits = lines3[t].replace(/\u2212/g, "-").replace(/\$/g, "").split(/[\s,;]+/).filter(Boolean);
+        if (bits.length !== 3) return { error: "Each line needs a start, an end, and a count. Example: 59.95  61.95  5" };
+        var start = toNumber(bits[0]);
+        var end = toNumber(bits[1]);
+        var count = Number(bits[2].replace(/%$/, ""));
+        if (start === null || end === null || !(end > start) || !(count > 0)) {
+          return { error: "Each line needs a start, an end after it, and a count." };
+        }
+        places = Math.max(places, decimalsIn(bits[0]), decimalsIn(bits[1]));
+        rows.push({ label: shortNum(start) + "–" + shortNum(end), x: null, f: count, left: start, right: end });
+      }
+      numeric = false;
+    } else if (shape === "one") {
       var tokens = plainTokens(text);
       if (!tokens.length) return { empty: true };
       for (var i = 0; i < tokens.length; i++) {
@@ -294,7 +331,7 @@
     }
     var n = rows.reduce(function (sum, row) { return sum + row.f; }, 0);
     if (n > 20000) return { error: "That list is too long for this page." };
-    return { rows: rows, n: n, places: places, numeric: numeric };
+    return { rows: rows, n: n, places: places, numeric: numeric, grouped: shape === "three" };
   }
 
   function medianOf(sorted) {
@@ -383,7 +420,10 @@
       var key = numeric ? String(row.x) : row.label;
       if (index[key] === undefined) {
         index[key] = map.length;
-        map.push({ key: key, x: row.x, label: numeric ? unrounded(row.x) : row.label, f: 0 });
+        map.push({
+          key: key, x: row.x, label: numeric ? unrounded(row.x) : row.label, f: 0,
+          left: row.left, right: row.right
+        });
       }
       map[index[key]].f += row.f;
     });
@@ -530,6 +570,13 @@
     if (!vmax) vmax = 1;
     var gap = touching ? 0 : plotW / n * 0.34;
     var bw = plotW / n - gap;
+    var scaled = touching && items.every(function (it) {
+      return typeof it.left === "number" && typeof it.right === "number" && it.right > it.left;
+    });
+    var x0 = scaled ? items[0].left : 0;
+    var x1 = scaled ? items[n - 1].right : 1;
+    var span = x1 - x0 || 1;
+    function X(v) { return left + (v - x0) / span * plotW; }
     var parts = [
       '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"></rect>',
       '<line x1="' + left + '" y1="' + (top + plotH) + '" x2="' + (W - right) + '" y2="' + (top + plotH) + '" stroke="#d5e0de" stroke-width="1.4"></line>'
@@ -538,12 +585,13 @@
     items.forEach(function (it, i) {
       var h = it.f / vmax * (plotH - 22);
       if (it.f > 0) h = Math.max(h, 1);
-      var x = left + i * (plotW / n) + (touching ? 0 : gap / 2);
+      var x = scaled ? X(it.left) : left + i * (plotW / n) + (touching ? 0 : gap / 2);
+      var barW = scaled ? Math.max(X(it.right) - X(it.left), 1) : bw;
       var y = top + plotH - h;
-      var width = touching ? bw + 0.6 : bw;
+      var width = touching ? barW + 0.6 : barW;
       parts.push('<rect x="' + x.toFixed(2) + '" y="' + y.toFixed(2) + '" width="' + width.toFixed(2) + '" height="' + h.toFixed(2) + '" fill="#5aa8b4"></rect>');
-      parts.push('<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (y - 8).toFixed(1) + '" text-anchor="middle" font-size="13" fill="#1c242c" font-family="Montserrat, sans-serif" font-weight="700">' + esc(unrounded(it.f)) + '</text>');
-      var lx = touching ? x : x + bw / 2;
+      parts.push('<text x="' + (x + barW / 2).toFixed(1) + '" y="' + (y - 8).toFixed(1) + '" text-anchor="middle" font-size="13" fill="#1c242c" font-family="Montserrat, sans-serif" font-weight="700">' + esc(unrounded(it.f)) + '</text>');
+      var lx = touching ? x : x + barW / 2;
       var ly = top + plotH + 20;
       if (it.rightLabel) lastEdge = it.rightLabel;
       if (rotate) {
@@ -553,7 +601,8 @@
       }
     });
     if (lastEdge) {
-      parts.push('<text x="' + (left + plotW).toFixed(1) + '" y="' + (top + plotH + 20).toFixed(1) + '" text-anchor="middle" font-size="13" fill="#5d6670" font-family="Montserrat, sans-serif">' + esc(lastEdge) + '</text>');
+      var endX = scaled ? X(items[n - 1].right) : left + plotW;
+      parts.push('<text x="' + endX.toFixed(1) + '" y="' + (top + plotH + 20).toFixed(1) + '" text-anchor="middle" font-size="13" fill="#5d6670" font-family="Montserrat, sans-serif">' + esc(lastEdge) + '</text>');
     }
     return '<svg class="chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" role="img">' + parts.join("") + '</svg>';
   }
@@ -587,20 +636,40 @@
   }
 
   function needsNumbers(name) {
+    if (shape === "three") {
+      return '<p class="hint">A start and an end are not one value. The frequency table and the histogram can use these bars. ' +
+        name + " needs each number.</p>";
+    }
     return '<p class="hint">' + name + " needs numbers.</p>";
   }
 
+  function givenHistogram(groups) {
+    return {
+      bins: groups.map(function (g, i) {
+        return {
+          label: unrounded(g.left),
+          edge: true,
+          rightLabel: i === groups.length - 1 ? unrounded(g.right) : "",
+          f: g.f,
+          left: g.left,
+          right: g.right
+        };
+      }),
+      note: "Each line is one bar. The bars touch when the end of one line is the start of the next."
+    };
+  }
+
   function render() {
-    document.getElementById("opt-bars").hidden = pick !== "hist";
+    document.getElementById("opt-bars").hidden = pick !== "hist" || shape === "three";
     document.getElementById("opt-k").hidden = pick !== "sd";
     document.getElementById("opt-pct").hidden = pick !== "percentile";
     if (!pick) {
       out.innerHTML = '<p class="hint">Choose what you want.</p>';
       return;
     }
-    var parsed = parse(dataBox.value, freqBox.checked);
+    var parsed = parse(dataBox.value, shape);
     if (parsed.empty) {
-      out.innerHTML = '<p class="hint">Paste a list first.</p>';
+      out.innerHTML = '<p class="hint">Paste the data first.</p>';
       return;
     }
     if (parsed.error) {
@@ -618,9 +687,14 @@
         : '<p class="hint">Each height is divided by ' + esc(unrounded(parsed.n)) + ", the total of the heights.</p>";
     } else if (pick === "bar") {
       html = "<h2>Bar graph</h2>" + chartSvg(groups, false);
-      html += '<p class="hint">The bars stay apart. Each bar is one category.</p>';
+      html += shape === "three"
+        ? '<p class="hint">The bars stay apart. These intervals share edges, so a histogram is the picture that lets them touch.</p>'
+        : '<p class="hint">The bars stay apart. Each bar is one category.</p>';
     } else if (pick === "hist") {
-      if (!parsed.numeric) html = needsNumbers("A histogram");
+      if (parsed.grouped) {
+        var given = givenHistogram(groups);
+        html = "<h2>Histogram</h2>" + chartSvg(given.bins, true) + '<p class="hint">' + esc(given.note) + "</p>";
+      } else if (!parsed.numeric) html = needsNumbers("A histogram");
       else {
         var hist = planHistogram(summarize(parsed.rows).sorted, parsed.places, barsBox.value.trim());
         html = hist.error
@@ -628,6 +702,9 @@
           : "<h2>Histogram</h2>" + chartSvg(hist.bins, true) + '<p class="hint">' + esc(hist.note) + "</p>" + classTable(hist.bins, parsed.n);
       }
     } else if (pick === "center") {
+      if (parsed.grouped) {
+        html = needsNumbers("The mean");
+      } else {
       var mode = modes(groups);
       html = "<h2>Center</h2><div class=\"stats\">";
       if (parsed.numeric) {
@@ -639,6 +716,7 @@
       html += parsed.numeric
         ? '<p class="hint">The mean uses every value. The median is the middle of the ordered list.</p>'
         : '<p class="hint">The mode is the category that appears most often. A mean needs numbers.</p>';
+      }
     } else if (pick === "quartiles") {
       if (!parsed.numeric) html = needsNumbers("Quartiles");
       else {
@@ -690,17 +768,27 @@
     out.innerHTML = html;
   }
 
-  document.querySelector(".choices").addEventListener("click", function (event) {
+  document.getElementById("shapes").addEventListener("click", function (event) {
+    var button = event.target.closest("button");
+    if (!button) return;
+    shape = button.getAttribute("data-shape");
+    Array.prototype.forEach.call(document.querySelectorAll("#shapes button"), function (el) {
+      el.setAttribute("aria-pressed", el === button ? "true" : "false");
+    });
+    shapeHint.textContent = shapeText[shape];
+    dataBox.placeholder = shapePlaceholder[shape];
+    render();
+  });
+  document.getElementById("wants").addEventListener("click", function (event) {
     var button = event.target.closest("button");
     if (!button) return;
     pick = button.getAttribute("data-pick");
-    Array.prototype.forEach.call(document.querySelectorAll(".choices button"), function (el) {
+    Array.prototype.forEach.call(document.querySelectorAll("#wants button"), function (el) {
       el.setAttribute("aria-pressed", el === button ? "true" : "false");
     });
     render();
   });
   dataBox.addEventListener("input", render);
-  freqBox.addEventListener("change", render);
   pctBox.addEventListener("input", render);
   kBox.addEventListener("input", render);
   barsBox.addEventListener("input", render);
