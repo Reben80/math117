@@ -188,6 +188,13 @@
   <p><a class="badge" href="../">MATH 117</a></p>
   <h1>Calculator</h1>
   <p class="lead">Chapters 1 and 2. Say how many columns the book gives you, paste them, then choose one thing.</p>
+  <p class="field" id="demo-label">From the book</p>
+  <div class="choices" id="demos" role="group" aria-labelledby="demo-label">
+    <button type="button" data-demo="hours-list" aria-pressed="false">Hours, one column</button>
+    <button type="button" data-demo="hours-table" aria-pressed="false">Hours, two columns</button>
+    <button type="button" data-demo="heights" aria-pressed="false">Heights, three columns</button>
+  </div>
+  <p class="hint">Click one. The box fills, and one result appears. Then try another button on the same numbers.</p>
   <p class="field" id="shape-label">How many columns?</p>
   <div class="choices" id="shapes" role="group" aria-labelledby="shape-label">
     <button type="button" data-shape="one" aria-pressed="true">One column</button>
@@ -855,27 +862,70 @@
     out.innerHTML = html;
   }
 
+  var demos = {
+    "hours-list": {
+      shape: "one",
+      pick: "table",
+      data: "5, 6, 3, 3, 2, 4, 7, 5, 2, 3, 5, 6, 5, 4, 4, 3, 5, 2, 5, 3"
+    },
+    "hours-table": {
+      shape: "two",
+      pick: "table",
+      data: "Hours  Frequency\n2  3\n3  5\n4  3\n5  6\n6  2\n7  1"
+    },
+    "heights": {
+      shape: "three",
+      pick: "hist",
+      data: "Start  End  Frequency\n59.95  61.95  5\n61.95  63.95  3\n63.95  65.95  15\n65.95  67.95  40\n67.95  69.95  17\n69.95  71.95  12\n71.95  73.95  7\n73.95  75.95  1"
+    }
+  };
+
+  function mark(group, attr, value) {
+    Array.prototype.forEach.call(document.querySelectorAll("#" + group + " button"), function (el) {
+      el.setAttribute("aria-pressed", el.getAttribute(attr) === value ? "true" : "false");
+    });
+  }
+
+  function useShape(next) {
+    shape = next;
+    mark("shapes", "data-shape", next);
+    shapeHint.textContent = shapeText[shape];
+    dataBox.placeholder = shapePlaceholder[shape];
+  }
+
+  function usePick(next) {
+    pick = next;
+    mark("wants", "data-pick", next);
+  }
+
+  document.getElementById("demos").addEventListener("click", function (event) {
+    var button = event.target.closest("button");
+    if (!button) return;
+    var demo = demos[button.getAttribute("data-demo")];
+    mark("demos", "data-demo", button.getAttribute("data-demo"));
+    useShape(demo.shape);
+    usePick(demo.pick);
+    barsBox.value = "";
+    dataBox.value = demo.data;
+    render();
+  });
   document.getElementById("shapes").addEventListener("click", function (event) {
     var button = event.target.closest("button");
     if (!button) return;
-    shape = button.getAttribute("data-shape");
-    Array.prototype.forEach.call(document.querySelectorAll("#shapes button"), function (el) {
-      el.setAttribute("aria-pressed", el === button ? "true" : "false");
-    });
-    shapeHint.textContent = shapeText[shape];
-    dataBox.placeholder = shapePlaceholder[shape];
+    mark("demos", "data-demo", "");
+    useShape(button.getAttribute("data-shape"));
     render();
   });
   document.getElementById("wants").addEventListener("click", function (event) {
     var button = event.target.closest("button");
     if (!button) return;
-    pick = button.getAttribute("data-pick");
-    Array.prototype.forEach.call(document.querySelectorAll("#wants button"), function (el) {
-      el.setAttribute("aria-pressed", el === button ? "true" : "false");
-    });
+    usePick(button.getAttribute("data-pick"));
     render();
   });
-  dataBox.addEventListener("input", render);
+  dataBox.addEventListener("input", function () {
+    mark("demos", "data-demo", "");
+    render();
+  });
   pctBox.addEventListener("input", render);
   kBox.addEventListener("input", render);
   barsBox.addEventListener("input", render);
