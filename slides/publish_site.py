@@ -12,27 +12,29 @@ SLIDES = ROOT / "slides"
 DOCS = ROOT / "docs"
 LIB_SOURCE = SLIDES / "1.1-key-terms" / "lib"
 
+# unit, folder, section number, name, blurb
 DECKS = [
-    ("1.1-key-terms", "1.1", "Key terms", "Statistics, probability, and the six words in every study."),
-    ("1.2-data-sampling", "1.2", "Data and sampling", "Words or numbers, and how the sample is chosen."),
-    ("1.3-frequency", "1.3", "Frequency tables", "Nominal, ordinal, interval, ratio, and how often each value shows up."),
-    ("1.4-experiments", "1.4", "Experiments and ethics", "An observational study, or a study that assigns the treatment."),
+    ("1", "1.1-key-terms", "1.1", "Key terms", "Statistics, probability, and the six words in every study."),
+    ("1", "1.2-data-sampling", "1.2", "Data and sampling", "Words or numbers, and how the sample is chosen."),
+    ("1", "1.3-frequency", "1.3", "Frequency tables", "Nominal, ordinal, interval, ratio, and how often each value shows up."),
+    ("1", "1.4-experiments", "1.4", "Experiments and ethics", "An observational study, or a study that assigns the treatment."),
+    ("2", "2.1-graphs", "2.1", "Stem-and-leaf plots", "A small list, kept whole. Then a line graph and a bar graph."),
 ]
 
 # Dates and sections follow the Fall 2026 second-half calendar.
 # Homework, the unit test, and the discussion are due on the last day of each unit.
 WEEKS = [
-    ("October 28 – November 1", "Unit 1 · Sampling and Data", "OpenStax Introductory Statistics 2e, sections 1.1–1.4", "Homework, test, and discussion due November 1", True),
-    ("November 2 – 6", "Unit 2 · Descriptive Statistics", "OpenStax Introductory Statistics 2e, sections 2.1–2.7", "Homework, test, and discussion due November 6", False),
-    ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", False),
-    ("November 10 – 11", "Exam 1", "Units 1, 2, and 3", "", False),
-    ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", False),
-    ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", False),
-    ("November 20 – 21", "Unit S1 · Bootstrap Confidence Intervals", "Introduction to Modern Statistics, chapter 12", "Homework, test, and discussion due November 21", False),
-    ("November 22 – 23", "Exam 2", "Units 4 and 5. Unit S1 is not on this exam.", "", False),
-    ("November 24 – 28", "Unit 6 · Hypothesis Testing, introduction", "OpenStax Introductory Statistics 2e, sections 9.1–9.4", "Homework, test, and discussion due November 28", False),
-    ("November 29 – December 1", "Unit 7 · Hypothesis testing for proportions", "OpenStax Introductory Statistics 2e, sections 9.5 and 10.3", "Homework, test, and discussion due December 1", False),
-    ("December 2 – 5", "Unit 8 · Hypothesis testing for means", "OpenStax Introductory Statistics 2e, sections 9.5, 10.1, and 10.4", "Homework, test, and discussion due December 5", False),
+    ("October 28 – November 1", "Unit 1 · Sampling and Data", "OpenStax Introductory Statistics 2e, sections 1.1–1.4", "Homework, test, and discussion due November 1", "1"),
+    ("November 2 – 6", "Unit 2 · Descriptive Statistics", "OpenStax Introductory Statistics 2e, sections 2.1–2.7", "Homework, test, and discussion due November 6", "2"),
+    ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", ""),
+    ("November 10 – 11", "Exam 1", "Units 1, 2, and 3", "", ""),
+    ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", ""),
+    ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", ""),
+    ("November 20 – 21", "Unit S1 · Bootstrap Confidence Intervals", "Introduction to Modern Statistics, chapter 12", "Homework, test, and discussion due November 21", ""),
+    ("November 22 – 23", "Exam 2", "Units 4 and 5. Unit S1 is not on this exam.", "", ""),
+    ("November 24 – 28", "Unit 6 · Hypothesis Testing, introduction", "OpenStax Introductory Statistics 2e, sections 9.1–9.4", "Homework, test, and discussion due November 28", ""),
+    ("November 29 – December 1", "Unit 7 · Hypothesis testing for proportions", "OpenStax Introductory Statistics 2e, sections 9.5 and 10.3", "Homework, test, and discussion due December 1", ""),
+    ("December 2 – 5", "Unit 8 · Hypothesis testing for means", "OpenStax Introductory Statistics 2e, sections 9.5, 10.1, and 10.4", "Homework, test, and discussion due December 5", ""),
 ]
 
 
@@ -45,22 +47,22 @@ def rewrite(html):
 
 
 def landing():
-    cards = []
-    for folder, number, name, blurb in DECKS:
-        cards.append(
+    cards_by_unit = {}
+    for unit, folder, number, name, blurb in DECKS:
+        cards_by_unit.setdefault(unit, []).append(
             f'<a class="card" href="{folder}/">'
             f'<p class="num">Section {number}</p>'
             f'<h2>{name}</h2>'
             f'<p>{blurb}</p>'
             f'</a>'
         )
-    card_html = "".join(cards)
     weeks = []
-    for dates, title, source, due, has_decks in WEEKS:
+    for dates, title, source, due, unit in WEEKS:
         exam = title.startswith("Exam")
         klass = "week exam" if exam else "week"
         due_html = f'<p class="due">{due}</p>' if due else ""
-        decks_html = f'<div class="grid">{card_html}</div>' if has_decks else ""
+        cards = cards_by_unit.get(unit, [])
+        decks_html = f'<div class="grid">{"".join(cards)}</div>' if cards else ""
         weeks.append(
             f'<li class="{klass}">'
             f'<p class="dates">{dates}</p>'
@@ -268,7 +270,7 @@ def main():
     shutil.copytree(LIB_SOURCE, DOCS / "lib", ignore=shutil.ignore_patterns(".DS_Store"))
     (DOCS / ".nojekyll").write_text("")
     (DOCS / "index.html").write_text(landing())
-    for folder, _number, _name, _blurb in DECKS:
+    for _unit, folder, _number, _name, _blurb in DECKS:
         source = SLIDES / folder
         if not (source / "index.html").is_file():
             raise SystemExit(f"missing deck: {source}")
