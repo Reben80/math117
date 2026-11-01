@@ -19,6 +19,12 @@ DECKS = [
     ("1", "1.3-frequency", "1.3", "Frequency tables", "Nominal, ordinal, interval, ratio, and how often each value shows up."),
     ("1", "1.4-experiments", "1.4", "Experiments and ethics", "An observational study, or a study that assigns the treatment."),
     ("2", "2.1-graphs", "2.1", "Stem-and-leaf plots", "A small list, kept whole. Then a line graph and a bar graph."),
+    ("2", "2.2-histograms", "2.2", "Histograms", "Bars that touch, for a long list of measurements."),
+    ("2", "2.3-location", "2.3", "Quartiles", "Percentiles, quartiles, and the IQR."),
+    ("2", "2.4-boxplots", "2.4", "Box plots", "The five-number summary as a picture."),
+    ("2", "2.5-center", "2.5", "Center", "Mean, median, and mode."),
+    ("2", "2.6-skewness", "2.6", "Skewness", "How the mean rides the tail."),
+    ("2", "2.7-spread", "2.7", "Standard deviation", "How far the values sit from the mean."),
 ]
 
 # Dates and sections follow the Fall 2026 second-half calendar.
