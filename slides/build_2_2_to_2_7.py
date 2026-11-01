@@ -1,8 +1,8 @@
 """Sections 2.2 through 2.7 as Slides.com HTML exports.
 
 Every count, quartile, and dollar amount on a student slide is taken from
-OpenStax Introductory Statistics 2e. Figures are redrawn. Extra try-its
-stay in the speaker notes.
+OpenStax Introductory Statistics 2e. Figures are redrawn. A few try-its
+are on the slides so a 60–80 minute class has a problem to work.
 """
 
 import shutil
@@ -642,7 +642,53 @@ def slides_23():
         "Q1 is the median of the lower six, (230500 + 387000) / 2 = 308750. "
         "Q3 is the median of the upper six, (639000 + 659000) / 2 = 649000. "
         "Use these printed quartiles. A value is a potential outlier if it is below Q1 minus 1.5 IQR or above Q3 plus 1.5 IQR. "
-        "Try It 2.13 is eleven salaries. Same fence. Leave it unless someone asks."
+        "The next slide is Try It 2.13. Give them two minutes, then show the answer."
+    )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.13 · your turn")
+            + title("Eleven salaries", 44)
+            + '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;line-height:1.4;">'
+            '28,000 &nbsp; 33,000 &nbsp; 40,500 &nbsp; 42,000 &nbsp; 54,000 &nbsp; 54,000<br>'
+            '64,500 &nbsp; 68,500 &nbsp; 69,000 &nbsp; 72,000 &nbsp; 120,000</p>'
+            + '<p style="margin:18px 0 0;color:#5d6670;font-size:22px;">Already in order. Find the IQR. Is $120,000 an outlier?</p>',
+            64, 80, 1100,
+        ),
+        text_block(
+            card_shell(
+                '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
+                '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">'
+                'n = 11, so the median is the 6th salary. Q1 and Q3 are the middles of the two halves.</p>',
+                140,
+            ),
+            64, 420, 1100, 140,
+        ),
+    ], notes="Give them about two minutes. The next slide is the check. Do not start the fence until Q1 and Q3 are on the board."))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.13")
+            + title("$120,000 is past the fence", 40),
+            64, 28, 1100,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Q1 · median · Q3</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">$40,500 · $54,000 · $69,000</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;">IQR = 69,000 − 40,500 = $28,500</p>',
+            180,
+        ), 64, 170, 1150, 180),
+        text_block(
+            '<p style="margin:0 0 10px;color:#1c242c;font-size:24px;line-height:1.35;">'
+            '1.5 × 28,500 = 42,750. The upper fence is 69,000 + 42,750 = $111,750.</p>'
+            '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
+            '$120,000 is above that fence. It is a potential outlier. Nothing falls below the lower fence.</p>',
+            64, 400, 1150,
+        ),
+    ], notes=(
+        "Lower five: 28000, 33000, 40500, 42000, 54000. Q1 is 40500. "
+        "Upper five: 64500, 68500, 69000, 72000, 120000. Q3 is 69000. "
+        "Lower fence is 40500 − 42750, which is negative, so no low outlier."
     )))
     out.append(section([
         backdrop(),
@@ -801,7 +847,50 @@ def slides_24():
         "The fifteen times: 0, 40, 60, 30, 60, 10, 45, 30, 300, 90, 30, 120, 60, 0, 20. "
         "If 300 is set aside, the book’s new maximum is 120. Q1 is still 20 and Q3 is still 60. "
         "The conclusion does not change: half the students are between 20 and 60 minutes. "
-        "Try It 2.22 is ten project times: 2, 3, 5, 3, 4, 4, 3, 11, 3, 2 hours. Same five-number questions. Leave it unless asked."
+        "The next slide is Try It 2.22. Same five numbers, then a decision."
+    )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.22 · your turn")
+            + title("Ten project times", 44)
+            + '<p style="margin:14px 0 0;color:#1c242c;font-size:28px;line-height:1.4;">'
+            '2, 3, 5, 3, 4, 4, 3, 11, 3, 2 hours.</p>'
+            + '<p style="margin:16px 0 0;color:#5d6670;font-size:22px;line-height:1.4;">'
+            'The instructor hopes a typical project takes 3 to 4 hours. Find the five numbers. Should the project change?</p>',
+            64, 90, 1100,
+        ),
+        text_block(
+            card_shell(
+                '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
+                '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;">Order the ten times first. n is even, so the median is the average of the 5th and 6th.</p>',
+                140,
+            ),
+            64, 420, 1100, 140,
+        ),
+    ], notes="Ordered: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Give them about two minutes."))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.22")
+            + title("Leave the project as it is", 40),
+            64, 28, 1100,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Min · Q1 · median · Q3 · max</p>'
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:32px;font-weight:650;">2 · 3 · 3 · 4 · 11</p>'
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:24px;">IQR = 4 − 3 = 1. The upper fence is 4 + 1.5 = 5.5.</p>',
+            190,
+        ), 64, 170, 1150, 190),
+        text_block(
+            '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.4;">'
+            '11 hours is a potential outlier. The middle half is 3 to 4 hours, which is what the instructor hoped. '
+            'One long project is not a reason to change the assignment.</p>',
+            64, 420, 1150,
+        ),
+    ], notes=(
+        "Lower half 2, 2, 3, 3, 3 so Q1 is 3. Upper half 3, 4, 4, 5, 11 so Q3 is 4. "
+        "The 5th and 6th ordered times are both 3, so the median is 3."
     )))
     out.append(quick("Read the box", [
         ("The box holds",
@@ -922,9 +1011,53 @@ def slides_25():
     ], notes=(
         "The book states the median, 30000, and does not print the mean. "
         "49 times 30000 is 1470000. Add 5000000 to get 6470000. Divide by 50 to get 129400. "
-        "Try It 2.27: one house is worth 2500000, 29 are worth 280000, and the other 30 of 60 are worth 315000. "
-        "Same question. The median is the better center."
+        "The next two slides are Try It 2.27. Same question, houses instead of incomes."
     )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.27 · your turn")
+            + title("Sixty houses", 48)
+            + '<p style="margin:16px 0 0;color:#1c242c;font-size:26px;line-height:1.4;">'
+            'One house is worth $2,500,000. Twenty-nine are worth $280,000. The other thirty are worth $315,000.</p>'
+            + '<p style="margin:18px 0 0;color:#5d6670;font-size:22px;">Which is the better center, the mean or the median?</p>',
+            64, 100, 1100,
+        ),
+        text_block(
+            card_shell(
+                '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
+                '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">'
+                'n = 60, so the median is the average of the 30th and 31st ordered prices.</p>',
+                140,
+            ),
+            64, 430, 1100, 140,
+        ),
+    ], notes="Do not have them add all 60 prices by hand. The next slide shows both numbers."))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.27")
+            + title("The median stays with the houses", 36),
+            64, 28, 1100,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">The mean</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">(29 × 280,000 + 30 × 315,000 + 2,500,000) / 60</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:36px;font-weight:650;">$334,500</p>',
+            200,
+        ), 64, 170, 560, 200),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">The median</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">The 30th and 31st prices are both this.</p>'
+            '<p style="margin:10px 0 0;color:#2a6f7a;font-size:36px;font-weight:650;">$315,000</p>',
+            200,
+        ), 656, 170, 560, 200),
+        text_block(
+            '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
+            'The median is the better center. The house worth $2,500,000 pulls the mean up.</p>',
+            64, 430, 1150,
+        ),
+    ], notes="29 times 280000 is 8120000. 30 times 315000 is 9450000. Add 2500000 to get 20070000. Divide by 60 to get 334500."))
     out.append(section([
         backdrop(),
         text_block(kicker("The mode") + title("The value that appears most"), 72, 28, 1100),
@@ -1082,10 +1215,41 @@ def slides_26():
             64, 430, 1150,
         ),
     ], notes=(
-        "Example 2.31, letter counts. Terry: 7, 9, 3, 3, 3, 4, 1, 3, 2, 2. Mean 3.7, median 3, right skew. "
-        "Davis: 3, 3, 3, 4, 1, 4, 3, 2, 3, 1. Mean 2.7, median 3, left skew. "
-        "Maris: 2, 3, 4, 4, 4, 6, 6, 6, 8, 3. Mean 4.6, median 4, roughly symmetric. "
-        "The book's summary: the median stays near the high point, and the mean sits farther out on the tail."
+        "The next slide is Example 2.31, three students counting letters. The means and medians are already computed. "
+        "Ask which tail each list has before you show the labels."
+    )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Example 2.31 · letters in a word")
+            + title("Three students, three tails", 40),
+            64, 20, 1150,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">TERRY · RIGHT</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">Mean 3.7. Median 3.</p>'
+            '<p style="margin:10px 0 0;color:#5d6670;font-size:18px;line-height:1.35;">7, 9, 3, 3, 3, 4, 1, 3, 2, 2. The 9 pulls the mean up.</p>',
+            220,
+        ), 64, 160, 370, 220),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">DAVIS · LEFT</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">Mean 2.7. Median 3.</p>'
+            '<p style="margin:10px 0 0;color:#5d6670;font-size:18px;line-height:1.35;">3, 3, 3, 4, 1, 4, 3, 2, 3, 1. The 1s pull the mean down.</p>',
+            220,
+        ), 454, 160, 370, 220),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">MARIS · NEARLY EVEN</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">Mean 4.6. Median 4.</p>'
+            '<p style="margin:10px 0 0;color:#5d6670;font-size:18px;line-height:1.35;">2, 3, 4, 4, 4, 6, 6, 6, 8, 3. The two centers nearly agree.</p>',
+            220,
+        ), 844, 160, 370, 220),
+        text_block(
+            '<p style="margin:0;color:#1c242c;font-size:22px;">The median stays near the high point of the list. The mean rides out on the tail.</p>',
+            64, 430, 1150,
+        ),
+    ], notes=(
+        "Terry sum 37, mean 3.7, median 3. Davis sum 27, mean 2.7, median 3. Maris sum 46, mean 4.6, median 4. "
+        "Maris is the roughly symmetric one. Do not make them recompute all three means unless the hour is long."
     )))
     out.append(quick("Name the tail", [
         ("Mean 7.7, median 7.5, mode 7. The shape is",
@@ -1213,8 +1377,38 @@ def slides_27():
     ], notes=(
         "Variance is in squared units. The standard deviation is the square root, back in the units of the data. "
         "s estimates σ when the sample looks like the population. "
-        "Keystrokes: STAT EDIT, 1-Var Stats. Sx is the sample standard deviation. σx is the population one. "
-        "Do not round the calculator’s Sx if you still have steps to do. Round the final answer."
+        "The next slide is the keystroke list. Walk it once with a short list before Example 2.32."
+    )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("On the calculator")
+            + title("Let it do the arithmetic", 40),
+            64, 24, 1100,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">1 · ENTER THE LIST</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">STAT, then EDIT. Clear L1. Type one value per row.</p>',
+            150,
+        ), 64, 160, 560, 150),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">2 · ONE-VARIABLE STATS</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">STAT, CALC, 1-Var Stats, then Calculate.</p>',
+            150,
+        ), 656, 160, 560, 150),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">3 · READ THE RIGHT LINE</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">x̄ is the mean. Sx is the sample standard deviation. σx is the population one.</p>',
+            150,
+        ), 64, 340, 1150, 150),
+        text_block(
+            '<p style="margin:0;color:#1c242c;font-size:22px;">Keep the calculator’s Sx unrounded while you still have steps to do. Round the final answer.</p>',
+            64, 530, 1150,
+        ),
+    ], notes=(
+        "TI-83 or TI-84. To clear a list: put the cursor on L1, CLEAR, ENTER. "
+        "STAT 4 is ClrList if someone asks. A phone calculator is enough for a mean. "
+        "Standard deviation is the reason the graphing calculator comes out today."
     )))
     out.append(section([
         backdrop(),
@@ -1250,7 +1444,90 @@ def slides_27():
         "Sum of f times squared deviations is 9.7375. Sample variance is 9.7375 / 19. "
         "s = 0.72 to two decimals. The calculator’s Sx is about 0.715891. Use that unrounded value for further steps, then check the book’s rounded lines: "
         "plus 1s is 11.25, minus 2s is 9.09, and plus or minus 1.5s is 11.61 and 9.45. "
-        "Example 2.33 reuses the 31 exam scores from section 2.1. The book’s calculator results: mean 73.5, s = 17.9, median 73, Q1 61, Q3 90, IQR 29."
+        "The next slides reuse Monday’s 31 exam scores, then Try It 2.32, the baseball ages. "
+        "Have them enter the ages. Do not compute s by hand."
+    )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Example 2.33 · the same 31 exam scores")
+            + title("Monday’s list, on the calculator", 36),
+            64, 20, 1150,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Center</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:26px;font-weight:650;">Mean 73.5 · median 73</p>',
+            120,
+        ), 64, 155, 560, 120),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Spread</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:26px;font-weight:650;">s = 17.9 · IQR = 29</p>',
+            120,
+        ), 656, 155, 560, 120),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">The five numbers</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:26px;font-weight:650;">33 · 61 · 73 · 90 · 100</p>'
+            '<p style="margin:8px 0 0;color:#5d6670;font-size:18px;">Minimum, Q1, median, Q3, maximum.</p>',
+            130,
+        ), 64, 300, 1150, 130),
+        text_block(
+            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
+            'The lower half spreads more: 73 − 33 = 40 points. The upper half spreads 100 − 73 = 27. '
+            'That is the long left whisker from the box plot. s = 17.9 says a typical score sits about 18 points from 73.5.</p>',
+            64, 470, 1150,
+        ),
+    ], notes=(
+        "Scores: 33, 42, 49, 49, 53, 55, 55, 61, 63, 67, 68, 68, 69, 69, 72, 73, 74, 78, 80, 83, 88, 88, 88, 90, 92, 94, 94, 94, 94, 96, 100. "
+        "Unrounded mean is about 73.52 and Sx is about 17.92. The book rounds to 73.5 and 17.9. Q1 is 61 and Q3 is 90, so the IQR is 29."
+    )))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.32 · your turn")
+            + title("Twenty-five baseball ages", 40)
+            + '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.45;">'
+            '21, 21, 22, 23, 24, 24, 25, 25, 28, 29, 29, 31, 32,<br>'
+            '33, 33, 34, 35, 36, 36, 36, 36, 38, 38, 38, 40</p>'
+            + '<p style="margin:16px 0 0;color:#5d6670;font-size:22px;">'
+            'Use the calculator. Find the mean, Sx, and the age two standard deviations above the mean.</p>',
+            64, 70, 1120,
+        ),
+        text_block(
+            card_shell(
+                '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
+                '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Clear L1 first. Read x̄ and Sx. Then compute x̄ + 2 Sx with the unrounded Sx.</p>',
+                120,
+            ),
+            64, 470, 1120, 120,
+        ),
+    ], notes="n = 25. Sum is 767. Give them about five minutes to type the list and read the screen."))
+    out.append(section([
+        backdrop(),
+        text_block(
+            kicker("Try It 2.32")
+            + title("Two standard deviations above is 42.9", 34),
+            64, 28, 1100,
+        ),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">From 1-Var Stats</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">x̄ = 30.68 &nbsp;&nbsp; Sx = 6.09</p>',
+            140,
+        ), 64, 160, 1150, 140),
+        text_block(card_shell(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Two standard deviations above the mean</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">30.68 + 2(6.09) = 42.86</p>',
+            140,
+        ), 64, 320, 1150, 140),
+        text_block(
+            '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
+            'Nobody on the team is 42.9 years old. The oldest player is 40. '
+            'The standard deviation describes the spread. It does not invent a player.</p>',
+            64, 500, 1150,
+        ),
+    ], notes=(
+        "Sx to more places is about 6.0945, so two standard deviations above is about 42.87. "
+        "The slide uses the two-decimal readings 30.68 and 6.09. "
+        "40 is (40 − 30.68) / 6.09 ≈ 1.5 standard deviations above the mean, if someone asks."
     )))
     out.append(quick("Read the spread", [
         ("Store B’s waits vary more because",
@@ -1263,6 +1540,17 @@ def slides_27():
          [("A", "Sx, divide by n − 1"), ("B", "σx, divide by N"), ("C", "The range")],
          "A", "σx is the population standard deviation."),
     ], "One right-arrow shows 1B, 2A, 3A. Homework 94 through 107. The chapter review starts at 108."))
+    out.append(quick("Before Friday", [
+        ("The salary of $120,000 is",
+         [("A", "The median"), ("B", "A potential outlier"), ("C", "Below the fence")],
+         "B", "The fence is $111,750."),
+        ("For the 60 houses, the better center is",
+         [("A", "The mean, $334,500"), ("B", "The median, $315,000"), ("C", "The $2,500,000 house")],
+         "B", "One house pulls the mean up."),
+        ("For the 31 exam scores, 17.9 is",
+         [("A", "The mean"), ("B", "The sample standard deviation"), ("C", "The IQR")],
+         "B", "The mean is 73.5. The IQR is 29."),
+    ], "One right-arrow shows 1B, 2B, 3B. This reviews Tuesday, Wednesday, and today before the Friday deadline."))
     out.append(closing(
         "End of Unit 2",
         "You can describe a list",
