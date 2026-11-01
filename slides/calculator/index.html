@@ -38,7 +38,7 @@
   }
   .lead, .note {
     margin: 14px 0 0;
-    max-width: 680px;
+    max-width: 720px;
     color: #5d6670;
     font-size: 17px;
     line-height: 1.45;
@@ -71,8 +71,17 @@
   .check input { width: auto; margin-top: 3px; }
   .row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 16px;
+  }
+  .chart {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 12px;
+    background: #fff;
+    border: 1px solid #e4e1da;
+    border-radius: 14px;
   }
   .row input { max-width: 100%; }
   h2 {
@@ -160,7 +169,7 @@
 <main>
   <p><a class="badge" href="../">MATH 117</a></p>
   <h1>Calculator</h1>
-  <p class="lead">Chapters 1 and 2. Paste the list. Words give a frequency table. Numbers also give the center, the quartiles, and the standard deviation.</p>
+  <p class="lead">Chapters 1 and 2. Paste the list. Words give a frequency table and a bar graph, with a gap between the bars. Numbers give a histogram, with the bars touching, plus the center, the quartiles, and the standard deviation.</p>
   <label class="field" for="data">The list</label>
   <textarea id="data" spellcheck="false" placeholder="5, 6, 3, 3, 2, 4, 7, 5, 2, 3"></textarea>
   <label class="check"><input id="freq" type="checkbox"> The second number on each line is the count. Example: 9.5 2</label>
@@ -173,6 +182,10 @@
       <label class="field" for="k">How many standard deviations from the mean</label>
       <input id="k" inputmode="decimal" placeholder="1 or −2">
     </div>
+    <div>
+      <label class="field" for="bars">How many bars in the histogram</label>
+      <input id="bars" inputmode="numeric" placeholder="5 to 15">
+    </div>
   </div>
   <div id="out" aria-live="polite"></div>
 </main>
@@ -182,6 +195,7 @@
   var freqBox = document.getElementById("freq");
   var pctBox = document.getElementById("pct");
   var kBox = document.getElementById("k");
+  var barsBox = document.getElementById("bars");
   var out = document.getElementById("out");
 
   function esc(s) {
@@ -232,16 +246,23 @@
       for (var j = 0; j < lines.length; j++) {
         var line = lines[j].replace(/\u2212/g, "-").replace(/\$/g, "");
         var pair = line.match(/^(\d{1,3}(?:,\d{3})+(?:\.\d+)?)[\s]+(\d+)$/) ||
-          line.match(/^(.+?)[\s,;]+(\d+)$/);
-        if (!pair) return { error: "Each line needs a value and a count, such as 9.5 2." };
-        var label = pair[1].trim().replace(/,/g, "");
-        if (!/^\d+$/.test(pair[2]) || Number(pair[2]) < 1) {
-          return { error: "A count has to be a whole number, 1 or more." };
+          line.match(/^(.+?)[\s,;]+(\d+(?:\.\d+)?%?)$/);
+        if (!pair || (/[\s,]/.test(pair[1].trim()) && !/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(pair[1].trim()))) {
+          return { error: "Each line needs a value and a count, such as 9.5 2." };
         }
+        var rawCount = pair[2].replace(/%$/, "");
+        var label = pair[1].trim().replace(/,/g, "");
         var x = toNumber(label);
-        if (x === null) numeric = false;
-        else places = Math.max(places, decimalsIn(label));
-        rows.push({ label: label, x: x, f: Number(pair[2]) });
+        var count = Number(rawCount);
+        if (x !== null) {
+          if (!/^\d+$/.test(rawCount) || count < 1) {
+            return { error: "A count has to be a whole number, 1 or more." };
+          }
+          places = Math.max(places, decimalsIn(label));
+        } else if (!(count > 0)) {
+          return { error: "A bar height has to be a number greater than 0." };
+        } else numeric = false;
+        rows.push({ label: label, x: x, f: count });
       }
     }
     var n = rows.reduce(function (sum, row) { return sum + row.f; }, 0);
@@ -367,11 +388,163 @@
     if (most < 2) return { text: "No value is repeated", note: "Every value appears once." };
     var found = groups.filter(function (g) { return g.f === most; });
     var names = found.map(function (g) { return g.label; }).join(", ");
-    var note = most + (most === 1 ? " time" : " times");
-    if (found.length === 2) note = "Two modes. Each appears " + most + " times.";
+    var whole = groups.every(function (g) { return Math.abs(g.f - Math.round(g.f)) < 1e-9; });
+    var note;
+    if (!whole) note = found.length > 1 ? "These are the largest bar heights." : "This is the largest bar height.";
+    else if (found.length === 2) note = "Two modes. Each appears " + most + " times.";
     else if (found.length > 2) note = "Each appears " + most + " times.";
     else note = "Appears " + most + " times.";
     return { text: names, note: note };
+  }
+
+  function fillBins(sorted, start, width, bars) {
+    var counts = [];
+    for (var i = 0; i < bars; i++) counts.push(0);
+    sorted.forEach(function (x) {
+      var i = Math.floor((x - start) / width + 1e-8);
+      if (i < 0) i = 0;
+      if (i >= bars) i = bars - 1;
+      counts[i] += 1;
+    });
+    return counts;
+  }
+
+  function hitsBoundary(sorted, start, width, bars) {
+    for (var j = 0; j < sorted.length; j++) {
+      var pos = (sorted[j] - start) / width;
+      var nearest = Math.round(pos);
+      if (nearest >= 1 && nearest <= bars - 1 && Math.abs(pos - nearest) < 1e-6) return true;
+    }
+    return false;
+  }
+
+  function roundUpNice(x) {
+    var exp = Math.floor(Math.log10(x));
+    var base = Math.pow(10, exp);
+    var frac = x / base;
+    var nice = [1, 2, 2.5, 5, 10];
+    for (var i = 0; i < nice.length; i++) {
+      if (frac < nice[i] - 1e-8) return nice[i] * base;
+    }
+    return 10 * base;
+  }
+
+  function planHistogram(sorted, places, barsRaw) {
+    var min = sorted[0];
+    var max = sorted[sorted.length - 1];
+    var asked = null;
+    if (barsRaw) {
+      if (!/^\d+$/.test(barsRaw) || Number(barsRaw) < 1 || Number(barsRaw) > 30) {
+        return { error: "Use 1 to 30 bars." };
+      }
+      asked = Number(barsRaw);
+    }
+    var span = max - min;
+    if (asked === null && places === 0 && span <= 14 && Math.abs(span - Math.round(span)) < 1e-8) {
+      var bars = Math.round(span) + 1;
+      var start = min - 0.5;
+      var counts = fillBins(sorted, start, 1, bars);
+      return {
+        bins: counts.map(function (f, i) {
+          var left = start + i;
+          return { label: unrounded(left + 0.5), f: f, left: left, right: left + 1 };
+        }),
+        note: "These are whole numbers, and the list does not stretch far, so each number gets its own bar. The bars touch. The bar for " +
+          unrounded(min) + " runs from " + unrounded(start) + " to " + unrounded(start + 1) +
+          ", so the number sits in the middle. A bar graph would leave a gap. That picture is for categories, such as yes and no."
+      };
+    }
+    var bars = asked || Math.min(15, Math.max(5, Math.round(Math.sqrt(sorted.length))));
+    var step = 5 * Math.pow(10, -(places + 1));
+    var start = min - step;
+    var end = max + step;
+    var raw = (end - start) / bars;
+    var width = raw;
+    var guard = 0;
+    while (hitsBoundary(sorted, start, width, bars) && guard < 6) {
+      width = roundUpNice(width * (1 + 1e-6));
+      guard += 1;
+    }
+    var counts = fillBins(sorted, start, width, bars);
+    var last = start + bars * width;
+    var note = "Start at " + unrounded(start) + ", one decimal place past the data, just below " + unrounded(min) +
+      ". " + bars + " bars. Width (" + unrounded(end) + " − " + unrounded(start) + ") / " + bars + " = " + unrounded(raw) + ". ";
+    if (Math.abs(width - raw) > 1e-6) {
+      note += "That width puts a value on a line, so the width rounds up to " + unrounded(width) +
+        ". The last boundary is " + unrounded(last) + ". ";
+    } else {
+      note += "No value sits on a boundary, so the width stays " + unrounded(width) + ". ";
+    }
+    note += "A value on the left edge stays in that bar. A value on the right edge goes to the next bar. The bars touch. A bar graph of categories would leave a gap.";
+    if (!asked) note += " A common choice is about the square root of n bars, usually somewhere from 5 to 15. More than one histogram can be right.";
+    return {
+      bins: counts.map(function (f, i) {
+        var left = start + i * width;
+        return {
+          label: unrounded(left),
+          edge: true,
+          rightLabel: i === bars - 1 ? unrounded(left + width) : "",
+          f: f,
+          left: left,
+          right: left + width
+        };
+      }),
+      note: note
+    };
+  }
+
+  function chartSvg(items, touching) {
+    var n = items.length;
+    var slot = 72;
+    var W = Math.max(640, n * slot + 80);
+    var rotate = items.some(function (it) { return String(it.label).length > 6; }) || n > 12;
+    var bottom = rotate ? 96 : 58;
+    var top = 46;
+    var H = 320;
+    var left = 48;
+    var right = 48;
+    var plotW = W - left - right;
+    var plotH = H - top - bottom;
+    var vmax = 0;
+    items.forEach(function (it) { if (it.f > vmax) vmax = it.f; });
+    if (!vmax) vmax = 1;
+    var gap = touching ? 0 : plotW / n * 0.34;
+    var bw = plotW / n - gap;
+    var parts = [
+      '<rect x="0" y="0" width="' + W + '" height="' + H + '" fill="#ffffff"></rect>',
+      '<line x1="' + left + '" y1="' + (top + plotH) + '" x2="' + (W - right) + '" y2="' + (top + plotH) + '" stroke="#d5e0de" stroke-width="1.4"></line>'
+    ];
+    var lastEdge = "";
+    items.forEach(function (it, i) {
+      var h = it.f / vmax * (plotH - 22);
+      if (it.f > 0) h = Math.max(h, 1);
+      var x = left + i * (plotW / n) + (touching ? 0 : gap / 2);
+      var y = top + plotH - h;
+      var width = touching ? bw + 0.6 : bw;
+      parts.push('<rect x="' + x.toFixed(2) + '" y="' + y.toFixed(2) + '" width="' + width.toFixed(2) + '" height="' + h.toFixed(2) + '" fill="#5aa8b4"></rect>');
+      parts.push('<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (y - 8).toFixed(1) + '" text-anchor="middle" font-size="13" fill="#1c242c" font-family="Montserrat, sans-serif" font-weight="700">' + esc(unrounded(it.f)) + '</text>');
+      var lx = touching ? x : x + bw / 2;
+      var ly = top + plotH + 20;
+      if (it.rightLabel) lastEdge = it.rightLabel;
+      if (rotate) {
+        parts.push('<text x="0" y="0" text-anchor="end" font-size="12" fill="#5d6670" font-family="Montserrat, sans-serif" transform="translate(' + lx.toFixed(1) + ' ' + (ly + 4).toFixed(1) + ') rotate(-40)">' + esc(it.label) + '</text>');
+      } else {
+        parts.push('<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle" font-size="13" fill="#5d6670" font-family="Montserrat, sans-serif">' + esc(it.label) + '</text>');
+      }
+    });
+    if (lastEdge) {
+      parts.push('<text x="' + (left + plotW).toFixed(1) + '" y="' + (top + plotH + 20).toFixed(1) + '" text-anchor="middle" font-size="13" fill="#5d6670" font-family="Montserrat, sans-serif">' + esc(lastEdge) + '</text>');
+    }
+    return '<svg class="chart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" role="img">' + parts.join("") + '</svg>';
+  }
+
+  function classTable(bins, n) {
+    var body = bins.map(function (bin) {
+      return "<tr><td>" + esc(unrounded(bin.left) + " to " + unrounded(bin.right)) + "</td><td>" +
+        esc(unrounded(bin.f)) + "</td><td>" + share(bin.f, n, false) + "</td></tr>";
+    }).join("");
+    return '<div class="wrap"><table><thead><tr><th>Bar</th><th>Frequency</th><th>Relative</th></tr></thead><tbody>' +
+      body + "</tbody></table></div>";
   }
 
   function percentile(sorted, k) {
@@ -404,20 +577,37 @@
       return;
     }
     var groups = groupsOf(parsed.rows, parsed.numeric);
+    var wholeCounts = groups.every(function (g) { return Math.abs(g.f - Math.round(g.f)) < 1e-9; });
     var html = "<h2>Frequency table</h2>" + table(groups, parsed.n);
-    html += '<p class="hint">' + parsed.n + (parsed.n === 1 ? " value." : " values.") +
-      " Relative frequency is the count divided by " + parsed.n + ". The last cumulative entry is 1.</p>";
+    if (wholeCounts) {
+      html += '<p class="hint">' + parsed.n + (parsed.n === 1 ? " value." : " values.") +
+        " Relative frequency is the count divided by " + parsed.n + ". The last cumulative entry is 1.</p>";
+    } else {
+      html += '<p class="hint">The bar heights add to ' + esc(unrounded(parsed.n)) +
+        ". Relative frequency divides each height by that total. The last cumulative entry is 1.</p>";
+    }
 
     if (!parsed.numeric) {
       var wordMode = modes(groups);
+      html += "<h2>Bar graph</h2>" + chartSvg(groups, false);
+      html += '<p class="hint">The bars stay apart, because these are categories. The order is the order in the list. A histogram is for numbers, and its bars touch.</p>';
       html += '<div class="stats"><div class="stat"><p class="k">Mode</p><p class="v">' + esc(wordMode.text) +
         '</p><p class="r">' + esc(wordMode.note) + "</p></div></div>";
-      html += '<p class="hint">These are words, so this is the frequency table from chapter 1. A mean, a quartile, or a standard deviation needs numbers.</p>';
+      html += '<p class="hint">A mean, a quartile, or a standard deviation needs numbers.</p>';
       out.innerHTML = html;
       return;
     }
 
     var stats = summarize(parsed.rows);
+    var hist = planHistogram(stats.sorted, parsed.places, barsBox.value.trim());
+
+    if (hist.error) {
+      html += '<p class="hint">' + esc(hist.error) + "</p>";
+    } else {
+      html += "<h2>Histogram</h2>" + chartSvg(hist.bins, true);
+      html += '<p class="hint">' + esc(hist.note) + "</p>" + classTable(hist.bins, parsed.n);
+    }
+
     var places = parsed.places + 1;
     var mode = modes(groups);
     var five = [stats.min, stats.q1, stats.median, stats.q3, stats.max].map(unrounded).join(" · ");
@@ -474,6 +664,7 @@
   freqBox.addEventListener("change", render);
   pctBox.addEventListener("input", render);
   kBox.addEventListener("input", render);
+  barsBox.addEventListener("input", render);
   render();
 }());
 </script>
