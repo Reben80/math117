@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Intro Stats Toolkit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Young+Serif&display=swap" rel="stylesheet">
+<style>
+/* Layout: chapter rail on the left, one working "sheet" on graph paper; final answers get a highlighter swipe */
+:root{
+  --paper:#EDF1F3; --sheet:#FFFFFF; --ink:#14232D; --muted:#566977; --line:#D2DBE1; --grid:#E1E8EC;
+  --accent:#175F79; --accent-ink:#FFFFFF; --bar:#A8CAD7; --mark:#FFD45C;
+  --bad:#A8261C; --bad-bg:#FBEAE7; --good:#23704A; --good-bg:#E5F3EA;
+  --f-display:"Young Serif", Georgia, "Times New Roman", serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"Atkinson Hyperlegible Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0E161C; --sheet:#15212A; --ink:#E3EBF0; --muted:#97A9B5; --line:#2B3B47; --grid:#18252E;
+  --accent:#64B8D6; --accent-ink:#08131A; --bar:#2F5E72; --mark:rgba(233,185,58,.42);
+  --bad:#FF9A8F; --bad-bg:#3A1C19; --good:#86D9A9; --good-bg:#16301F; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --paper:#0E161C; --sheet:#15212A; --ink:#E3EBF0; --muted:#97A9B5; --line:#2B3B47; --grid:#18252E;
+  --accent:#64B8D6; --accent-ink:#08131A; --bar:#2F5E72; --mark:rgba(233,185,58,.42);
+  --bad:#FF9A8F; --bad-bg:#3A1C19; --good:#86D9A9; --good-bg:#16301F; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background-color:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 48px}
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:22px}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.05;margin:0;text-wrap:balance}
+.top p{margin:6px 0 0;color:var(--muted);max-width:60ch}
+.jump{display:none;flex-direction:column;gap:4px;font-weight:700;font-size:.85rem;width:100%}
+.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:24px;align-items:start}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);display:flex;flex-direction:column;gap:18px}
+.rail h4{font:700 .72rem/1.3 var(--f-body);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0 0 4px;padding-left:10px}
+.rail a{display:flex;gap:8px;padding:5px 10px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:.94rem;line-height:1.3}
+.rail a:hover{background:var(--sheet)}
+.rail a[aria-current="page"]{background:var(--accent);color:var(--accent-ink)}
+.rail .sec{font-family:var(--f-mono);font-size:.78rem;opacity:.7;min-width:2.6em;padding-top:1px}
+@media (max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.rail{display:none}.jump{display:flex}}
+
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:10px;padding:clamp(18px,3vw,34px);min-width:0}
+.eyebrow{font:600 .8rem var(--f-mono);color:var(--accent);letter-spacing:.03em}
+h2{font-family:var(--f-display);font-weight:400;font-size:clamp(1.55rem,3vw,2.05rem);margin:4px 0 8px;line-height:1.15;text-wrap:balance}
+.lede{color:var(--muted);max-width:68ch;margin:0 0 22px}
+.inputs{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-start}
+.fld{display:flex;flex-direction:column;gap:5px;flex:1 1 170px;min-width:0}
+.fld.wide{flex-basis:100%}
+.fld>span{font-weight:700;font-size:.88rem}
+.fld small{color:var(--muted);font-size:.8rem}
+.group{flex-basis:100%;display:flex;flex-wrap:wrap;gap:12px 16px;padding:12px 14px;border:1px dashed var(--line);border-radius:8px}
+.group>b{flex-basis:100%;font-size:.85rem}
+input,select,textarea{font:1rem var(--f-mono);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:9px 10px;width:100%;min-width:0}
+textarea{resize:vertical;line-height:1.55}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btns{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 0}
+button{font:700 .9rem var(--f-body);border-radius:6px;padding:9px 14px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.hint{font-size:.82rem;color:var(--muted)}
+.out{margin-top:24px;display:flex;flex-direction:column;gap:22px;border-top:1px dashed var(--line);padding-top:24px;min-width:0}
+.out:empty{display:none}
+.answers{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:10px}
+.a{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;min-width:0}
+.a .k{font-size:.82rem;color:var(--muted)}
+.a .v{font:600 1.22rem/1.35 var(--f-mono);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.a .s{font-size:.78rem;color:var(--muted);font-family:var(--f-mono)}
+mark{background:linear-gradient(transparent 56%,var(--mark) 56%,var(--mark) 94%,transparent 94%);color:inherit;padding:0 2px}
+h3{font:700 1rem var(--f-body);margin:0 0 -10px}
+.steps summary{font-weight:700;cursor:pointer;width:fit-content}
+.steps ol{margin:12px 0 0;padding-left:1.5em;display:flex;flex-direction:column;gap:12px}
+.steps li{max-width:78ch}
+.steps li::marker{font-family:var(--f-mono);color:var(--muted)}
+.m{font-family:var(--f-mono);font-size:.94rem;display:block;margin-top:3px;overflow-wrap:anywhere}
+.ov{text-decoration:overline}
+.calc{background:var(--paper);border-radius:8px;padding:11px 14px;display:flex;flex-direction:column;gap:3px}
+.calc-h{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.calc code{font-family:var(--f-mono);font-size:.93rem;overflow-wrap:anywhere}
+.tbl{overflow-x:auto;max-width:100%}
+table{border-collapse:collapse;font-family:var(--f-mono);font-size:.92rem;font-variant-numeric:tabular-nums}
+th,td{padding:6px 12px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+th{font-family:var(--f-body);font-weight:700;font-size:.82rem;color:var(--muted)}
+th:first-child,td:first-child{text-align:left}
+tfoot td{font-weight:700;border-top:2px solid var(--ink);border-bottom:0}
+td.hl{background:var(--mark)}
+.grid input{width:9ch;padding:6px 8px;text-align:right}
+.grid th input{width:13ch;text-align:left;font-family:var(--f-body);font-weight:700}
+.grid th,.grid td{padding:4px;border:0}
+.chart{margin:0}
+.chart-scroll{overflow-x:auto}
+.chart svg{width:100%;min-width:500px;height:auto;display:block}
+figcaption{color:var(--muted);font-size:.85rem;margin-top:6px}
+svg text{fill:var(--muted);font-family:var(--f-mono);font-size:14px}
+svg .lbl{fill:var(--ink);font-family:var(--f-body);font-weight:700}
+svg .ax{stroke:var(--line)} svg .axd{stroke:var(--ink);stroke-width:1.5}
+svg .bar{fill:var(--bar)} svg .bar.hi{fill:var(--accent)}
+svg .poly{fill:none;stroke:var(--ink);stroke-width:2} svg .dot{fill:var(--ink)}
+svg .box{fill:var(--bar);stroke:var(--ink);stroke-width:2} svg .wh{stroke:var(--ink);stroke-width:2}
+svg .out{fill:var(--sheet);stroke:var(--accent);stroke-width:2.5}
+svg .ven{fill:var(--accent);fill-opacity:.13;stroke:var(--accent);stroke-width:2}
+svg .frame{fill:none;stroke:var(--line);stroke-width:1.5}
+svg .br{stroke:var(--muted);stroke-width:1.6} svg .node{fill:var(--sheet);stroke:var(--accent);stroke-width:2}
+.msg{padding:12px 14px;border-radius:8px;background:var(--bad-bg);color:var(--bad);max-width:70ch}
+.verdict{padding:10px 14px;border-radius:8px;background:var(--good-bg);color:var(--ink)}
+.verdict b{color:var(--good)}
+.note{color:var(--muted);font-size:.88rem;margin:0;max-width:78ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-family:var(--f-mono);padding:2px 10px;border:1px solid var(--line);border-radius:999px;background:var(--paper);font-size:.92rem}
+.stem td{font-size:1rem;padding:3px 10px;border:0;text-align:left}
+.stem td:first-child{text-align:right;border-right:2px solid var(--ink);font-weight:600}
+.stem td:last-child{letter-spacing:.35em}
+.terms{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px 26px}
+.terms dt{font-weight:700;margin-top:6px}
+.terms dd{margin:2px 0 0;color:var(--muted);font-size:.94rem}
+.terms dd i{color:var(--ink)}
+footer{color:var(--muted);font-size:.85rem;margin-top:26px;max-width:84ch}
+footer a,.sheet a{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Intro Stats Toolkit</h1>
+      <p>Step-by-step calculators for <i>Introductory Statistics 2e</i> (OpenStax), Chapters 1–4.</p>
+    </div>
+    <label class="jump" for="jump">Calculator<select id="jump"></select></label>
+  </header>
+  <div class="layout">
+    <nav class="rail" id="rail" aria-label="Calculators"></nav>
+    <main id="main"></main>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ---------- helpers ---------- */
+class UserErr extends Error{}
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function rnd(x,d){const p=10**d;let v=Math.round((x+Math.sign(x)*Number.EPSILON*Math.abs(x))*p)/p;return Object.is(v,-0)?0:v;}
+function sci(x){if(x===0)return"0";const e=Math.floor(Math.log10(Math.abs(x)));const m=x/10**e;return `${(+m.toFixed(3))} × 10<sup>${e}</sup>`;}
+const f=(x,d=4)=>(x==null||!isFinite(x))?"—":String(rnd(x,d));
+const fs=x=>{if(!isFinite(x))return"—";if(x===0)return"0";const a=Math.abs(x);return(a>=1e-4&&a<1e9)?String(+x.toPrecision(6)):sci(x);};
+const fP=p=>{if(!isFinite(p))return"—";if(p<=0)return"0";if(p<0.00005)return sci(p);return p.toFixed(4);};
+const xb='<span class="ov">x</span>';
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const sum=a=>a.reduce((s,x)=>s+x,0);
+
+function parseData(str){
+  const toks=str.split(/[\s,;]+/).filter(Boolean);
+  if(!toks.length) throw new UserErr("Enter some data values, separated by spaces, commas, or new lines.");
+  const vals=[];let dp=0;
+  for(const t of toks){const v=Number(t);if(!isFinite(v)) throw new UserErr(`“${esc(t)}” is not a number. Fix or remove it.`);
+    vals.push(v);const m=t.match(/\.(\d+)$/);if(m)dp=Math.max(dp,m[1].length);}
+  return{vals,dp};
+}
+function num(get,id,name,o={}){
+  const{min=-Infinity,max=Infinity,int=false,optional=false,strictMin=false}=o;
+  const s=get(id).trim();
+  if(s===""){if(optional)return null;throw new UserErr(`Enter ${name}.`);}
+  const v=Number(s);
+  if(!isFinite(v)) throw new UserErr(`${cap(name)} must be a number.`);
+  if(int&&!Number.isInteger(v)) throw new UserErr(`${cap(name)} must be a whole number.`);
+  if(v<min||v>max||(strictMin&&v===min)) throw new UserErr(`${cap(name)} must be ${strictMin?"greater than "+min:"at least "+min}${max<Infinity?" and at most "+max:""}.`);
+  return v;
+}
+function median(a){const n=a.length,m=Math.floor(n/2);return n%2?a[m]:(a[m-1]+a[m])/2;}
+function niceStep(span,count){const raw=span/count;const mag=10**Math.floor(Math.log10(raw));const e=raw/mag;return(e>5?10:e>2?5:e>1?2:1)*mag;}
+function ticks(min,max,count=5){if(!(max>min)){min-=1;max+=1;}const st=niceStep(max-min,count);const a=Math.floor(min/st+1e-9)*st,b=Math.ceil(max/st-1e-9)*st;const out=[];for(let v=a;v<=b+st/2;v+=st)out.push(rnd(v,10));return out;}
+
+const LF=[0];function lf(k){for(let i=LF.length;i<=k;i++)LF[i]=LF[i-1]+Math.log(i);return LF[k];}
+const logC=(n,k)=>lf(n)-lf(k)-lf(n-k);
+function combExact(n,k){if(k<0||k>n)return 0;k=Math.min(k,n-k);let c=1;for(let i=1;i<=k;i++){c=c*(n-k+i)/i;if(c>9e15)return null;}return Math.round(c);}
+const combStr=(n,k)=>{const c=combExact(n,k);return c===null?sci(Math.exp(logC(n,k))):c.toLocaleString("en-US");};
+const factStr=k=>k<=18?[...Array(k)].reduce((p,_,i)=>p*(i+1),1).toLocaleString("en-US"):sci(Math.exp(lf(k)));
+
+/* ---------- output builders ---------- */
+const answers=items=>`<div class="answers">${items.map(([k,v,s])=>`<div class="a"><span class="k">${k}</span><span class="v"><mark>${v}</mark></span>${s?`<span class="s">${s}</span>`:""}</div>`).join("")}</div>`;
+const steps=(list,title="Show the steps")=>`<details class="steps" open><summary>${title}</summary><ol>${list.map(s=>`<li>${s}</li>`).join("")}</ol></details>`;
+const calc=()=>"";
+const tbl=(head,rows,foot)=>`<div class="tbl"><table><thead><tr>${head.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>typeof c==="object"&&c?`<td class="${c.cls}">${c.v}</td>`:`<td>${c}</td>`).join("")}</tr>`).join("")}</tbody>${foot?`<tfoot><tr>${foot.map(c=>`<td>${c}</td>`).join("")}</tr></tfoot>`:""}</table></div>`;
+const chart=(svg,capt)=>`<figure class="chart"><div class="chart-scroll">${svg}</div>${capt?`<figcaption>${capt}</figcaption>`:""}</figure>`;
+const note=s=>`<p class="note">${s}</p>`;
+const h3=s=>`<h3>${s}</h3>`;
+const m=s=>`<span class="m">${s}</span>`;
+
+/* ---------- input builders ---------- */
+const fld=(id,label,attrs="",hint="")=>`<label class="fld" for="${id}"><span>${label}</span><input id="${id}" ${attrs}>${hint?`<small>${hint}</small>`:""}</label>`;
+const area=(id,label,hint="",rows=4)=>`<label class="fld wide" for="${id}"><span>${label}</span><textarea id="${id}" rows="${rows}" spellcheck="false"></textarea>${hint?`<small>${hint}</small>`:""}</label>`;
+const sel=(id,label,opts,hint="")=>`<label class="fld" for="${id}"><span>${label}</span><select id="${id}">${opts.map(([v,t])=>`<option value="${v}">${t}</option>`).join("")}</select>${hint?`<small>${hint}</small>`:""}</label>`;
+const NUM='inputmode="decimal" autocomplete="off"';
+
+/* ---------- charts ---------- */
+function barSVG({labels,values,hi=[],edges=null,poly=false,yfmt=v=>f(v,4),title="Bar chart"}){
+  const W=680,H=280,L=60,R=18,T=16,B=48,pw=W-L-R,ph=H-T-B,n=values.length;
+  const maxV=Math.max(...values)||1;const tk=ticks(0,maxV,4);const top=tk[tk.length-1];
+  const y=v=>T+ph-(v/top)*ph,bw=pw/n;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(title)}">`;
+  for(const t of tk)s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}"/><text x="${L-8}" y="${y(t)+5}" text-anchor="end">${yfmt(t)}</text>`;
+  values.forEach((v,i)=>{const gap=edges?1:bw*.2;const x=L+i*bw+gap/2;
+    s+=`<rect class="bar${hi[i]?" hi":""}" x="${x}" y="${y(v)}" width="${Math.max(bw-gap,1)}" height="${Math.max(T+ph-y(v),0)}"><title>${esc(String(labels[i]))}: ${yfmt(v)}</title></rect>`;});
+  s+=`<line class="axd" x1="${L}" x2="${W-R}" y1="${T+ph}" y2="${T+ph}"/>`;
+  if(edges){const st=Math.ceil(edges.length/9);edges.forEach((e,i)=>{if(i%st)return;s+=`<text x="${L+i*bw}" y="${T+ph+22}" text-anchor="middle">${e}</text>`;});}
+  else{const st=Math.ceil(n/14);labels.forEach((l,i)=>{if(i%st)return;s+=`<text x="${L+i*bw+bw/2}" y="${T+ph+22}" text-anchor="middle">${esc(String(l).slice(0,10))}</text>`;});}
+  if(poly){const pts=[[L,y(0)],...values.map((v,i)=>[L+i*bw+bw/2,y(v)]),[W-R,y(0)]];
+    s+=`<polyline class="poly" points="${pts.map(p=>p.join(",")).join(" ")}"/>`+pts.slice(1,-1).map(p=>`<circle class="dot" cx="${p[0]}" cy="${p[1]}" r="4"/>`).join("");}
+  return s+"</svg>";
+}
+function boxSVG(S){
+  const W=680,H=140,L=30,R=30;const tk=ticks(S.min,S.max,7);const d0=tk[0],d1=tk[tk.length-1];
+  const x=v=>L+(v-d0)/((d1-d0)||1)*(W-L-R);const cy=52,bh=46;
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Box plot">`;
+  s+=`<line class="wh" x1="${x(S.min)}" x2="${x(S.q1)}" y1="${cy}" y2="${cy}"/><line class="wh" x1="${x(S.q3)}" x2="${x(S.max)}" y1="${cy}" y2="${cy}"/>`;
+  s+=`<line class="wh" x1="${x(S.min)}" x2="${x(S.min)}" y1="${cy-14}" y2="${cy+14}"/><line class="wh" x1="${x(S.max)}" x2="${x(S.max)}" y1="${cy-14}" y2="${cy+14}"/>`;
+  s+=`<rect class="box" x="${x(S.q1)}" y="${cy-bh/2}" width="${Math.max(x(S.q3)-x(S.q1),1)}" height="${bh}"/>`;
+  s+=`<line class="wh" x1="${x(S.med)}" x2="${x(S.med)}" y1="${cy-bh/2}" y2="${cy+bh/2}" style="stroke-width:3"/>`;
+  for(const o of S.outliers)s+=`<circle class="out" cx="${x(o)}" cy="${cy}" r="6"><title>Outlier: ${o}</title></circle>`;
+  s+=`<line class="axd" x1="${L}" x2="${W-R}" y1="104" y2="104"/>`;
+  for(const t of tk)s+=`<line class="axd" x1="${x(t)}" x2="${x(t)}" y1="104" y2="110"/><text x="${x(t)}" y="128" text-anchor="middle">${f(t,6)}</text>`;
+  return s+"</svg>";
+}
+
+/* ---------- describe ---------- */
+function describe(vals){
+  const a=[...vals].sort((x,y)=>x-y),n=a.length,total=sum(a),mean=total/n,med=median(a);
+  const lo=a.slice(0,Math.floor(n/2)),hi=a.slice(Math.ceil(n/2));
+  const q1=n>1?median(lo):a[0],q3=n>1?median(hi):a[0],iqr=q3-q1;
+  const ss=a.reduce((s,x)=>s+(x-mean)**2,0);
+  const cnt=new Map();a.forEach(x=>cnt.set(x,(cnt.get(x)||0)+1));
+  const mc=Math.max(...cnt.values());const modes=mc>1?[...cnt].filter(([,c])=>c===mc).map(([v])=>v):[];
+  const lf_=q1-1.5*iqr,uf=q3+1.5*iqr;
+  return{a,n,total,mean,med,lo,hi,q1,q3,iqr,ss,s:n>1?Math.sqrt(ss/(n-1)):0,sigma:Math.sqrt(ss/n),modes,mc,min:a[0],max:a[n-1],
+    lf:lf_,uf,outliers:a.filter(x=>x<lf_-1e-12||x>uf+1e-12)};
+}
+
+/* ========== TOOLS ========== */
+const CH={1:"Sampling and Data",2:"Descriptive Statistics",3:"Probability Topics",4:"Discrete Random Variables"};
+const tools=[];const tool=t=>tools.push(t);
+
+/* ---- 1: key terms ---- */
+tool({id:"key-terms",ch:1,sec:"1.1–1.4",title:"Key terms",nav:"Key terms",
+lede:"Quick definitions from Chapter 1, with an everyday example of each.",
+html:`<div class="terms">
+<dl><h3>Basic words (1.1)</h3><br>
+<dt>Population</dt><dd>Everyone or everything you want to study. <i>All students at the college.</i></dd>
+<dt>Sample</dt><dd>The part of the population you actually measure. <i>200 students who took the survey.</i></dd>
+<dt>Parameter vs. statistic</dt><dd>A parameter describes the population (μ, σ, <i>p</i>). A statistic describes a sample (${xb}, <i>s</i>, <i>p′</i>) and is used to estimate the parameter.</dd>
+<dt>Variable</dt><dd>A characteristic that changes from person to person. <i>Hours of sleep, major.</i></dd></dl>
+<dl><h3>Types of data (1.2)</h3><br>
+<dt>Qualitative (categorical)</dt><dd>Labels or names. <i>Eye color, major, zip code.</i></dd>
+<dt>Quantitative discrete</dt><dd>Numbers you count. <i>Number of siblings, phone calls per day.</i></dd>
+<dt>Quantitative continuous</dt><dd>Numbers you measure. <i>Height, time, weight.</i></dd></dl>
+</div>
+${h3("Levels of measurement (1.3)")}
+${tbl(["Level","Ordered?","Differences meaningful?","True zero / ratios?","Example"],[
+["Nominal","No","No","No","Favorite color"],["Ordinal","Yes","No","No","Top-5 ranking, satisfaction rating"],
+["Interval","Yes","Yes","No","Temperature in °F or °C"],["Ratio","Yes","Yes","Yes","Exam score, weight, time"]])}
+<div class="terms">
+<dl><h3>Sampling methods (1.2)</h3><br>
+<dt>Simple random sample</dt><dd>Every group of <i>n</i> members has the same chance of being chosen. <i>Number all 500 students and pick 30 with random numbers.</i></dd>
+<dt>Stratified</dt><dd>Split the population into groups (strata) and take a random sample from <b>each</b> group. <i>10 students from each class year.</i></dd>
+<dt>Cluster</dt><dd>Split into groups (clusters), randomly pick <b>some</b> clusters, and use everyone in them. <i>Survey every student in 4 randomly chosen sections.</i></dd>
+<dt>Systematic</dt><dd>Random starting point, then every <i>k</i>th member of a list. <i>Every 20th name after a random start.</i></dd>
+<dt>Convenience</dt><dd>Whoever is easy to reach. Not random, so it is often biased. <i>Asking the first 25 people at the cafeteria.</i></dd></dl>
+<dl><h3>Experiments (1.4)</h3><br>
+<dt>Explanatory and response variables</dt><dd>The explanatory variable is what you change; the response variable is what you measure.</dd>
+<dt>Treatments</dt><dd>The different values of the explanatory variable given to the groups.</dd>
+<dt>Lurking variable</dt><dd>An extra variable that can affect the result. Random assignment helps control it.</dd>
+<dt>Control group and placebo</dt><dd>A control group gets no real treatment. A placebo is a fake treatment that looks real.</dd>
+<dt>Blinding</dt><dd>Subjects don't know which treatment they get. In a double-blind study, the researchers don't know either.</dd></dl>
+</div>`,static:true});
+
+/* ---- 1: frequency table ---- */
+tool({id:"frequency-table",ch:1,sec:"1.3",title:"Frequency table",nav:"Frequency table",
+lede:"Turns a list of data into a table of frequency, relative frequency, and cumulative relative frequency. Works for numbers or for words (qualitative data).",
+html:area("ft-data","Data","Separate values with spaces, commas, or new lines. For words with spaces, put one per line.",4),
+example:{"ft-data":"5 6 3 3 2 4 7 5 2 3 5 6 5 4 4 3 5 2 5 3"},exampleNote:"Example: hours worked per week by 20 students.",
+compute(get){
+  const str=get("ft-data");
+  let toks=/[\n,;]/.test(str)?str.split(/[\n,;]+/).map(s=>s.trim()).filter(Boolean):str.split(/\s+/).filter(Boolean);
+  if(!toks.length) throw new UserErr("Enter some data values, separated by spaces, commas, or new lines.");
+  const numeric=toks.every(t=>isFinite(Number(t)));
+  const cnt=new Map();for(const t of toks){const k=numeric?Number(t):t;cnt.set(k,(cnt.get(k)||0)+1);}
+  const keys=[...cnt.keys()];if(numeric)keys.sort((a,b)=>a-b);
+  const n=toks.length;let cum=0;
+  const rows=keys.map(k=>{const c=cnt.get(k);cum+=c;return[esc(k),c,`${f(c/n,4)}`,f(cum/n,4)];});
+  const top=Math.max(...cnt.values());const most=keys.filter(k=>cnt.get(k)===top);
+  const k0=keys[0],c0=cnt.get(k0);
+  let out=answers([["Number of values, n",n],["Different values",keys.length],["Most frequent",esc(most.slice(0,4).join(", "))+(most.length>4?"…":""),`appears ${top} time${top>1?"s":""}`]]);
+  out+=tbl(["Value","Frequency","Relative frequency","Cumulative relative frequency"],rows,["Total",n,"1",""]);
+  if(keys.length<=40)out+=chart(barSVG({labels:keys,values:keys.map(k=>cnt.get(k)),yfmt:v=>f(v,2),title:"Frequency bar chart"}),"Frequency of each value");
+  const st=[`Count the values: n = ${n}.`,`Frequency = how many times each value appears. For example, ${esc(k0)} appears ${c0} time${c0>1?"s":""}.`,
+    `Relative frequency = frequency ÷ n. For ${esc(k0)}: ${m(`${c0} / ${n} = ${f(c0/n,4)}`)}`,
+    `Cumulative relative frequency = running total of the relative frequencies. The last row is always 1.`];
+  if(keys.length>1){const k1=keys[1],c1=cnt.get(k1);st.push(`For example, for ${esc(k1)}: ${m(`${f(c0/n,4)} + ${f(c1/n,4)} = ${f((c0+c1)/n,4)}`)}`);}
+  out+=steps(st);
+  return out;}});
+
+/* ---- 1: random sample ---- */
+tool({id:"random-sample",ch:1,sec:"1.2",title:"Random sample picker",nav:"Random sample",manual:true,
+lede:"Draws a simple random sample or a systematic sample from a numbered population or from your own list of names.",
+html:sel("rs-pop","Population",[["num","Numbered 1 to N"],["list","My own list"]])
+ +fld("rs-N","Population size, N",NUM)
+ +area("rs-list","Population list","One name or item per line (or separated by commas).",4)
+ +sel("rs-method","Method",[["srs","Simple random sample (no repeats)"],["sys","Systematic sample"],["rep","Random numbers (repeats allowed)"]])
+ +fld("rs-n","Sample size, n",NUM),
+actionLabel:"Draw sample",
+example:{"rs-pop":"num","rs-N":"120","rs-n":"10","rs-method":"srs","rs-list":"Ana\nBen\nChloe\nDev\nEli\nFatima\nGrace\nHiro\nIsaac\nJada\nKofi\nLena"},
+onChange(get){const L=get("rs-pop")==="list";$("#rs-N").closest(".fld").hidden=L;$("#rs-list").closest(".fld").hidden=!L;},
+compute(get){
+  const isList=get("rs-pop")==="list";let pop;
+  if(isList){pop=get("rs-list").split(/[\n,]+/).map(s=>s.trim()).filter(Boolean);if(pop.length<2)throw new UserErr("Enter at least two items in the population list.");}
+  else{const N=num(get,"rs-N","the population size N",{min:2,max:1e6,int:true});pop=null;var Nn=N;}
+  const N=isList?pop.length:Nn;const lab=i=>isList?esc(pop[i-1]):i;
+  const meth=get("rs-method");const n=num(get,"rs-n","the sample size n",{min:1,int:true,max:meth==="rep"?10000:N});
+  const ri=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  let pick=[],st=[];
+  if(meth==="srs"){const idx=[...Array(N)].map((_,i)=>i+1);for(let i=0;i<n;i++){const j=ri(i,N-1);[idx[i],idx[j]]=[idx[j],idx[i]];}pick=idx.slice(0,n);
+    st=[`Number the population from 1 to ${N}.`,`Pick random numbers between 1 and ${N}. If a number repeats, skip it and draw again.`,`Keep going until you have ${n} different members.`];}
+  else if(meth==="sys"){const k=Math.floor(N/n);if(k<1)throw new UserErr("The sample size is larger than the population.");const s0=ri(1,k);for(let i=0;i<n;i++)pick.push(s0+i*k);
+    st=[`Find the gap: k = N ÷ n = ${N} ÷ ${n} ≈ ${k} (round down).`,`Pick a random start from 1 to ${k}: start = ${s0}.`,`Take every ${k}th member after that: ${pick.slice(0,4).join(", ")}${n>4?", …":""}`];}
+  else{for(let i=0;i<n;i++)pick.push(ri(1,N));st=[`Pick ${n} random whole numbers from 1 to ${N}. The same number can come up more than once.`];}
+  const sorted=[...pick].sort((a,b)=>a-b);
+  let out=h3("Your sample"+(meth==="srs"?" (in the order drawn)":""))+`<div class="chips">${pick.map(i=>`<span class="chip">${lab(i)}</span>`).join("")}</div>`;
+  if(isList&&meth!=="rep")out+=h3("Position numbers, sorted")+`<div class="chips">${sorted.map(i=>`<span class="chip">${i}</span>`).join("")}</div>`;
+  else if(!isList)out+=h3("Sorted")+`<div class="chips">${sorted.map(i=>`<span class="chip">${i}</span>`).join("")}</div>`;
+  out+=steps(st,"How it was chosen");
+  out+=calc([`MATH → PRB → randInt(1, ${N}, ${n})`,"randInt can repeat numbers. For a sample with no repeats, skip any repeats and draw more."]);
+  return out;}});
+
+/* ---- 2: summary statistics ---- */
+tool({id:"summary",ch:2,sec:"2.3–2.7",title:"Summary statistics and box plot",nav:"Summary statistics",
+lede:"Enter a list of numbers to get the mean, median, mode, quartiles, IQR, standard deviation, outliers, and a box plot.",
+html:area("sm-data","Data","Separate values with spaces, commas, or new lines.",4)+sel("sm-kind","The data are a",[["sample","Sample (use s, divide by n − 1)"],["pop","Population (use σ, divide by N)"]]),
+example:{"sm-data":"12 15 9 18 22 14 11 16 13 19 25 10 15 17 8 14 16 21 13 40","sm-kind":"sample"},exampleNote:"Example: weights of 20 backpacks, in pounds.",
+compute(get){
+  const{vals,dp}=parseData(get("sm-data"));if(vals.length<2)throw new UserErr("Enter at least two values.");
+  const S=describe(vals),d=dp+1,pop=get("sm-kind")==="pop";
+  const sd=pop?S.sigma:S.s,mSym=pop?"μ":xb,sSym=pop?"σ":"<i>s</i>",nSym=pop?"N":"n";
+  const modeStr=S.modes.length?S.modes.map(v=>f(v,8)).join(", "):"No mode";
+  let out=answers([[`${pop?"Population":"Sample"} size, ${nSym}`,S.n],[`Mean, ${mSym}`,f(S.mean,d),`unrounded ${fs(S.mean)}`],["Median",f(S.med,8)],["Mode",modeStr,S.modes.length?`appears ${S.mc} times`:"no value repeats"],
+    [`Standard deviation, ${sSym}`,f(sd,d),`unrounded ${fs(sd)}`],[`Variance, ${sSym}²`,f(sd*sd,d+1)],["Q1",f(S.q1,8)],["Q3",f(S.q3,8)],["IQR",f(S.iqr,8)],["Range",f(S.max-S.min,8)]]);
+  out+=h3("Five-number summary")+`<div class="chips">${[["Min",S.min],["Q1",S.q1],["Median",S.med],["Q3",S.q3],["Max",S.max]].map(([k,v])=>`<span class="chip">${k} ${f(v,8)}</span>`).join("")}</div>`;
+  out+=chart(boxSVG(S),S.outliers.length?`Box plot. Circles mark outliers: ${S.outliers.map(v=>f(v,8)).join(", ")}.`:"Box plot. No outliers.");
+  const n=S.n,a=S.a;
+  const st=[`Put the data in order (${nSym} = ${n}):${m(a.map(v=>f(v,8)).join(", "))}`,
+    `Mean: add the values and divide by ${nSym}.${m(`${mSym} = Σx / ${nSym} = ${fs(S.total)} / ${n} = ${fs(S.mean)} ≈ ${f(S.mean,d)}`)}`,
+    n%2?`Median: ${nSym} = ${n} is odd, so the median is the middle value, in position (${n} + 1) / 2 = ${(n+1)/2}.${m(`Median = ${f(S.med,8)}`)}`
+       :`Median: ${nSym} = ${n} is even, so average the two middle values (positions ${n/2} and ${n/2+1}).${m(`Median = (${f(a[n/2-1],8)} + ${f(a[n/2],8)}) / 2 = ${f(S.med,8)}`)}`,
+    `Q1 is the median of the lower half${n%2?" (leave out the median itself)":""}:${m(`${S.lo.map(v=>f(v,8)).join(", ")}  →  Q1 = ${f(S.q1,8)}`)}`,
+    `Q3 is the median of the upper half:${m(`${S.hi.map(v=>f(v,8)).join(", ")}  →  Q3 = ${f(S.q3,8)}`)}`,
+    `Interquartile range:${m(`IQR = Q3 − Q1 = ${f(S.q3,8)} − ${f(S.q1,8)} = ${f(S.iqr,8)}`)}`,
+    `Outlier fences:${m(`Q1 − 1.5(IQR) = ${f(S.q1,8)} − 1.5(${f(S.iqr,8)}) = ${f(S.lf,8)}`)}${m(`Q3 + 1.5(IQR) = ${f(S.q3,8)} + 1.5(${f(S.iqr,8)}) = ${f(S.uf,8)}`)}${S.outliers.length?`Values outside the fences are outliers: <b>${S.outliers.map(v=>f(v,8)).join(", ")}</b>.`:"No values fall outside the fences, so there are no outliers."}`,
+    `Standard deviation: find each deviation (x − ${mSym}), square it, and add.${m(`Σ(x − ${mSym})² = ${fs(S.ss)}`)}${m(`${sSym}² = Σ(x − ${mSym})² / ${pop?"N":"(n − 1)"} = ${fs(S.ss)} / ${pop?n:n-1} = ${fs(sd*sd)}`)}${m(`${sSym} = √${fs(sd*sd)} = ${fs(sd)} ≈ ${f(sd,d)}`)}`,
+    `Rounding: the data have ${dp} decimal place${dp===1?"":"s"}, so the mean and standard deviation are rounded to ${d}.`];
+  out+=steps(st);
+  if(n<=30)out+=`<details class="steps"><summary>Deviation table</summary>${tbl(["x",`x − ${mSym}`,`(x − ${mSym})²`],a.map(x=>[f(x,8),f(x-S.mean,4),f((x-S.mean)**2,4)]),["Σ","0",f(S.ss,4)])}</details>`;
+  out+=calc(["STAT → 1:Edit → type the data into L1","STAT → CALC → 1:1-Var Stats → L1 → ENTER","x̄ = mean, Sx = sample standard deviation s, σx = population standard deviation σ, Q1, Med, Q3 are listed when you scroll down"]);
+  return out;}});
+
+/* ---- 2: stemplot ---- */
+tool({id:"stemplot",ch:2,sec:"2.1",title:"Stem-and-leaf plot",nav:"Stem-and-leaf plot",
+lede:"Builds a stemplot. The leaf is the last digit of each value; the stem is everything in front of it.",
+html:area("sp-data","Data","Whole numbers or decimals. Every value should have the same number of decimal places.",4)+sel("sp-split","Stems",[["1","One line per stem"],["2","Split stems (two lines per stem: leaves 0–4 and 5–9)"]]),
+example:{"sp-data":"45 52 57 61 63 63 68 70 71 74 74 76 79 81 82 85 88 90 93 98","sp-split":"1"},exampleNote:"Example: 20 quiz scores out of 100.",
+compute(get){
+  const{vals,dp}=parseData(get("sp-data"));const split=get("sp-split")==="2";
+  if(vals.some(v=>v<0))throw new UserErr("This stemplot tool works with zero and positive values only.");
+  const u=10**-dp;const ks=vals.map(v=>Math.round(v/u)).sort((a,b)=>a-b);
+  const items=ks.map(k=>({stem:Math.floor(k/10),leaf:k%10}));
+  const lab=stem=>dp===0?String(stem):(stem*10*u).toFixed(Math.max(dp-1,0));
+  const s0=items[0].stem,s1=items[items.length-1].stem;
+  if((s1-s0+1)*(split?2:1)>60)throw new UserErr("The data are spread too widely for a stemplot (more than 60 stems). Try a histogram instead.");
+  const lines=[];
+  for(let st=s0;st<=s1;st++){const lv=items.filter(it=>it.stem===st).map(it=>it.leaf);
+    if(split){lines.push([lab(st),lv.filter(l=>l<5).join("")],[lab(st),lv.filter(l=>l>=5).join("")]);}else lines.push([lab(st),lv.join("")]);}
+  while(lines.length&&lines[0][1]==="")lines.shift();while(lines.length&&lines[lines.length-1][1]==="")lines.pop();
+  const mid=Math.floor(items.length/2),ex={...items[mid],sg:1};const exVal=(ks[mid]*u).toFixed(dp);
+  let out=`<div class="tbl"><table class="stem"><tbody>${lines.map(([s,l])=>`<tr><td>${s}</td><td>${l||"&nbsp;"}</td></tr>`).join("")}</tbody></table></div>`;
+  out+=note(`Key: ${lab(ex.stem)} | ${ex.leaf} means ${exVal}`);
+  out+=steps([`The data have ${dp} decimal place${dp===1?"":"s"}, so the leaf is the ${dp===0?"ones":dp===1?"tenths":dp===2?"hundredths":"last"} digit.`,
+    `Split each value into stem and leaf. For example, ${exVal} → stem ${lab(ex.stem)}, leaf ${ex.leaf}.`,
+    `List the stems from smallest to largest${split?", two lines per stem (leaves 0–4 on the first line, 5–9 on the second)":""}. Include stems with no leaves so gaps show up.`,
+    `Write each leaf next to its stem, in order. Every value gets a leaf, so repeated values appear more than once.`]);
+  return out;}});
+
+/* ---- 2: histogram ---- */
+tool({id:"histogram",ch:2,sec:"2.2",title:"Histogram and frequency polygon",nav:"Histogram",
+lede:"Picks a starting point and bar width the way the textbook does, then draws the histogram and frequency table.",
+html:area("hg-data","Data","Separate values with spaces, commas, or new lines.",4)+fld("hg-bars","Number of bars",NUM)+fld("hg-width","Bar width (optional)",NUM,"Leave blank to compute it")+fld("hg-start","Starting point (optional)",NUM,"Leave blank to use the book's rule")+sel("hg-poly","Show",[["0","Histogram"],["1","Histogram + frequency polygon"]]),
+example:{"hg-data":"62.4 64.1 65.3 66.0 66.8 67.2 67.5 68.1 68.4 68.9 69.0 69.3 69.8 70.2 70.5 70.9 71.4 71.8 72.3 73.0 73.6 74.4 75.1 76.8","hg-bars":"6","hg-width":"","hg-start":"","hg-poly":"0"},exampleNote:"Example: heights of 24 adults, in inches.",
+compute(get){
+  const{vals,dp}=parseData(get("hg-data"));if(vals.length<2)throw new UserErr("Enter at least two values.");
+  const u=10**-dp,min=Math.min(...vals),max=Math.max(...vals);
+  const userStart=num(get,"hg-start","the starting point",{optional:true});
+  const start=userStart??rnd(min-u/2,dp+1);
+  if(start>min)throw new UserErr(`The starting point must be at or below the smallest value, ${min}.`);
+  const userW=num(get,"hg-width","the bar width",{optional:true,min:0,strictMin:true});
+  let bars,w,wStep;
+  if(userW!=null){w=userW;bars=Math.max(1,Math.floor((max-start)/w-1e-9)+1);}
+  else{bars=num(get,"hg-bars","the number of bars",{min:1,max:60,int:true});const raw=(max-start)/bars;w=rnd(Math.ceil(raw/u-1e-9)*u,dp);if(start+w*bars<=max)w=rnd(w+u,dp);wStep=raw;}
+  if(bars>80)throw new UserErr("That width makes more than 80 bars. Use a wider bar.");
+  const edges=[...Array(bars+1)].map((_,i)=>rnd(start+i*w,dp+2));
+  const freq=Array(bars).fill(0);for(const v of vals){let i=Math.floor((v-start)/w+1e-9);if(i>=bars)i=bars-1;if(i<0)i=0;freq[i]++;}
+  const n=vals.length;
+  let out=answers([["Starting point",f(start,dp+2)],["Bar width",f(w,dp+2)],["Number of bars",bars],["n",n]]);
+  out+=chart(barSVG({labels:freq.map((_,i)=>`${edges[i]}–${edges[i+1]}`),values:freq,edges,poly:get("hg-poly")==="1",yfmt:v=>f(v,2),title:"Histogram"}),"Frequency for each interval. Bars touch because the data are continuous.");
+  out+=tbl(["Interval","Frequency","Relative frequency"],freq.map((c,i)=>[`${edges[i]} – ${edges[i+1]}`,c,f(c/n,4)]),["Total",n,"1"]);
+  const st=[];
+  if(userStart==null)st.push(`Starting point: use a number with one more decimal place than the data, just below the smallest value.${m(`${f(min,dp)} − ${f(u/2,dp+1)} = ${f(start,dp+1)}`)}`);
+  else st.push(`Starting point (your choice): ${f(start,dp+2)}.`);
+  if(userW==null)st.push(`Bar width = (largest value − starting point) ÷ number of bars.${m(`(${f(max,dp)} − ${f(start,dp+1)}) / ${bars} = ${fs(wStep)}`)}Round up so every value fits: width = ${f(w,dp)}. You may round up to a more convenient number (enter it as the bar width).`);
+  else st.push(`Bar width (your choice): ${f(w,dp+2)}. This needs ${bars} bars to reach the largest value, ${f(max,dp)}.`);
+  st.push(`Interval boundaries: keep adding the width to the starting point: ${edges.slice(0,4).join(", ")}${edges.length>4?", …":""}`);
+  st.push(`Count how many values fall in each interval. Because the boundaries have an extra decimal place, no value lands exactly on a boundary.`);
+  if(get("hg-poly")==="1")st.push("Frequency polygon: plot each frequency above the middle of its interval and connect the points. Start and end the line on the axis.");
+  out+=steps(st);
+  return out;}});
+
+/* ---- 2: percentiles ---- */
+tool({id:"percentile",ch:2,sec:"2.3",title:"Percentiles",nav:"Percentiles",
+lede:"Find the value at the kth percentile, or find which percentile a value is in, using the textbook's formulas.",
+html:area("pc-data","Data","Separate values with spaces, commas, or new lines.",3)+fld("pc-k","Find the value at percentile k",NUM,"A number from 0 to 100")+fld("pc-x","Find the percentile of value x",NUM),
+example:{"pc-data":"45 52 57 61 63 63 68 70 71 74 74 76 79 81 82 85 88 90 93 98","pc-k":"80","pc-x":"74"},exampleNote:"Example: 20 quiz scores.",
+compute(get){
+  const{vals}=parseData(get("pc-data"));const a=[...vals].sort((x,y)=>x-y),n=a.length;
+  const k=num(get,"pc-k","k",{optional:true,min:0,max:100}),x=num(get,"pc-x","x",{optional:true});
+  if(k==null&&x==null)throw new UserErr("Enter a percentile k, a value x, or both.");
+  let out="",ans=[],st=[`Order the data (n = ${n}):${m(a.join(", "))}`];
+  if(k!=null){const i=(k/100)*(n+1);let val,txt;
+    if(Number.isInteger(rnd(i,9))&&i>=1&&i<=n){val=a[rnd(i,9)-1];txt=`i = ${f(i,4)} is a whole number, so the ${k}th percentile is the value in position ${f(i,4)}: <b>${val}</b>.`;}
+    else{const lo=Math.min(Math.max(Math.floor(i),1),n),hi=Math.min(Math.max(Math.ceil(i),1),n);val=(a[lo-1]+a[hi-1])/2;
+      txt=`i = ${f(i,4)} is not a whole number. Round down and up to positions ${lo} and ${hi}, then average those values:${m(`(${a[lo-1]} + ${a[hi-1]}) / 2 = ${f(val,8)}`)}`;}
+    ans.push([`Value at the ${k}th percentile`,f(val,8)]);
+    st.push(`Value at the ${k}th percentile: find the position i.${m(`i = (k / 100)(n + 1) = (${k} / 100)(${n} + 1) = ${f(i,4)}`)}${txt}`);}
+  if(x!=null){const below=a.filter(v=>v<x).length,eq=a.filter(v=>v===x).length;const p=(below+0.5*eq)/n*100;
+    ans.push([`Percentile of ${x}`,`${Math.round(p)}th`,`exact: ${f(p,2)}`]);
+    st.push(`Percentile of ${x}: count the values below it (x) and the values equal to it (y).${m(`x = ${below} below, y = ${eq} equal`)}${m(`(x + 0.5y) / n × 100 = (${below} + 0.5·${eq}) / ${n} × 100 = ${f(p,2)}`)}Round to the nearest whole number: ${x} is at about the <b>${Math.round(p)}th percentile</b>.`);}
+  out+=answers(ans)+steps(st);
+  return out;}});
+
+/* ---- 2: grouped data ---- */
+tool({id:"grouped",ch:2,sec:"2.5, 2.7",title:"Mean and SD from a frequency table",nav:"Frequency table → mean, SD",
+lede:"When the data come as a frequency table, use the class midpoints. Enter one line per class: an interval and its frequency, or a single value and its frequency.",
+html:area("gr-data","Classes and frequencies","One per line, like  10-20, 7  or  3, 5  (value 3 appears 5 times).",6)+sel("gr-kind","The data are a",[["sample","Sample (divide by n − 1)"],["pop","Population (divide by N)"]]),
+example:{"gr-data":"0-10, 3\n10-20, 7\n20-30, 9\n30-40, 5\n40-50, 2","gr-kind":"sample"},exampleNote:"Example: minutes spent on homework by 26 students.",
+compute(get){
+  const lines=get("gr-data").split(/\n+/).map(s=>s.trim()).filter(Boolean);if(!lines.length)throw new UserErr("Enter at least one class and its frequency.");
+  const N_="(-?\\d*\\.?\\d+)";const reI=new RegExp(`^${N_}\\s*(?:-|–|to)\\s*${N_}\\s*[,;:\\s]\\s*(\\d+)$`),reV=new RegExp(`^${N_}\\s*[,;:\\s]\\s*(\\d+)$`);
+  const rows=lines.map(L=>{let mm=L.match(reI);if(mm){const lo=+mm[1],hi=+mm[2];if(hi<=lo)throw new UserErr(`In “${esc(L)}” the upper limit must be larger than the lower limit.`);return{label:`${lo} – ${hi}`,mid:(lo+hi)/2,f:+mm[3],iv:true};}
+    mm=L.match(reV);if(mm)return{label:mm[1],mid:+mm[1],f:+mm[2],iv:false};throw new UserErr(`I couldn't read “${esc(L)}”. Use the form  10-20, 7  or  3, 5.`);});
+  const n=sum(rows.map(r=>r.f));if(n<2)throw new UserErr("The frequencies must add to at least 2.");
+  const pop=get("gr-kind")==="pop";const sfm=sum(rows.map(r=>r.f*r.mid)),mean=sfm/n;const ss=sum(rows.map(r=>r.f*(r.mid-mean)**2));const sd=Math.sqrt(ss/(pop?n:n-1));
+  const mS=pop?"μ":xb,sS=pop?"σ":"<i>s</i>",any=rows.some(r=>r.iv);
+  let out=answers([[pop?"N":"n",n],[`Mean, ${mS}`,f(mean,4)],[`Standard deviation, ${sS}`,f(sd,4)],[`Variance, ${sS}²`,f(sd*sd,4)]]);
+  out+=tbl([any?"Class":"Value","Frequency f",any?"Midpoint m":"m",`f · m`,`f(m − ${mS})²`],rows.map(r=>[r.label,r.f,f(r.mid,6),f(r.f*r.mid,6),f(r.f*(r.mid-mean)**2,4)]),["Total",n,"",f(sfm,6),f(ss,4)]);
+  out+=steps([any?`Find each class midpoint: (lower + upper) / 2. For example, ${rows[0].label} → ${f(rows[0].mid,6)}.`:"Each value is its own midpoint.",
+    `Multiply each midpoint by its frequency and add:${m(`Σ f·m = ${fs(sfm)}`)}`,
+    `Mean:${m(`${mS} = Σ f·m / ${pop?"N":"n"} = ${fs(sfm)} / ${n} = ${fs(mean)}`)}`,
+    `For each class find f(m − ${mS})² and add:${m(`Σ f(m − ${mS})² = ${fs(ss)}`)}`,
+    `Standard deviation:${m(`${sS} = √( Σ f(m − ${mS})² / ${pop?"N":"(n − 1)"} ) = √( ${fs(ss)} / ${pop?n:n-1} ) = ${fs(sd)}`)}`]);
+  out+=calc(["Put the midpoints in L1 and the frequencies in L2","STAT → CALC → 1-Var Stats L1, L2"]);
+  return out;}});
+
+/* ---- 2: z-scores ---- */
+tool({id:"z-score",ch:2,sec:"2.7",title:"z-scores: how many standard deviations?",nav:"z-scores",
+lede:"A z-score tells how many standard deviations a value is above (+) or below (−) the mean. Use it to compare values from different groups.",
+html:`<div class="group"><b>Value A</b>${fld("zs-n1","Name","")}${fld("zs-x1","Value x",NUM)}${fld("zs-m1","Mean",NUM)}${fld("zs-s1","Standard deviation",NUM)}</div>
+<div class="group"><b>Value B (optional, to compare)</b>${fld("zs-n2","Name","")}${fld("zs-x2","Value x",NUM)}${fld("zs-m2","Mean",NUM)}${fld("zs-s2","Standard deviation",NUM)}</div>
+<div class="group"><b>Go backward (optional): find the value that is z standard deviations from the mean</b>${fld("zs-fm","Mean",NUM)}${fld("zs-fs","Standard deviation",NUM)}${fld("zs-fz","z",NUM)}</div>`,
+example:{"zs-n1":"Maya (Biology)","zs-x1":"84","zs-m1":"76","zs-s1":"6","zs-n2":"Leo (History)","zs-x2":"90","zs-m2":"82","zs-s2":"8","zs-fm":"76","zs-fs":"6","zs-fz":"-1.5"},exampleNote:"Example: two students' exam scores in different classes.",
+compute(get){
+  const one=i=>{const vals=["x","m","s"].map(k=>get(`zs-${k}${i}`).trim());if(vals.every(v=>v===""))return null;
+    const x=num(get,`zs-x${i}`,"the value x"),mu=num(get,`zs-m${i}`,"the mean"),s=num(get,`zs-s${i}`,"the standard deviation",{min:0,strictMin:true});
+    return{name:esc(get(`zs-n${i}`).trim()||(i===1?"A":"B")),x,mu,s,z:(x-mu)/s};};
+  const A=one(1),B=one(2);let ans=[],st=[];
+  for(const P of[A,B])if(P){ans.push([`z for ${P.name}`,f(P.z,2),`unrounded ${fs(P.z)}`]);
+    st.push(`${P.name}:${m(`z = (x − mean) / SD = (${P.x} − ${P.mu}) / ${P.s} = ${fs(P.z)} ≈ ${f(P.z,2)}`)}${P.name} is ${f(Math.abs(P.z),2)} standard deviation${Math.abs(rnd(P.z,2))===1?"":"s"} ${P.z>=0?"above":"below"} the mean.`);}
+  let back="";
+  const fm=get("zs-fm").trim(),fsd=get("zs-fs").trim(),fz=get("zs-fz").trim();
+  if(fm||fsd||fz){const mu=num(get,"zs-fm","the mean"),s=num(get,"zs-fs","the standard deviation",{min:0,strictMin:true}),z=num(get,"zs-fz","z");const x=mu+z*s;
+    ans.push([`Value at z = ${z}`,f(x,4)]);st.push(`Going backward:${m(`x = mean + z·SD = ${mu} + (${z})(${s}) = ${fs(x)}`)}`);}
+  if(!ans.length)throw new UserErr("Fill in Value A (value, mean, and standard deviation).");
+  let out=answers(ans);
+  if(A&&B){const better=A.z>B.z?A:B.z>A.z?B:null;out+=`<div class="verdict">${better?`<b>${better.name}</b> did better relative to their own group, because ${f(better.z,2)} is a higher z-score than ${f((better===A?B:A).z,2)}.`:"Both values are the same number of standard deviations from their means."}</div>`;}
+  out+=steps(st);
+  return out;}});
+
+/* ---- 3: probability rules ---- */
+tool({id:"prob-rules",ch:3,sec:"3.1–3.3",title:"Probability rules (AND, OR, given)",nav:"AND / OR / given",
+lede:"Enter P(A), P(B), and one more fact. The calculator fills in every other probability, checks for independence and mutually exclusive events, and draws the Venn diagram.",
+html:fld("pr-a","P(A)",NUM)+fld("pr-b","P(B)",NUM)+sel("pr-kind","You also know",[["and","P(A AND B)"],["or","P(A OR B)"],["agb","P(A | B)"],["bga","P(B | A)"]])+fld("pr-v","Its value",NUM),
+example:{"pr-a":"0.4","pr-b":"0.5","pr-kind":"and","pr-v":"0.2"},
+compute(get){
+  const pa=num(get,"pr-a","P(A)",{min:0,max:1}),pb=num(get,"pr-b","P(B)",{min:0,max:1}),v=num(get,"pr-v","the third probability",{min:0,max:1}),k=get("pr-kind");
+  let pab,first;
+  if(k==="and"){pab=v;first=`You entered P(A AND B) = ${v}.`;}
+  else if(k==="or"){pab=pa+pb-v;first=`From the addition rule, P(A AND B) = P(A) + P(B) − P(A OR B):${m(`${pa} + ${pb} − ${v} = ${f(pab,6)}`)}`;}
+  else if(k==="agb"){pab=v*pb;first=`From the multiplication rule, P(A AND B) = P(A | B) · P(B):${m(`${v} × ${pb} = ${f(pab,6)}`)}`;}
+  else{pab=v*pa;first=`From the multiplication rule, P(A AND B) = P(B | A) · P(A):${m(`${v} × ${pa} = ${f(pab,6)}`)}`;}
+  pab=rnd(pab,12);
+  if(pab<0||pab>Math.min(pa,pb)+1e-12)throw new UserErr(`These numbers don't fit together: P(A AND B) would be ${f(pab,4)}, but it must be between 0 and the smaller of P(A) and P(B).`);
+  const por=pa+pb-pab;if(por>1+1e-12)throw new UserErr(`These numbers don't fit together: P(A OR B) would be ${f(por,4)}, which is more than 1.`);
+  const agb=pb>0?pab/pb:NaN,bga=pa>0?pab/pa:NaN;const ind=Math.abs(pab-pa*pb)<5e-7,me=pab<1e-12;
+  let out=answers([["P(A AND B)",fP(pab)],["P(A OR B)",fP(por)],["P(A | B)",pb>0?fP(agb):"undefined"],["P(B | A)",pa>0?fP(bga):"undefined"],["P(A′)",fP(1-pa),"not A"],["P(B′)",fP(1-pb),"not B"],["P(neither)",fP(1-por),"not A and not B"]]);
+  out+=`<div class="verdict"><b>${ind?"Independent.":"Not independent."}</b> ${ind?`P(A AND B) = P(A)·P(B) = ${f(pa*pb,4)}.`:`P(A)·P(B) = ${f(pa*pb,4)}, which is not P(A AND B) = ${f(pab,4)}.`}<br><b>${me?"Mutually exclusive.":"Not mutually exclusive."}</b> ${me?"P(A AND B) = 0, so A and B can't happen together.":"P(A AND B) is not 0, so A and B can happen together."}</div>`;
+  const W=600,H=270;let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Venn diagram"><rect class="frame" x="10" y="10" width="${W-20}" height="${H-20}" rx="8"/>`;
+  s+=`<circle class="ven" cx="235" cy="138" r="100"/><circle class="ven" cx="365" cy="138" r="100"/>`;
+  s+=`<text class="lbl" x="160" y="52" text-anchor="middle">A</text><text class="lbl" x="440" y="52" text-anchor="middle">B</text>`;
+  s+=`<text class="lbl" x="185" y="143" text-anchor="middle">${f(pa-pab,4)}</text><text class="lbl" x="300" y="143" text-anchor="middle">${f(pab,4)}</text><text class="lbl" x="415" y="143" text-anchor="middle">${f(pb-pab,4)}</text>`;
+  s+=`<text x="${W-24}" y="${H-24}" text-anchor="end">Neither: ${f(1-por,4)}</text></svg>`;
+  out+=chart(s,"Each region shows its probability. The overlap is P(A AND B).");
+  out+=steps([first,`Addition rule:${m(`P(A OR B) = P(A) + P(B) − P(A AND B) = ${pa} + ${pb} − ${f(pab,4)} = ${f(por,4)}`)}`,
+    pb>0?`Conditional probability:${m(`P(A | B) = P(A AND B) / P(B) = ${f(pab,4)} / ${pb} = ${f(agb,4)}`)}`:"P(B) = 0, so P(A | B) is undefined.",
+    pa>0?`${m(`P(B | A) = P(A AND B) / P(A) = ${f(pab,4)} / ${pa} = ${f(bga,4)}`)}`:"P(A) = 0, so P(B | A) is undefined.",
+    `Complement rule:${m(`P(A′) = 1 − P(A) = ${f(1-pa,4)},   P(B′) = 1 − P(B) = ${f(1-pb,4)}`)}`,
+    `Independence check: are P(A AND B) and P(A)·P(B) equal?${m(`P(A)·P(B) = ${pa} × ${pb} = ${f(pa*pb,4)}   vs.   P(A AND B) = ${f(pab,4)}`)}${ind?"They are equal, so A and B are independent. (Same as checking P(A | B) = P(A).)":"They are different, so A and B are dependent."}`]);
+  return out;}});
+
+/* ---- 3: contingency table ---- */
+(function(){
+  let g='<div class="tbl"><table class="grid"><thead><tr><th></th>';
+  for(let j=0;j<4;j++)g+=`<th data-c="${j}"><input id="ct-c${j}" aria-label="Column ${j+1} name" autocomplete="off"></th>`;
+  g+="</tr></thead><tbody>";
+  for(let i=0;i<4;i++){g+=`<tr data-r="${i}"><th><input id="ct-r${i}" aria-label="Row ${i+1} name" autocomplete="off"></th>`;for(let j=0;j<4;j++)g+=`<td data-c="${j}"><input id="ct-v${i}${j}" ${NUM} aria-label="Count in row ${i+1}, column ${j+1}"></td>`;g+="</tr>";}
+  g+="</tbody></table></div>";
+  const ex={"ct-rows":"2","ct-cols":"3","ct-r0":"Drinks coffee","ct-r1":"No coffee","ct-c0":"Morning","ct-c1":"Afternoon","ct-c2":"Evening","ct-v00":"48","ct-v01":"30","ct-v02":"22","ct-v10":"32","ct-v11":"40","ct-v12":"28","ct-ea":"0","ct-eb":"0"};
+  const setOpts=(id,labels)=>{const s=document.getElementById(id);const v=s.value;const h=labels.map((l,i)=>`<option value="${i}">${esc(l)}</option>`).join("");if(s.dataset.h!==h){s.innerHTML=h;s.dataset.h=h;s.value=(+v<labels.length&&v!=="")?v:"0";}};
+  const names=(get,p,k)=>[...Array(k)].map((_,i)=>get(`ct-${p}${i}`).trim()||`${p==="r"?"Row":"Column"} ${i+1}`);
+  tool({id:"contingency",ch:3,sec:"3.4",title:"Contingency table",nav:"Contingency table",
+  lede:"Type the counts from a two-way table. Then pick event A (a row) and event B (a column) to get every probability with its fraction.",
+  html:sel("ct-rows","Rows",[["2","2"],["3","3"],["4","4"]])+sel("ct-cols","Columns",[["2","2"],["3","3"],["4","4"]])+`<div class="fld wide"><span>Counts (click a name to rename it)</span>${g}</div>`+sel("ct-ea","Event A (a row)",[])+sel("ct-eb","Event B (a column)",[]),
+  example:ex,exampleNote:"Example: 200 students by coffee habit and class time.",
+  onChange(get){const R=+get("ct-rows"),C=+get("ct-cols");document.querySelectorAll(".grid [data-c]").forEach(e=>e.hidden=+e.dataset.c>=C);document.querySelectorAll(".grid tr[data-r]").forEach(e=>e.hidden=+e.dataset.r>=R);
+    setOpts("ct-ea",names(get,"r",R));setOpts("ct-eb",names(get,"c",C));},
+  compute(get){
+    const R=+get("ct-rows"),C=+get("ct-cols"),rn=names(get,"r",R),cn=names(get,"c",C);
+    const M=[...Array(R)].map((_,i)=>[...Array(C)].map((_,j)=>num(get,`ct-v${i}${j}`,`the count in row ${i+1}, column ${j+1}`,{min:0,int:true})));
+    const rt=M.map(r=>sum(r)),ctot=[...Array(C)].map((_,j)=>sum(M.map(r=>r[j]))),N=sum(rt);if(N===0)throw new UserErr("The counts add to 0. Enter some counts.");
+    const ea=+get("ct-ea")||0,eb=+get("ct-eb")||0,A=esc(rn[ea]),B=esc(cn[eb]),c=M[ea][eb],ra=rt[ea],cb=ctot[eb];
+    const pA=ra/N,pB=cb/N,pAB=c/N,pOr=(ra+cb-c)/N,pAgB=cb?c/cb:NaN,pBgA=ra?c/ra:NaN;
+    let out=tbl(["",...cn.map(esc),"Total"],M.map((r,i)=>[`<b>${esc(rn[i])}</b>`,...r.map((v,j)=>i===ea&&j===eb?{cls:"hl",v}:v),rt[i]]),["Total",...ctot,N]);
+    out+=note(`A = ${A}, B = ${B}. The highlighted cell is A AND B.`);
+    const fr=(a,b)=>`${a}/${b}`;
+    out+=answers([["P(A)",fP(pA),fr(ra,N)],["P(B)",fP(pB),fr(cb,N)],["P(A AND B)",fP(pAB),fr(c,N)],["P(A OR B)",fP(pOr),fr(ra+cb-c,N)],["P(A | B)",cb?fP(pAgB):"undefined",fr(c,cb)],["P(B | A)",ra?fP(pBgA):"undefined",fr(c,ra)]]);
+    const ind=cb&&Math.abs(pAgB-pA)<5e-7;
+    out+=`<div class="verdict"><b>${ind?"Independent.":"Not independent."}</b> P(A | B) = ${f(pAgB,4)} and P(A) = ${f(pA,4)}${ind?" are equal.":" are different."} ${c===0?"<br><b>Mutually exclusive:</b> no one is in both A and B.":""}</div>`;
+    out+=steps([`Grand total: N = ${N}.`,
+      `P(A): use the row total for “${A}”.${m(`P(A) = ${ra} / ${N} = ${f(pA,4)}`)}`,
+      `P(B): use the column total for “${B}”.${m(`P(B) = ${cb} / ${N} = ${f(pB,4)}`)}`,
+      `P(A AND B): use the one cell in both.${m(`P(A AND B) = ${c} / ${N} = ${f(pAB,4)}`)}`,
+      `P(A OR B): add the row and column totals, then subtract the shared cell so it isn't counted twice.${m(`P(A OR B) = (${ra} + ${cb} − ${c}) / ${N} = ${ra+cb-c} / ${N} = ${f(pOr,4)}`)}`,
+      `P(A | B): look only at the “${B}” column (${cb} people). Of those, ${c} are “${A}”.${m(`P(A | B) = ${c} / ${cb} = ${f(pAgB,4)}`)}`,
+      `P(B | A): look only at the “${A}” row (${ra} people). Of those, ${c} are “${B}”.${m(`P(B | A) = ${c} / ${ra} = ${f(pBgA,4)}`)}`,
+      `Independence: compare P(A | B) = ${f(pAgB,4)} with P(A) = ${f(pA,4)}. ${ind?"Equal, so knowing B does not change the chance of A.":"Different, so knowing B changes the chance of A."}`]);
+    out+=`<details class="steps"><summary>Every cell as a probability (cell ÷ ${N})</summary>${tbl(["",...cn.map(esc),"Total"],M.map((r,i)=>[`<b>${esc(rn[i])}</b>`,...r.map(v=>f(v/N,4)),f(rt[i]/N,4)]),["Total",...ctot.map(v=>f(v/N,4)),"1"])}</details>`;
+    return out;}});
+})();
+
+/* ---- 3: tree diagram ---- */
+tool({id:"tree",ch:3,sec:"3.5",title:"Tree diagram (two stages)",nav:"Tree diagram",
+lede:"For a two-step situation: first A or not A, then B or not B. Enter the first-stage probability and the two conditional probabilities.",
+html:`<div class="group"><b>Stage 1</b>${fld("tr-na","Name of A","")}${fld("tr-na2","Name of not A","")}${fld("tr-pa","P(A)",NUM)}</div>
+<div class="group"><b>Stage 2</b>${fld("tr-nb","Name of B","")}${fld("tr-nb2","Name of not B","")}${fld("tr-pba","P(B | A)",NUM)}${fld("tr-pba2","P(B | not A)",NUM)}</div>`,
+example:{"tr-na":"Studied","tr-na2":"Didn't study","tr-pa":"0.7","tr-nb":"Pass","tr-nb2":"Fail","tr-pba":"0.9","tr-pba2":"0.4"},exampleNote:"Example: 70% of students studied; 90% of those passed, and 40% of the others passed.",
+compute(get){
+  const nm=(id,d)=>esc((get(id).trim()||d).slice(0,22));
+  const A=nm("tr-na","A"),A2=nm("tr-na2","not A"),B=nm("tr-nb","B"),B2=nm("tr-nb2","not B");
+  const pa=num(get,"tr-pa","P(A)",{min:0,max:1}),p1=num(get,"tr-pba","P(B | A)",{min:0,max:1}),p2=num(get,"tr-pba2","P(B | not A)",{min:0,max:1});
+  const q=1-pa,ends=[pa*p1,pa*(1-p1),q*p2,q*(1-p2)],pB=ends[0]+ends[2],pAgB=pB>0?ends[0]/pB:NaN;
+  let out=answers([[`P(${B})`,fP(pB)],[`P(${A} AND ${B})`,fP(ends[0])],[`P(${A} | ${B})`,pB>0?fP(pAgB):"undefined"],[`P(${B2})`,fP(1-pB)]]);
+  const W=680,H=300;let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Tree diagram">`;
+  const R0=[24,150],S1=[[230,78],[230,222]],S2=[[430,38],[430,118],[430,182],[430,262]];
+  const line=(a,b)=>`<line class="br" x1="${a[0]}" y1="${a[1]}" x2="${b[0]}" y2="${b[1]}"/>`;
+  const plab=(a,b,t,up)=>`<text x="${(a[0]+b[0])/2}" y="${(a[1]+b[1])/2+(up?-8:18)}" text-anchor="middle">${t}</text>`;
+  s+=line(R0,S1[0])+line(R0,S1[1])+plab(R0,S1[0],f(pa,4),true)+plab(R0,S1[1],f(q,4),false);
+  const p2s=[p1,1-p1,p2,1-p2];
+  S2.forEach((pt,i)=>{const par=S1[i<2?0:1];s+=line([par[0]+6,par[1]],pt)+plab([par[0]+40,par[1]],pt,f(p2s[i],4),i%2===0);});
+  s+=`<circle class="node" cx="${R0[0]}" cy="${R0[1]}" r="6"/>`;
+  S1.forEach((pt,i)=>s+=`<circle class="node" cx="${pt[0]}" cy="${pt[1]}" r="6"/><text class="lbl" x="${pt[0]}" y="${pt[1]+(i?28:-14)}" text-anchor="middle">${i?A2:A}</text>`);
+  S2.forEach((pt,i)=>s+=`<circle class="node" cx="${pt[0]}" cy="${pt[1]}" r="6"/><text class="lbl" x="${pt[0]+14}" y="${pt[1]+5}">${i%2?B2:B}</text><text x="${W-12}" y="${pt[1]+5}" text-anchor="end">${f(ends[i],4)}</text>`);
+  s+="</svg>";
+  out+=chart(s,"Multiply along each path. The numbers at the right are the path probabilities; they add to 1.");
+  out+=steps([`Complements: P(${A2}) = 1 − ${pa} = ${f(q,4)}; P(${B2} | ${A}) = 1 − ${p1} = ${f(1-p1,4)}; P(${B2} | ${A2}) = 1 − ${p2} = ${f(1-p2,4)}.`,
+    `Multiply along each path:${m(`P(${A} AND ${B}) = ${pa} × ${p1} = ${f(ends[0],4)}`)}${m(`P(${A} AND ${B2}) = ${pa} × ${f(1-p1,4)} = ${f(ends[1],4)}`)}${m(`P(${A2} AND ${B}) = ${f(q,4)} × ${p2} = ${f(ends[2],4)}`)}${m(`P(${A2} AND ${B2}) = ${f(q,4)} × ${f(1-p2,4)} = ${f(ends[3],4)}`)}`,
+    `P(${B}): add every path that ends in ${B}.${m(`P(${B}) = ${f(ends[0],4)} + ${f(ends[2],4)} = ${f(pB,4)}`)}`,
+    `Working backward:${m(`P(${A} | ${B}) = P(${A} AND ${B}) / P(${B}) = ${f(ends[0],4)} / ${f(pB,4)} = ${f(pAgB,4)}`)}`]);
+  return out;}});
+
+/* ---- 4: discrete PDF table ---- */
+tool({id:"pdf-table",ch:4,sec:"4.1–4.2",title:"Probability distribution: mean and SD",nav:"PDF table → mean, SD",
+lede:"Enter each value of X with its probability (or its frequency). The calculator checks that it is a valid distribution and finds the expected value and standard deviation.",
+html:area("pt-data","Values and probabilities","One per line:  x, P(x)",6)+sel("pt-kind","Second column is",[["prob","Probability P(x)"],["freq","Frequency (count)"]]),
+example:{"pt-data":"0, 0.1\n1, 0.3\n2, 0.4\n3, 0.2","pt-kind":"prob"},exampleNote:"Example: X = number of pets in a household.",
+compute(get){
+  const lines=get("pt-data").split(/\n+/).map(s=>s.trim()).filter(Boolean);if(!lines.length)throw new UserErr("Enter at least one line like  0, 0.25");
+  const fr=get("pt-kind")==="freq";
+  const rows=lines.map(L=>{const p=L.split(/[\s,;:]+/).filter(Boolean);if(p.length!==2||!p.every(t=>isFinite(Number(t))))throw new UserErr(`I couldn't read “${esc(L)}”. Use the form  x, P(x).`);return[+p[0],+p[1]];});
+  if(rows.some(r=>r[1]<0))throw new UserErr("Probabilities and frequencies can't be negative.");
+  const tot=sum(rows.map(r=>r[1]));
+  if(fr){if(tot===0)throw new UserErr("The frequencies add to 0.");rows.forEach(r=>{r[2]=r[1];r[1]=r[1]/tot;});}
+  else{if(rows.some(r=>r[1]>1))throw new UserErr("Each probability must be between 0 and 1.");if(Math.abs(tot-1)>0.0015)throw new UserErr(`This is not a valid distribution: the probabilities add to ${f(tot,4)}, but they must add to 1.`);}
+  rows.sort((a,b)=>a[0]-b[0]);
+  const mu=sum(rows.map(([x,p])=>x*p)),v=sum(rows.map(([x,p])=>(x-mu)**2*p)),sd=Math.sqrt(v);
+  let out=answers([["Mean (expected value), μ",f(mu,4)],["Standard deviation, σ",f(sd,4)],["Variance, σ²",f(v,4)],["Σ P(x)",f(sum(rows.map(r=>r[1])),4),"must equal 1"]]);
+  const head=fr?["x","Frequency","P(x)","x · P(x)","(x − μ)² · P(x)"]:["x","P(x)","x · P(x)","(x − μ)² · P(x)"];
+  out+=tbl(head,rows.map(([x,p,c])=>fr?[x,c,f(p,4),f(x*p,4),f((x-mu)**2*p,4)]:[x,f(p,4),f(x*p,4),f((x-mu)**2*p,4)]),fr?["Total",tot,"1",f(mu,4),f(v,4)]:["Total",f(tot,4),f(mu,4),f(v,4)]);
+  if(rows.length<=40)out+=chart(barSVG({labels:rows.map(r=>r[0]),values:rows.map(r=>r[1]),title:"Probability distribution"}),"P(x) for each value of x");
+  const st=[];if(fr)st.push(`Turn frequencies into probabilities: P(x) = frequency ÷ total = frequency ÷ ${tot}.`);
+  st.push(`Check: each P(x) is between 0 and 1, and they add to 1.`);
+  st.push(`Mean: multiply each x by P(x) and add.${m(`μ = Σ x·P(x) = ${rows.slice(0,6).map(([x,p])=>`(${x})(${f(p,4)})`).join(" + ")}${rows.length>6?" + …":""} = ${f(mu,4)}`)}`);
+  st.push(`Standard deviation: for each x find (x − μ)²·P(x), add them, and take the square root.${m(`σ = √( Σ (x − μ)²·P(x) ) = √${f(v,4)} = ${f(sd,4)}`)}`);
+  st.push(`Meaning: over many repeats, the average value of X will be close to ${f(mu,4)}.`);
+  out+=steps(st);
+  out+=calc(["Put x in L1 and P(x) in L2","STAT → CALC → 1-Var Stats L1, L2  →  x̄ is μ and σx is σ"]);
+  return out;}});
+
+/* ---- 4: named distributions ---- */
+const DISTS=[
+ {id:"binomial",sec:"4.3",title:"Binomial distribution",nav:"Binomial",
+  lede:"Use when there is a fixed number of trials n, each trial is success or failure, the trials are independent, and P(success) = p is the same every time. X = number of successes.",
+  params:[["n","Number of trials, n",{min:1,max:1000,int:true}],["p","Probability of success, p",{min:0,max:1}]],
+  ex:{n:"12",p:"0.25",q:"le",x:"3"},exNote:"Example: a 12-question multiple-choice quiz, guessing on every question (p = 0.25). What is P(at most 3 correct)?",
+  notation:P=>`X ~ B(${P.n}, ${P.p})`,support:P=>[0,P.n],
+  pmf:(P,k)=>{const{n,p}=P;if(k<0||k>n)return 0;if(p===0)return k===0?1:0;if(p===1)return k===n?1:0;return Math.exp(logC(n,k)+k*Math.log(p)+(n-k)*Math.log(1-p));},
+  mean:P=>P.n*P.p,sd:P=>Math.sqrt(P.n*P.p*(1-P.p)),
+  meanSteps:P=>[`μ = np = (${P.n})(${P.p}) = ${fs(P.n*P.p)}`,`σ = √(npq) = √( (${P.n})(${P.p})(${f(1-P.p,6)}) ) = ${fs(Math.sqrt(P.n*P.p*(1-P.p)))}`],
+  pmfStep:(P,k,v)=>`P(X = ${k}) = C(${P.n}, ${k}) · ${P.p}<sup>${k}</sup> · ${f(1-P.p,6)}<sup>${P.n-k}</sup> = ${combStr(P.n,k)} × ${fs(P.p**k)} × ${fs((1-P.p)**(P.n-k))} = ${fP(v)}`,
+  formula:"P(X = x) = C(n, x) · p<sup>x</sup> · q<sup>n − x</sup>, where q = 1 − p",
+  ti:P=>({pdf:x=>`binompdf(${P.n}, ${P.p}, ${x})`,cdf:x=>`binomcdf(${P.n}, ${P.p}, ${x})`}),
+  win:P=>{if(P.n<=60)return[0,P.n];const mu=P.n*P.p,s=Math.sqrt(P.n*P.p*(1-P.p))||1;let a=Math.max(0,Math.floor(mu-4.5*s)),b=Math.min(P.n,Math.ceil(mu+4.5*s));if(b-a>80){a=Math.max(0,Math.round(mu)-40);b=Math.min(P.n,a+80);}return[a,b];}},
+ {id:"geometric",sec:"4.4",title:"Geometric distribution",nav:"Geometric",
+  lede:"Use when you repeat independent trials until the first success, and P(success) = p every time. X = the number of trials it takes to get the first success (so X = 1, 2, 3, …).",
+  params:[["p","Probability of success, p",{min:0,max:1,strictMin:true}]],
+  ex:{p:"0.2",q:"eq",x:"4"},exNote:"Example: 20% of callers donate. What is the probability that the 4th caller is the first to donate?",
+  notation:P=>`X ~ G(${P.p})`,support:()=>[1,Infinity],
+  pmf:(P,k)=>k<1?0:(1-P.p)**(k-1)*P.p,mean:P=>1/P.p,sd:P=>Math.sqrt((1-P.p)/P.p**2),
+  meanSteps:P=>[`μ = 1 / p = 1 / ${P.p} = ${fs(1/P.p)}`,`σ = √( (1 − p) / p² ) = √( ${f(1-P.p,6)} / ${fs(P.p**2)} ) = ${fs(Math.sqrt((1-P.p)/P.p**2))}`],
+  pmfStep:(P,k,v)=>`P(X = ${k}) = (1 − p)<sup>${k} − 1</sup> · p = ${f(1-P.p,6)}<sup>${k-1}</sup> × ${P.p} = ${fs((1-P.p)**(k-1))} × ${P.p} = ${fP(v)}`,
+  formula:"P(X = x) = (1 − p)<sup>x − 1</sup> · p,  for x = 1, 2, 3, …",
+  ti:P=>({pdf:x=>`geometpdf(${P.p}, ${x})`,cdf:x=>`geometcdf(${P.p}, ${x})`}),
+  win:P=>{const k=P.p>=1?1:Math.ceil(Math.log(0.005)/Math.log(1-P.p));return[1,Math.max(8,Math.min(60,k))];}},
+ {id:"hypergeometric",sec:"4.5",title:"Hypergeometric distribution",nav:"Hypergeometric",
+  lede:"Use when you take a sample without replacement from two groups. r = size of the group you care about, b = size of the other group, n = how many you pick. X = number picked from the group you care about.",
+  params:[["r","Size of the group of interest, r",{min:0,max:100000,int:true}],["b","Size of the other group, b",{min:0,max:100000,int:true}],["n","Sample size, n",{min:1,max:100000,int:true}]],
+  ex:{r:"6",b:"9",n:"5",q:"eq",x:"2"},exNote:"Example: a club has 6 seniors and 9 juniors. 5 members are chosen at random for a committee. What is the probability that exactly 2 are seniors?",
+  check:P=>{if(P.n>P.r+P.b)throw new UserErr(`The sample size n can't be more than the total r + b = ${P.r+P.b}.`);},
+  notation:P=>`X ~ H(${P.r}, ${P.b}, ${P.n})`,support:P=>[Math.max(0,P.n-P.b),Math.min(P.n,P.r)],
+  pmf:(P,k)=>{const[a,b]=[Math.max(0,P.n-P.b),Math.min(P.n,P.r)];if(k<a||k>b)return 0;return Math.exp(logC(P.r,k)+logC(P.b,P.n-k)-logC(P.r+P.b,P.n));},
+  mean:P=>P.n*P.r/(P.r+P.b),sd:P=>{const N=P.r+P.b;return N>1?Math.sqrt(P.n*P.r*P.b*(N-P.n)/(N*N*(N-1))):0;},
+  meanSteps:P=>{const N=P.r+P.b;return[`μ = nr / (r + b) = (${P.n})(${P.r}) / ${N} = ${fs(P.n*P.r/N)}`,`σ = √( n · (r/N) · (b/N) · (N − n)/(N − 1) ), with N = r + b = ${N}:  σ = ${fs(N>1?Math.sqrt(P.n*P.r*P.b*(N-P.n)/(N*N*(N-1))):0)}`];},
+  pmfStep:(P,k,v)=>`P(X = ${k}) = C(${P.r}, ${k}) · C(${P.b}, ${P.n-k}) / C(${P.r+P.b}, ${P.n}) = ${combStr(P.r,k)} × ${combStr(P.b,P.n-k)} / ${combStr(P.r+P.b,P.n)} = ${fP(v)}`,
+  formula:"P(X = x) = C(r, x) · C(b, n − x) / C(r + b, n)",
+  ti:null,
+  win:P=>{const[a,b]=[Math.max(0,P.n-P.b),Math.min(P.n,P.r)];if(b-a<=80)return[a,b];const mu=P.n*P.r/(P.r+P.b);const lo=Math.max(a,Math.round(mu)-40);return[lo,Math.min(b,lo+80)];}},
+ {id:"poisson",sec:"4.6",title:"Poisson distribution",nav:"Poisson",
+  lede:"Use for the number of times something happens in a fixed interval of time or space, when you know the average number μ for that interval. If the rate is for a different interval, scale it first (for example, 6 per hour → 3 per half hour).",
+  params:[["mu","Mean for the interval, μ",{min:0,max:10000,strictMin:true}]],
+  ex:{mu:"4.5",q:"gt",x:"6"},exNote:"Example: a help desk gets an average of 4.5 calls per hour. What is P(more than 6 calls in an hour)?",
+  notation:P=>`X ~ P(${P.mu})`,support:()=>[0,Infinity],
+  pmf:(P,k)=>k<0?0:Math.exp(k*Math.log(P.mu)-P.mu-lf(k)),mean:P=>P.mu,sd:P=>Math.sqrt(P.mu),
+  meanSteps:P=>[`μ = ${P.mu}`,`σ = √μ = √${P.mu} = ${fs(Math.sqrt(P.mu))}`],
+  pmfStep:(P,k,v)=>`P(X = ${k}) = μ<sup>${k}</sup> · e<sup>−μ</sup> / ${k}! = ${fs(P.mu**k)} × ${fs(Math.exp(-P.mu))} / ${factStr(k)} = ${fP(v)}`,
+  formula:"P(X = x) = μ<sup>x</sup> · e<sup>−μ</sup> / x!,  for x = 0, 1, 2, …",
+  ti:P=>({pdf:x=>`poissonpdf(${P.mu}, ${x})`,cdf:x=>`poissoncdf(${P.mu}, ${x})`}),
+  win:P=>{const s=Math.sqrt(P.mu);let a=Math.max(0,Math.floor(P.mu-4.5*s)),b=Math.ceil(P.mu+4.5*s)+1;if(b-a>80)b=a+80;return[a,Math.max(b,a+8)];}},
+];
+const QOPTS=[["eq","P(X = x)"],["le","P(X ≤ x)  at most"],["lt","P(X < x)  fewer than"],["ge","P(X ≥ x)  at least"],["gt","P(X > x)  more than"],["bt","P(a ≤ X ≤ b)  between"]];
+for(const D of DISTS){
+  const pid=k=>`${D.id}-${k}`;
+  const ex={};for(const[k,v]of Object.entries(D.ex))ex[pid(k)]=v;
+  tool({id:D.id,ch:4,sec:D.sec,title:D.title,nav:D.nav,lede:D.lede,exampleNote:D.exNote,example:ex,
+  html:D.params.map(([k,l])=>fld(pid(k),l,NUM)).join("")+sel(pid("q"),"Find",QOPTS)+fld(pid("x"),"x",NUM)+fld(pid("x2"),"b (upper end)",NUM),
+  onChange(get){const bt=get(pid("q"))==="bt";$("#"+pid("x2")).closest(".fld").hidden=!bt;$("#"+pid("x")).closest(".fld").firstElementChild.textContent=bt?"a (lower end)":"x";},
+  compute(get){
+    const P={};for(const[k,l,o]of D.params)P[k]=num(get,pid(k),l.split(",")[0].toLowerCase(),o);
+    if(D.check)D.check(P);
+    const q=get(pid("q"));const x=num(get,pid("x"),q==="bt"?"a":"x",{int:true,min:-1e6,max:100000});
+    const x2=q==="bt"?num(get,pid("x2"),"b",{int:true,min:-1e6,max:100000}):null;
+    if(q==="bt"&&x2<x)throw new UserErr("b must be at least as big as a.");
+    const[lo,hi]=D.support(P);const pmf=k=>D.pmf(P,k);
+    const cdf=k=>{if(k<lo)return 0;const top=Math.min(k,hi);let s=0;for(let i=lo;i<=top;i++)s+=pmf(i);return Math.min(s,1);};
+    let a,b,ev;
+    switch(q){case"eq":a=b=x;ev=`P(X = ${x})`;break;case"le":a=-Infinity;b=x;ev=`P(X ≤ ${x})`;break;case"lt":a=-Infinity;b=x-1;ev=`P(X < ${x})`;break;
+      case"ge":a=x;b=Infinity;ev=`P(X ≥ ${x})`;break;case"gt":a=x+1;b=Infinity;ev=`P(X > ${x})`;break;default:a=x;b=x2;ev=`P(${x} ≤ X ≤ ${x2})`;}
+    const A=Math.max(a,lo),B=Math.min(b,hi);
+    const viaComp=(q==="ge"||q==="gt");
+    let prob=A>B?0:viaComp?1-cdf(A-1):(()=>{let s=0;for(let i=A;i<=B;i++)s+=pmf(i);return s;})();
+    prob=Math.min(Math.max(prob,0),1);
+    const mu=D.mean(P),sd=D.sd(P);
+    let out=answers([[ev,fP(prob),q==="eq"?"":`x = ${x}${q==="bt"?` to ${x2}`:""}`],["Mean, μ",f(mu,4)],["Standard deviation, σ",f(sd,4)],["Variance, σ²",f(sd*sd,4)]]);
+    // chart
+    let[w0,w1]=D.win(P);
+    const ks=[];for(let k=w0;k<=w1;k++)ks.push(k);
+    const inEv=k=>k>=A&&k<=B;
+    out+=chart(barSVG({labels:ks,values:ks.map(pmf),hi:ks.map(inEv),title:`${D.title} for ${D.notation(P)}`}),`${D.notation(P)}. Dark bars are the values included in ${ev}.${w1<hi&&hi!==Infinity||hi===Infinity?" Values to the right have probabilities too small to see.":""}`);
+    // steps
+    const terms=(s,e)=>{const n=e-s+1;const parts=[];const t=k=>`P(X = ${k})`;
+      if(n<=6){for(let k=s;k<=e;k++)parts.push(fP(pmf(k)));return{lhs:[...Array(n)].map((_,i)=>t(s+i)).join(" + "),rhs:parts.join(" + ")};}
+      return{lhs:`${t(s)} + ${t(s+1)} + … + ${t(e)}`,rhs:`${fP(pmf(s))} + ${fP(pmf(s+1))} + ${fP(pmf(s+2))} + … + ${fP(pmf(e))}  (${n} terms)`};};
+    const st=[`This is ${D.notation(P)}. The values X can take are ${lo}, ${lo+1}, ${lo+2}, …${hi===Infinity?"":` up to ${hi}`}.`,`Formula: ${D.formula}`];
+    if(q==="eq"){st.push(A>B?`${x} is not a possible value of X, so ${ev} = 0.`:D.pmfStep(P,x,prob));}
+    else if(viaComp){const c=A-1;
+      st.push(`Use the complement:${m(`${ev} = 1 − P(X ≤ ${c})`)}`);
+      if(c<lo)st.push(`X can't be ${c} or less, so P(X ≤ ${c}) = 0 and ${ev} = 1.`);
+      else{const T=terms(lo,c);st.push(`P(X ≤ ${c}) = ${T.lhs}${m(`= ${T.rhs} = ${fP(cdf(c))}`)}`);st.push(`${ev} = 1 − ${fP(cdf(c))} = ${fP(prob)}`);}
+      if(lo===0||lo===1)st.push(`Find each term with the formula. For example: ${m(D.pmfStep(P,lo,pmf(lo)))}`);}
+    else{if(q==="lt")st.push(`“Fewer than ${x}” means ${x-1} or less:${m(`P(X < ${x}) = P(X ≤ ${x-1})`)}`);
+      if(A>B)st.push(`No possible values of X are in this range, so ${ev} = 0.`);
+      else{const T=terms(A,B);st.push(`Add the probabilities of each value from ${A} to ${B}:${m(`${T.lhs}`)}${m(`= ${T.rhs} = ${fP(prob)}`)}`);
+        st.push(`Find each term with the formula. For example: ${m(D.pmfStep(P,A,pmf(A)))}`);}}
+    st.push(`Mean and standard deviation:${D.meanSteps(P).map(m).join("")}`);
+    out+=steps(st);
+    // TI
+    if(D.ti){const T=D.ti(P);let line;
+      switch(q){case"eq":line=T.pdf(x);break;case"le":line=T.cdf(x);break;case"lt":line=T.cdf(x-1);break;case"ge":line=`1 − ${T.cdf(x-1)}`;break;case"gt":line=`1 − ${T.cdf(x)}`;break;default:line=`${T.cdf(x2)} − ${T.cdf(x-1)}`;}
+      out+=calc(["2nd → VARS (DISTR), then:",line,`“pdf” gives P(X = x). “cdf” gives P(X ≤ x).`]);}
+    else out+=calc(["There is no built-in hypergeometric function. Use the formula, with nCr from MATH → PRB:",`(${P.r} nCr ${x}) × (${P.b} nCr ${P.n-x}) / (${P.r+P.b} nCr ${P.n})  gives P(X = ${x})`]);
+    // full table
+    if(ks.length<=81)out+=`<details class="steps"><summary>Probability table</summary>${tbl(["x","P(X = x)","P(X ≤ x)"],ks.map(k=>[k,fP(pmf(k)),fP(cdf(k))]))}</details>`;
+    return out;}});
+}
+
+/* ========== APP SHELL ========== */
+const byId=Object.fromEntries(tools.map(t=>[t.id,t]));
+const saved={};let cur=null,timer=null;
+function buildNav(){
+  let r="",j="";
+  for(const c of[1,2,3,4]){const ts=tools.filter(t=>t.ch===c);
+    r+=`<div><h4>${c} · ${CH[c]}</h4>${ts.map(t=>`<a href="#${t.id}" data-id="${t.id}"><span class="sec">${t.sec.split(/[–,]/)[0]}</span><span>${t.nav}</span></a>`).join("")}</div>`;
+    j+=`<optgroup label="${c} · ${CH[c]}">${ts.map(t=>`<option value="${t.id}">${t.sec.split(/[–,]/)[0]}  ${t.nav}</option>`).join("")}</optgroup>`;}
+  $("#rail").innerHTML=r;$("#jump").innerHTML=j;
+  $("#jump").addEventListener("change",e=>{location.hash=e.target.value;});
+}
+const fields=()=>[...document.querySelectorAll("#main input, #main select, #main textarea")];
+const getter=id=>{const el=document.getElementById(id);return el?el.value:"";};
+function apply(vals){for(const[id,v]of Object.entries(vals)){const el=document.getElementById(id);if(el)el.value=v;}}
+function run(trigger){
+  const t=cur,out=$("#out");if(!t||t.static)return;
+  try{t.onChange&&t.onChange(getter);if(t.manual&&trigger==="input")return;out.innerHTML=t.compute(getter,trigger);}
+  catch(e){if(e instanceof UserErr)out.innerHTML=`<div class="msg">${e.message}</div>`;else{console.error(e);out.innerHTML=`<div class="msg">Something went wrong with these inputs. Check them and try again.</div>`;}}
+}
+function save(){if(cur&&!cur.static){const o={};fields().forEach(el=>{if(el.id)o[el.id]=el.value;});saved[cur.id]=o;}}
+function loadExample(){const t=cur;fields().forEach(el=>{if(el.tagName==="SELECT")el.selectedIndex=0;else el.value="";});
+  apply(t.example||{});t.onChange&&t.onChange(getter);apply(t.example||{});$("#exHint").hidden=!t.exampleNote;run("example");}
+function mount(id){
+  save();const t=byId[id]||byId.summary;cur=t;
+  document.querySelectorAll("#rail a").forEach(a=>a.getAttribute("data-id")===t.id?a.setAttribute("aria-current","page"):a.removeAttribute("aria-current"));
+  $("#jump").value=t.id;
+  $("#main").innerHTML=`<section class="sheet"><div class="eyebrow">Chapter ${t.ch} · Section ${t.sec}</div><h2>${t.title}</h2><p class="lede">${t.lede}</p>
+    ${t.static?t.html:`<div class="inputs">${t.html}</div>
+    <div class="btns">${t.manual?`<button class="primary" type="button" data-act="go">${t.actionLabel||"Calculate"}</button>`:""}<button type="button" data-act="ex">Load example</button><button type="button" data-act="clear">Clear</button>
+    <span class="hint" id="exHint" hidden>${t.exampleNote||""}</span></div><div id="out" class="out" aria-live="polite"></div>`}</section>`;
+  if(t.static)return;
+  if(saved[t.id]){apply(saved[t.id]);t.onChange&&t.onChange(getter);apply(saved[t.id]);run("load");}else loadExample();
+  $("#main").querySelector(".btns").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
+    if(b.dataset.act==="ex")loadExample();else if(b.dataset.act==="go")run("button");
+    else{fields().forEach(el=>{if(el.tagName==="SELECT")el.selectedIndex=0;else el.value="";});$("#exHint").hidden=true;run("clear");const first=$("#main textarea, #main input");first&&first.focus();}});
+  $("#main .inputs").addEventListener("input",e=>{$("#exHint").hidden=true;clearTimeout(timer);timer=setTimeout(()=>run("input"),160);});
+}
+function route(){const id=location.hash.slice(1);mount(byId[id]?id:"summary");}
+buildNav();window.addEventListener("hashchange",()=>{route();window.scrollTo({top:0});});route();
+</script>
+
+</body>
+</html>
