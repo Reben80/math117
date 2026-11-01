@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATH 117 · Calculator</title>
+<link rel="stylesheet" href="../lib/fonts/montserrat/montserrat.css">
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #eef6f4;
+    color: #1c242c;
+    font-family: Montserrat, sans-serif;
+  }
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 28px 96px;
+  }
+  a { color: #2a6f7a; }
+  .badge {
+    display: inline-block;
+    background: #2a6f7a;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 6px 12px;
+    text-decoration: none;
+  }
+  h1 {
+    margin: 22px 0 0;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+  }
+  .lead, .note {
+    margin: 14px 0 0;
+    max-width: 680px;
+    color: #5d6670;
+    font-size: 17px;
+    line-height: 1.45;
+  }
+  label.field {
+    display: block;
+    margin: 22px 0 8px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  textarea, input {
+    width: 100%;
+    border: 1.5px solid #e4e1da;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-family: Montserrat, sans-serif;
+    font-size: 16px;
+    color: #1c242c;
+    background: #fff;
+  }
+  textarea { min-height: 140px; resize: vertical; }
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .check input { width: auto; margin-top: 3px; }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .row input { max-width: 100%; }
+  h2 {
+    margin: 36px 0 0;
+    color: #2a6f7a;
+    font-size: 14px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .hint, .ordered {
+    margin: 10px 0 0;
+    color: #5d6670;
+    font-size: 16px;
+    line-height: 1.45;
+  }
+  .ordered { color: #1c242c; }
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .stat, .panel {
+    background: #fff;
+    border: 1px solid #e4e1da;
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+  .stat.wide, .panel { grid-column: 1 / -1; }
+  .k {
+    margin: 0;
+    color: #2a6f7a;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .plain {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .v {
+    margin: 6px 0 0;
+    font-size: 26px;
+    font-weight: 650;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+  }
+  .r {
+    margin: 4px 0 0;
+    color: #5d6670;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  .wrap { overflow-x: auto; margin-top: 12px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #e4e1da;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid #e4e1da;
+    font-size: 16px;
+  }
+  th {
+    color: #2a6f7a;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  tr:last-child td { border-bottom: 0; }
+  @media (max-width: 720px) {
+    h1 { font-size: 36px; }
+    .row, .stats { grid-template-columns: 1fr; }
+    main { padding: 32px 18px 72px; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <p><a class="badge" href="../">MATH 117</a></p>
+  <h1>Calculator</h1>
+  <p class="lead">Chapters 1 and 2. Paste the list. Words give a frequency table. Numbers also give the center, the quartiles, and the standard deviation.</p>
+  <label class="field" for="data">The list</label>
+  <textarea id="data" spellcheck="false" placeholder="5, 6, 3, 3, 2, 4, 7, 5, 2, 3"></textarea>
+  <label class="check"><input id="freq" type="checkbox"> The second number on each line is the count. Example: 9.5 2</label>
+  <div class="row">
+    <div>
+      <label class="field" for="pct">Which percentile</label>
+      <input id="pct" inputmode="decimal" placeholder="70">
+    </div>
+    <div>
+      <label class="field" for="k">How many standard deviations from the mean</label>
+      <input id="k" inputmode="decimal" placeholder="1 or −2">
+    </div>
+  </div>
+  <div id="out" aria-live="polite"></div>
+</main>
+<script>
+(function () {
+  var dataBox = document.getElementById("data");
+  var freqBox = document.getElementById("freq");
+  var pctBox = document.getElementById("pct");
+  var kBox = document.getElementById("k");
+  var out = document.getElementById("out");
+
+  function esc(s) {
+    return String(s).replace(/[&<>]/g, function (c) {
+      return c === "&" ? "&amp;" : c === "<" ? "&lt;" : "&gt;";
+    });
+  }
+
+  function cleanToken(token) {
+    return token.replace(/\u2212/g, "-").replace(/\$/g, "").trim();
+  }
+
+  function toNumber(token) {
+    var t = cleanToken(token).replace(/,/g, "");
+    if (!/^[-+]?\d*\.?\d+$/.test(t)) return null;
+    return Number(t);
+  }
+
+  function decimalsIn(token) {
+    var t = cleanToken(token).replace(/,/g, "");
+    var dot = t.indexOf(".");
+    return dot === -1 ? 0 : t.length - dot - 1;
+  }
+
+  function plainTokens(text) {
+    return text.replace(/\u2212/g, "-").replace(/\$/g, "").split(/[\n;\s]+/).flatMap(function (chunk) {
+      if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(chunk)) return [chunk.replace(/,/g, "")];
+      return chunk.split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+    });
+  }
+
+  function parse(text, withFreq) {
+    if (!text.trim()) return { empty: true };
+    var rows = [];
+    var places = 0;
+    var numeric = true;
+    if (!withFreq) {
+      var tokens = plainTokens(text);
+      if (!tokens.length) return { empty: true };
+      for (var i = 0; i < tokens.length; i++) {
+        var value = toNumber(tokens[i]);
+        if (value === null) numeric = false;
+        else places = Math.max(places, decimalsIn(tokens[i]));
+        rows.push({ label: cleanToken(tokens[i]).replace(/,/g, ""), x: value, f: 1 });
+      }
+    } else {
+      var lines = text.split(/\n/).map(function (l) { return l.trim(); }).filter(Boolean);
+      for (var j = 0; j < lines.length; j++) {
+        var line = lines[j].replace(/\u2212/g, "-").replace(/\$/g, "");
+        var pair = line.match(/^(\d{1,3}(?:,\d{3})+(?:\.\d+)?)[\s]+(\d+)$/) ||
+          line.match(/^(.+?)[\s,;]+(\d+)$/);
+        if (!pair) return { error: "Each line needs a value and a count, such as 9.5 2." };
+        var label = pair[1].trim().replace(/,/g, "");
+        if (!/^\d+$/.test(pair[2]) || Number(pair[2]) < 1) {
+          return { error: "A count has to be a whole number, 1 or more." };
+        }
+        var x = toNumber(label);
+        if (x === null) numeric = false;
+        else places = Math.max(places, decimalsIn(label));
+        rows.push({ label: label, x: x, f: Number(pair[2]) });
+      }
+    }
+    var n = rows.reduce(function (sum, row) { return sum + row.f; }, 0);
+    if (n > 20000) return { error: "That list is too long for this page." };
+    return { rows: rows, n: n, places: places, numeric: numeric };
+  }
+
+  function medianOf(sorted) {
+    var n = sorted.length;
+    if (!n) return null;
+    if (n % 2 === 1) return sorted[(n - 1) / 2];
+    return (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+  }
+
+  function summarize(rows) {
+    var n = rows.reduce(function (sum, row) { return sum + row.f; }, 0);
+    var total = rows.reduce(function (sum, row) { return sum + row.f * row.x; }, 0);
+    var mean = total / n;
+    var ss = rows.reduce(function (sum, row) {
+      var d = row.x - mean;
+      return sum + row.f * d * d;
+    }, 0);
+    var expanded = [];
+    rows.forEach(function (row) {
+      for (var i = 0; i < row.f; i++) expanded.push(row.x);
+    });
+    expanded.sort(function (a, b) { return a - b; });
+    var med = medianOf(expanded);
+    var lower, upper;
+    if (n % 2 === 1) {
+      lower = expanded.slice(0, (n - 1) / 2);
+      upper = expanded.slice((n + 1) / 2);
+    } else {
+      lower = expanded.slice(0, n / 2);
+      upper = expanded.slice(n / 2);
+    }
+    var q1 = medianOf(lower);
+    var q3 = medianOf(upper);
+    return {
+      n: n,
+      mean: mean,
+      median: med,
+      s: n > 1 ? Math.sqrt(ss / (n - 1)) : null,
+      sigma: Math.sqrt(ss / n),
+      min: expanded[0],
+      q1: q1,
+      q3: q3,
+      max: expanded[n - 1],
+      iqr: q1 === null || q3 === null ? null : q3 - q1,
+      sorted: expanded
+    };
+  }
+
+  function withCommas(s) {
+    var neg = s.charAt(0) === "-";
+    var body = neg ? s.slice(1) : s;
+    var parts = body.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return (neg ? "-" : "") + parts.join(".");
+  }
+
+  function unrounded(x) {
+    if (x === null || !isFinite(x)) return "—";
+    var s = x.toFixed(6).replace(/\.?0+$/, "");
+    if (s === "-0") s = "0";
+    return withCommas(s);
+  }
+
+  function rounded(x, places) {
+    if (x === null || !isFinite(x)) return "—";
+    return withCommas(x.toFixed(places));
+  }
+
+  function share(f, n, last) {
+    if (last) return "1.00";
+    var s = (f / n).toFixed(4).replace(/0+$/, "").replace(/\.$/, "");
+    if (s.indexOf(".") === -1) return s + ".00";
+    if (s.split(".")[1].length === 1) return s + "0";
+    return s;
+  }
+
+  function percent(f, n) {
+    var s = (f / n * 100).toFixed(1).replace(/\.0$/, "");
+    return s + "%";
+  }
+
+  function groupsOf(rows, numeric) {
+    var map = [];
+    var index = {};
+    rows.forEach(function (row) {
+      var key = numeric ? String(row.x) : row.label;
+      if (index[key] === undefined) {
+        index[key] = map.length;
+        map.push({ key: key, x: row.x, label: numeric ? unrounded(row.x) : row.label, f: 0 });
+      }
+      map[index[key]].f += row.f;
+    });
+    if (numeric) map.sort(function (a, b) { return a.x - b.x; });
+    return map;
+  }
+
+  function table(groups, n) {
+    var cumF = 0;
+    var body = groups.map(function (g, i) {
+      cumF += g.f;
+      var last = i === groups.length - 1;
+      return "<tr><td>" + esc(g.label) + "</td><td>" + g.f + "</td><td>" +
+        share(g.f, n, false) + "</td><td>" + percent(g.f, n) + "</td><td>" +
+        share(cumF, n, last) + "</td></tr>";
+    }).join("");
+    return '<div class="wrap"><table><thead><tr><th>Value</th><th>Frequency</th><th>Relative</th><th>Percent</th><th>Cumulative</th></tr></thead><tbody>' +
+      body + "</tbody></table></div>";
+  }
+
+  function stat(label, value, places, note) {
+    return '<div class="stat"><p class="k">' + label + '</p><p class="v">' + esc(unrounded(value)) +
+      '</p><p class="r">' + (note || ("Rounded " + esc(rounded(value, places)))) + "</p></div>";
+  }
+
+  function modes(groups) {
+    var most = 0;
+    groups.forEach(function (g) { if (g.f > most) most = g.f; });
+    if (most < 2) return { text: "No value is repeated", note: "Every value appears once." };
+    var found = groups.filter(function (g) { return g.f === most; });
+    var names = found.map(function (g) { return g.label; }).join(", ");
+    var note = most + (most === 1 ? " time" : " times");
+    if (found.length === 2) note = "Two modes. Each appears " + most + " times.";
+    else if (found.length > 2) note = "Each appears " + most + " times.";
+    else note = "Appears " + most + " times.";
+    return { text: names, note: note };
+  }
+
+  function percentile(sorted, k) {
+    var n = sorted.length;
+    var i = (k * (n + 1)) / 100;
+    if (Math.abs(i - Math.round(i)) < 1e-8) i = Math.round(i);
+    if (!isFinite(k)) return "Enter a percentile from 0 to 100.";
+    var text = "i = (" + unrounded(k) + " / 100) × (" + n + " + 1) = " + unrounded(i) + ". ";
+    if (i < 1 || i > n) return text + "That position is outside this list.";
+    if (Math.abs(i - Math.round(i)) < 1e-9) {
+      var pos = Math.round(i);
+      return text + "Position " + pos + " is " + unrounded(sorted[pos - 1]) + ".";
+    }
+    var down = Math.floor(i);
+    var up = Math.ceil(i);
+    var value = (sorted[down - 1] + sorted[up - 1]) / 2;
+    return text + "Average positions " + down + " and " + up + ", " +
+      unrounded(sorted[down - 1]) + " and " + unrounded(sorted[up - 1]) +
+      ". The percentile is " + unrounded(value) + ".";
+  }
+
+  function render() {
+    var parsed = parse(dataBox.value, freqBox.checked);
+    if (parsed.empty) {
+      out.innerHTML = '<p class="hint">Paste a list to see the numbers.</p>';
+      return;
+    }
+    if (parsed.error) {
+      out.innerHTML = '<p class="hint">' + esc(parsed.error) + "</p>";
+      return;
+    }
+    var groups = groupsOf(parsed.rows, parsed.numeric);
+    var html = "<h2>Frequency table</h2>" + table(groups, parsed.n);
+    html += '<p class="hint">' + parsed.n + (parsed.n === 1 ? " value." : " values.") +
+      " Relative frequency is the count divided by " + parsed.n + ". The last cumulative entry is 1.</p>";
+
+    if (!parsed.numeric) {
+      var wordMode = modes(groups);
+      html += '<div class="stats"><div class="stat"><p class="k">Mode</p><p class="v">' + esc(wordMode.text) +
+        '</p><p class="r">' + esc(wordMode.note) + "</p></div></div>";
+      html += '<p class="hint">These are words, so this is the frequency table from chapter 1. A mean, a quartile, or a standard deviation needs numbers.</p>';
+      out.innerHTML = html;
+      return;
+    }
+
+    var stats = summarize(parsed.rows);
+    var places = parsed.places + 1;
+    var mode = modes(groups);
+    var five = [stats.min, stats.q1, stats.median, stats.q3, stats.max].map(unrounded).join(" · ");
+    var low = stats.iqr === null ? null : stats.q1 - 1.5 * stats.iqr;
+    var high = stats.iqr === null ? null : stats.q3 + 1.5 * stats.iqr;
+    var outliers = [];
+    if (low !== null) {
+      stats.sorted.forEach(function (x) {
+        if (x < low - 1e-9 || x > high + 1e-9) outliers.push(unrounded(x));
+      });
+    }
+    html += "<h2>Ordered list</h2><p class=\"ordered\">" + esc(stats.sorted.map(unrounded).join(", ")) + "</p>";
+    html += "<h2>Center</h2><div class=\"stats\">" +
+      stat("Mean", stats.mean, places) +
+      stat("Median", stats.median, places) +
+      '<div class="stat"><p class="k">Mode</p><p class="v">' + esc(mode.text) + '</p><p class="r">' + esc(mode.note) + "</p></div>" +
+      "</div>";
+    html += "<h2>Spread</h2><div class=\"stats\">" +
+      stat("Range", stats.max - stats.min, places, "Maximum minus minimum") +
+      stat('<span class="plain">Sx</span> · sample', stats.s, places, stats.s === null ? "Needs at least two values" : "Rounded " + rounded(stats.s, places) + ". Divide by n − 1.") +
+      stat('<span class="plain">σx</span> · population', stats.sigma, places, "Rounded " + rounded(stats.sigma, places) + ". Divide by n.") +
+      "</div>";
+    html += "<h2>Quartiles</h2><div class=\"stats\">" +
+      '<div class="stat wide"><p class="k">Five numbers</p><p class="v">' + esc(five) +
+      '</p><p class="r">Minimum, Q1, median, Q3, maximum. Q1 and Q3 are medians of the two halves.</p></div>' +
+      stat("IQR", stats.iqr, places) +
+      stat("Lower fence", low, places, "Q1 − 1.5 × IQR") +
+      stat("Upper fence", high, places, "Q3 + 1.5 × IQR") +
+      '<div class="stat"><p class="k">Potential outliers</p><p class="v">' +
+      (outliers.length ? esc(outliers.join(", ")) : "None") + "</p><p class=\"r\">Outside the fences.</p></div>" +
+      "</div>";
+
+    var pctRaw = pctBox.value.trim().replace(/\u2212/g, "-");
+    html += "<h2>Percentile</h2>";
+    if (!pctRaw) html += '<p class="hint">Type a percentile above, such as 70.</p>';
+    else html += '<p class="ordered">' + esc(percentile(stats.sorted, Number(pctRaw))) + "</p>";
+
+    var kRaw = kBox.value.trim().replace(/\u2212/g, "-");
+    html += "<h2>Standard deviations from the mean</h2>";
+    if (!kRaw) html += '<p class="hint">Type how many standard deviations above, or a negative number for below.</p>';
+    else if (stats.s === null) html += '<p class="hint">Sx needs at least two values.</p>';
+    else if (!isFinite(Number(kRaw))) html += '<p class="hint">Enter a number of standard deviations.</p>';
+    else {
+      var k = Number(kRaw);
+      var value = stats.mean + k * stats.s;
+      var sign = k < 0 ? "−" : "+";
+      html += '<p class="ordered">' + esc(unrounded(stats.mean) + " " + sign + " (" + unrounded(Math.abs(k)) + ")(" +
+        unrounded(stats.s) + ") = " + unrounded(value) + ". Rounded " + rounded(value, places) + ".") + "</p>";
+    }
+    out.innerHTML = html;
+  }
+
+  dataBox.addEventListener("input", render);
+  freqBox.addEventListener("change", render);
+  pctBox.addEventListener("input", render);
+  kBox.addEventListener("input", render);
+  render();
+}());
+</script>
+</body>
+</html>
