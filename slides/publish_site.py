@@ -262,7 +262,7 @@ def landing():
     <p>Textbook content is © 2026 Rice University, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. These decks are shared for teaching under the same terms.</p>
     <p>Unit S1 follows chapter 12 of <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>, second edition, by Mine Çetinkaya-Rundel and Johanna Hardin, OpenIntro. That book is free and licensed <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
   </footer>
-  <p class="note" style="margin-top:28px"><a href="calculator/">Calculator</a> for a list from chapters 1 and 2, including the bar graph and the histogram. It opens on its own page.</p>
+  <p class="note" style="margin-top:28px"><a href="calculator/">Calculator</a> for a list from chapters 1 and 2. Choose one thing at a time. It opens on its own page.</p>
 </main>
 </body>
 </html>

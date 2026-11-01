@@ -43,7 +43,7 @@
     font-size: 17px;
     line-height: 1.45;
   }
-  label.field {
+  .field {
     display: block;
     margin: 22px 0 8px;
     font-size: 15px;
@@ -69,11 +69,29 @@
     line-height: 1.4;
   }
   .check input { width: auto; margin-top: 3px; }
-  .row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 16px;
+  .choices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
   }
+  .choices button {
+    border: 1.5px solid #e4e1da;
+    background: #fff;
+    color: #1c242c;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .choices button[aria-pressed="true"] {
+    background: #2a6f7a;
+    border-color: #2a6f7a;
+    color: #fff;
+  }
+  .opt { max-width: 360px; }
+  [hidden] { display: none !important; }
   .chart {
     width: 100%;
     height: auto;
@@ -160,7 +178,7 @@
   tr:last-child td { border-bottom: 0; }
   @media (max-width: 720px) {
     h1 { font-size: 36px; }
-    .row, .stats { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr; }
     main { padding: 32px 18px 72px; }
   }
 </style>
@@ -169,23 +187,31 @@
 <main>
   <p><a class="badge" href="../">MATH 117</a></p>
   <h1>Calculator</h1>
-  <p class="lead">Chapters 1 and 2. Paste the list. Words give a frequency table and a bar graph, with a gap between the bars. Numbers give a histogram, with the bars touching, plus the center, the quartiles, and the standard deviation.</p>
+  <p class="lead">Chapters 1 and 2. Paste the list, then choose one thing. The page shows only that.</p>
   <label class="field" for="data">The list</label>
   <textarea id="data" spellcheck="false" placeholder="5, 6, 3, 3, 2, 4, 7, 5, 2, 3"></textarea>
   <label class="check"><input id="freq" type="checkbox"> The second number on each line is the count. Example: 9.5 2</label>
-  <div class="row">
-    <div>
-      <label class="field" for="pct">Which percentile</label>
-      <input id="pct" inputmode="decimal" placeholder="70">
-    </div>
-    <div>
-      <label class="field" for="k">How many standard deviations from the mean</label>
-      <input id="k" inputmode="decimal" placeholder="1 or −2">
-    </div>
-    <div>
-      <label class="field" for="bars">How many bars in the histogram</label>
-      <input id="bars" inputmode="numeric" placeholder="5 to 15">
-    </div>
+  <p class="field" id="want-label">What do you want?</p>
+  <div class="choices" role="group" aria-labelledby="want-label">
+    <button type="button" data-pick="table" aria-pressed="false">Frequency table</button>
+    <button type="button" data-pick="bar" aria-pressed="false">Bar graph</button>
+    <button type="button" data-pick="hist" aria-pressed="false">Histogram</button>
+    <button type="button" data-pick="center" aria-pressed="false">Center</button>
+    <button type="button" data-pick="quartiles" aria-pressed="false">Quartiles</button>
+    <button type="button" data-pick="sd" aria-pressed="false">Standard deviation</button>
+    <button type="button" data-pick="percentile" aria-pressed="false">Percentile</button>
+  </div>
+  <div class="opt" id="opt-bars" hidden>
+    <label class="field" for="bars">How many bars</label>
+    <input id="bars" inputmode="numeric" placeholder="5 to 15">
+  </div>
+  <div class="opt" id="opt-k" hidden>
+    <label class="field" for="k">How many standard deviations from the mean</label>
+    <input id="k" inputmode="decimal" placeholder="1 or −2">
+  </div>
+  <div class="opt" id="opt-pct" hidden>
+    <label class="field" for="pct">Which percentile</label>
+    <input id="pct" inputmode="decimal" placeholder="70">
   </div>
   <div id="out" aria-live="polite"></div>
 </main>
@@ -197,6 +223,7 @@
   var kBox = document.getElementById("k");
   var barsBox = document.getElementById("bars");
   var out = document.getElementById("out");
+  var pick = "";
 
   function esc(s) {
     return String(s).replace(/[&<>]/g, function (c) {
@@ -449,9 +476,8 @@
           var left = start + i;
           return { label: unrounded(left + 0.5), f: f, left: left, right: left + 1 };
         }),
-        note: "These are whole numbers, and the list does not stretch far, so each number gets its own bar. The bars touch. The bar for " +
-          unrounded(min) + " runs from " + unrounded(start) + " to " + unrounded(start + 1) +
-          ", so the number sits in the middle. A bar graph would leave a gap. That picture is for categories, such as yes and no."
+        note: "Each whole number has its own bar, and the bars touch. The bar for " +
+          unrounded(min) + " runs from " + unrounded(start) + " to " + unrounded(start + 1) + "."
       };
     }
     var bars = asked || Math.min(15, Math.max(5, Math.round(Math.sqrt(sorted.length))));
@@ -466,17 +492,11 @@
       guard += 1;
     }
     var counts = fillBins(sorted, start, width, bars);
-    var last = start + bars * width;
-    var note = "Start at " + unrounded(start) + ", one decimal place past the data, just below " + unrounded(min) +
-      ". " + bars + " bars. Width (" + unrounded(end) + " − " + unrounded(start) + ") / " + bars + " = " + unrounded(raw) + ". ";
-    if (Math.abs(width - raw) > 1e-6) {
-      note += "That width puts a value on a line, so the width rounds up to " + unrounded(width) +
-        ". The last boundary is " + unrounded(last) + ". ";
-    } else {
-      note += "No value sits on a boundary, so the width stays " + unrounded(width) + ". ";
-    }
-    note += "A value on the left edge stays in that bar. A value on the right edge goes to the next bar. The bars touch. A bar graph of categories would leave a gap.";
-    if (!asked) note += " A common choice is about the square root of n bars, usually somewhere from 5 to 15. More than one histogram can be right.";
+    var note = "Start at " + unrounded(start) + ". Width (" + unrounded(end) + " − " + unrounded(start) + ") / " +
+      bars + " = " + unrounded(raw);
+    if (Math.abs(width - raw) > 1e-6) note += ", rounded up to " + unrounded(width);
+    note += ". A value on the right edge goes in the next bar.";
+    if (!asked) note += " Type another number of bars to change the picture.";
     return {
       bins: counts.map(function (f, i) {
         var left = start + i * width;
@@ -566,10 +586,21 @@
       ". The percentile is " + unrounded(value) + ".";
   }
 
+  function needsNumbers(name) {
+    return '<p class="hint">' + name + " needs numbers.</p>";
+  }
+
   function render() {
+    document.getElementById("opt-bars").hidden = pick !== "hist";
+    document.getElementById("opt-k").hidden = pick !== "sd";
+    document.getElementById("opt-pct").hidden = pick !== "percentile";
+    if (!pick) {
+      out.innerHTML = '<p class="hint">Choose what you want.</p>';
+      return;
+    }
     var parsed = parse(dataBox.value, freqBox.checked);
     if (parsed.empty) {
-      out.innerHTML = '<p class="hint">Paste a list to see the numbers.</p>';
+      out.innerHTML = '<p class="hint">Paste a list first.</p>';
       return;
     }
     if (parsed.error) {
@@ -577,89 +608,97 @@
       return;
     }
     var groups = groupsOf(parsed.rows, parsed.numeric);
-    var wholeCounts = groups.every(function (g) { return Math.abs(g.f - Math.round(g.f)) < 1e-9; });
-    var html = "<h2>Frequency table</h2>" + table(groups, parsed.n);
-    if (wholeCounts) {
-      html += '<p class="hint">' + parsed.n + (parsed.n === 1 ? " value." : " values.") +
-        " Relative frequency is the count divided by " + parsed.n + ". The last cumulative entry is 1.</p>";
-    } else {
-      html += '<p class="hint">The bar heights add to ' + esc(unrounded(parsed.n)) +
-        ". Relative frequency divides each height by that total. The last cumulative entry is 1.</p>";
-    }
+    var html = "";
 
-    if (!parsed.numeric) {
-      var wordMode = modes(groups);
-      html += "<h2>Bar graph</h2>" + chartSvg(groups, false);
-      html += '<p class="hint">The bars stay apart, because these are categories. The order is the order in the list. A histogram is for numbers, and its bars touch.</p>';
-      html += '<div class="stats"><div class="stat"><p class="k">Mode</p><p class="v">' + esc(wordMode.text) +
-        '</p><p class="r">' + esc(wordMode.note) + "</p></div></div>";
-      html += '<p class="hint">A mean, a quartile, or a standard deviation needs numbers.</p>';
-      out.innerHTML = html;
-      return;
-    }
-
-    var stats = summarize(parsed.rows);
-    var hist = planHistogram(stats.sorted, parsed.places, barsBox.value.trim());
-
-    if (hist.error) {
-      html += '<p class="hint">' + esc(hist.error) + "</p>";
-    } else {
-      html += "<h2>Histogram</h2>" + chartSvg(hist.bins, true);
-      html += '<p class="hint">' + esc(hist.note) + "</p>" + classTable(hist.bins, parsed.n);
-    }
-
-    var places = parsed.places + 1;
-    var mode = modes(groups);
-    var five = [stats.min, stats.q1, stats.median, stats.q3, stats.max].map(unrounded).join(" · ");
-    var low = stats.iqr === null ? null : stats.q1 - 1.5 * stats.iqr;
-    var high = stats.iqr === null ? null : stats.q3 + 1.5 * stats.iqr;
-    var outliers = [];
-    if (low !== null) {
-      stats.sorted.forEach(function (x) {
-        if (x < low - 1e-9 || x > high + 1e-9) outliers.push(unrounded(x));
-      });
-    }
-    html += "<h2>Ordered list</h2><p class=\"ordered\">" + esc(stats.sorted.map(unrounded).join(", ")) + "</p>";
-    html += "<h2>Center</h2><div class=\"stats\">" +
-      stat("Mean", stats.mean, places) +
-      stat("Median", stats.median, places) +
-      '<div class="stat"><p class="k">Mode</p><p class="v">' + esc(mode.text) + '</p><p class="r">' + esc(mode.note) + "</p></div>" +
-      "</div>";
-    html += "<h2>Spread</h2><div class=\"stats\">" +
-      stat("Range", stats.max - stats.min, places, "Maximum minus minimum") +
-      stat('<span class="plain">Sx</span> · sample', stats.s, places, stats.s === null ? "Needs at least two values" : "Rounded " + rounded(stats.s, places) + ". Divide by n − 1.") +
-      stat('<span class="plain">σx</span> · population', stats.sigma, places, "Rounded " + rounded(stats.sigma, places) + ". Divide by n.") +
-      "</div>";
-    html += "<h2>Quartiles</h2><div class=\"stats\">" +
-      '<div class="stat wide"><p class="k">Five numbers</p><p class="v">' + esc(five) +
-      '</p><p class="r">Minimum, Q1, median, Q3, maximum. Q1 and Q3 are medians of the two halves.</p></div>' +
-      stat("IQR", stats.iqr, places) +
-      stat("Lower fence", low, places, "Q1 − 1.5 × IQR") +
-      stat("Upper fence", high, places, "Q3 + 1.5 × IQR") +
-      '<div class="stat"><p class="k">Potential outliers</p><p class="v">' +
-      (outliers.length ? esc(outliers.join(", ")) : "None") + "</p><p class=\"r\">Outside the fences.</p></div>" +
-      "</div>";
-
-    var pctRaw = pctBox.value.trim().replace(/\u2212/g, "-");
-    html += "<h2>Percentile</h2>";
-    if (!pctRaw) html += '<p class="hint">Type a percentile above, such as 70.</p>';
-    else html += '<p class="ordered">' + esc(percentile(stats.sorted, Number(pctRaw))) + "</p>";
-
-    var kRaw = kBox.value.trim().replace(/\u2212/g, "-");
-    html += "<h2>Standard deviations from the mean</h2>";
-    if (!kRaw) html += '<p class="hint">Type how many standard deviations above, or a negative number for below.</p>';
-    else if (stats.s === null) html += '<p class="hint">Sx needs at least two values.</p>';
-    else if (!isFinite(Number(kRaw))) html += '<p class="hint">Enter a number of standard deviations.</p>';
-    else {
-      var k = Number(kRaw);
-      var value = stats.mean + k * stats.s;
-      var sign = k < 0 ? "−" : "+";
-      html += '<p class="ordered">' + esc(unrounded(stats.mean) + " " + sign + " (" + unrounded(Math.abs(k)) + ")(" +
-        unrounded(stats.s) + ") = " + unrounded(value) + ". Rounded " + rounded(value, places) + ".") + "</p>";
+    if (pick === "table") {
+      var wholeCounts = groups.every(function (g) { return Math.abs(g.f - Math.round(g.f)) < 1e-9; });
+      html = "<h2>Frequency table</h2>" + table(groups, parsed.n);
+      html += wholeCounts
+        ? '<p class="hint">Relative frequency is the count divided by ' + parsed.n + ". The last cumulative entry is 1.</p>"
+        : '<p class="hint">Each height is divided by ' + esc(unrounded(parsed.n)) + ", the total of the heights.</p>";
+    } else if (pick === "bar") {
+      html = "<h2>Bar graph</h2>" + chartSvg(groups, false);
+      html += '<p class="hint">The bars stay apart. Each bar is one category.</p>';
+    } else if (pick === "hist") {
+      if (!parsed.numeric) html = needsNumbers("A histogram");
+      else {
+        var hist = planHistogram(summarize(parsed.rows).sorted, parsed.places, barsBox.value.trim());
+        html = hist.error
+          ? '<p class="hint">' + esc(hist.error) + "</p>"
+          : "<h2>Histogram</h2>" + chartSvg(hist.bins, true) + '<p class="hint">' + esc(hist.note) + "</p>" + classTable(hist.bins, parsed.n);
+      }
+    } else if (pick === "center") {
+      var mode = modes(groups);
+      html = "<h2>Center</h2><div class=\"stats\">";
+      if (parsed.numeric) {
+        var stats = summarize(parsed.rows);
+        var places = parsed.places + 1;
+        html += stat("Mean", stats.mean, places) + stat("Median", stats.median, places);
+      }
+      html += '<div class="stat"><p class="k">Mode</p><p class="v">' + esc(mode.text) + '</p><p class="r">' + esc(mode.note) + "</p></div></div>";
+      html += parsed.numeric
+        ? '<p class="hint">The mean uses every value. The median is the middle of the ordered list.</p>'
+        : '<p class="hint">The mode is the category that appears most often. A mean needs numbers.</p>';
+    } else if (pick === "quartiles") {
+      if (!parsed.numeric) html = needsNumbers("Quartiles");
+      else {
+        var q = summarize(parsed.rows);
+        var qp = parsed.places + 1;
+        var five = [q.min, q.q1, q.median, q.q3, q.max].map(unrounded).join(" · ");
+        var low = q.iqr === null ? null : q.q1 - 1.5 * q.iqr;
+        var high = q.iqr === null ? null : q.q3 + 1.5 * q.iqr;
+        var outliers = [];
+        if (low !== null) q.sorted.forEach(function (x) {
+          if (x < low - 1e-9 || x > high + 1e-9) outliers.push(unrounded(x));
+        });
+        html = "<h2>Quartiles</h2><div class=\"stats\">" +
+          '<div class="stat wide"><p class="k">Five numbers</p><p class="v">' + esc(five) +
+          '</p><p class="r">Minimum, Q1, median, Q3, maximum.</p></div>' +
+          stat("IQR", q.iqr, qp) +
+          '<div class="stat"><p class="k">Potential outliers</p><p class="v">' +
+          (outliers.length ? esc(outliers.join(", ")) : "None") + "</p><p class=\"r\">Outside Q1 − 1.5 × IQR and Q3 + 1.5 × IQR.</p></div></div>";
+        html += '<p class="hint">Q1 and Q3 are the medians of the two halves.</p>';
+      }
+    } else if (pick === "sd") {
+      if (!parsed.numeric) html = needsNumbers("The standard deviation");
+      else {
+        var s = summarize(parsed.rows);
+        var sp = parsed.places + 1;
+        html = "<h2>Standard deviation</h2><div class=\"stats\">" +
+          stat('<span class="plain">Sx</span> · sample', s.s, sp, s.s === null ? "Needs at least two values" : "Rounded " + rounded(s.s, sp) + ". For a sample, read this one.") +
+          stat('<span class="plain">σx</span> · population', s.sigma, sp, "Rounded " + rounded(s.sigma, sp) + ".") +
+          "</div>";
+        var kRaw = kBox.value.trim().replace(/\u2212/g, "-");
+        if (kRaw && s.s !== null && isFinite(Number(kRaw))) {
+          var k = Number(kRaw);
+          var away = s.mean + k * s.s;
+          var sign = k < 0 ? "−" : "+";
+          html += '<p class="ordered">' + esc(unrounded(s.mean) + " " + sign + " (" + unrounded(Math.abs(k)) + ")(" +
+            unrounded(s.s) + ") = " + unrounded(away) + ". Rounded " + rounded(away, sp) + ".") + "</p>";
+        }
+      }
+    } else if (pick === "percentile") {
+      if (!parsed.numeric) html = needsNumbers("A percentile");
+      else {
+        var pctRaw = pctBox.value.trim().replace(/\u2212/g, "-");
+        html = "<h2>Percentile</h2>";
+        html += pctRaw
+          ? '<p class="ordered">' + esc(percentile(summarize(parsed.rows).sorted, Number(pctRaw))) + "</p>"
+          : '<p class="hint">Type a percentile, such as 70.</p>';
+      }
     }
     out.innerHTML = html;
   }
 
+  document.querySelector(".choices").addEventListener("click", function (event) {
+    var button = event.target.closest("button");
+    if (!button) return;
+    pick = button.getAttribute("data-pick");
+    Array.prototype.forEach.call(document.querySelectorAll(".choices button"), function (el) {
+      el.setAttribute("aria-pressed", el === button ? "true" : "false");
+    });
+    render();
+  });
   dataBox.addEventListener("input", render);
   freqBox.addEventListener("change", render);
   pctBox.addEventListener("input", render);
