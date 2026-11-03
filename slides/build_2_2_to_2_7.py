@@ -302,32 +302,83 @@ def series_svg(width=1152, height=280):
     return svg_wrap(inner, width, height)
 
 
-def box_svg(vmin, q1, med, q3, vmax, ticks, width=1152, height=250, heading=""):
-    left, right = 72, 36
-    span = vmax - vmin
-    shift = (height * 0.46 - 132) if height > 320 else 0
-    axis_y = 132 + shift
+def _arrow(x, y_from, y_to):
+    """A vertical arrow. y_to is the tip."""
+    x = f"{x:.1f}"
+    if y_to > y_from:
+        base = y_to - 8
+        tip = y_to
+        wing = tip - 8
+    else:
+        base = y_to + 8
+        tip = y_to
+        wing = tip + 8
+    return (
+        f'<line x1="{x}" y1="{y_from:.1f}" x2="{x}" y2="{base:.1f}" stroke="#2a6f7a" stroke-width="1.6"></line>'
+        f'<polygon points="{float(x) - 4.5:.1f},{wing:.1f} {float(x) + 4.5:.1f},{wing:.1f} {x},{tip:.1f}" fill="#2a6f7a"></polygon>'
+    )
+
+
+def _tag(x, y, text, size=14):
+    return (
+        f'<text x="{x:.1f}" y="{y:.1f}" text-anchor="middle" font-size="{size}" fill="#2a6f7a" '
+        f'font-family="Montserrat, sans-serif" font-weight="700">{text}</text>'
+    )
+
+
+def box_svg(vmin, q1, med, q3, vmax, ticks, width=1152, height=340, heading=""):
+    """Box with an arrow and a name on each of the five numbers."""
+    left, right = 86, 78
+    span = vmax - vmin or 1
+    # Names sit on three rows above the box so close values do not share a line.
+    # A tall title card centers that stack; a short chart keeps it under the heading.
+    top = 36 if height < 400 else (height - 280) // 2 + 50
+    heading_y = 28 if height < 400 else top - 48
+    row_ends = top + 22
+    row_box = top + 50
+    row_median = top + 78
+    box_top = top + 108
+    box_h = 84
+    box_bot = box_top + box_h
+    axis_y = box_top + box_h / 2
+    num_y = box_bot + 32
 
     def X(v):
         return left + (v - vmin) / span * (width - left - right)
 
+    def arrow_down(x, y_label, y_tip):
+        return _arrow(x, y_label + 6, y_tip)
+
+    x_min, x_q1, x_med, x_q3, x_max = X(vmin), X(q1), X(med), X(q3), X(vmax)
     parts = [
         f'<rect x="0" y="0" width="{width}" height="{height}" rx="18" fill="#ffffff" '
         f'stroke="#e4e1da" stroke-width="1.4"></rect>',
-        f'<text x="24" y="32" font-size="13" fill="#2a6f7a" font-family="Montserrat, sans-serif" '
+        f'<text x="24" y="{heading_y}" font-size="13" fill="#2a6f7a" font-family="Montserrat, sans-serif" '
         f'font-weight="700" letter-spacing="1.2">{heading}</text>',
-        f'<line x1="{X(vmin):.1f}" y1="{axis_y}" x2="{X(vmax):.1f}" y2="{axis_y}" '
+        _tag(x_min, row_ends, "minimum"),
+        _tag(x_max, row_ends, "maximum"),
+        arrow_down(x_min, row_ends, box_top - 8),
+        arrow_down(x_max, row_ends, box_top - 8),
+        _tag(x_q1, row_box, "Q1"),
+        _tag(x_q3, row_box, "Q3"),
+        arrow_down(x_q1, row_box, box_top),
+        arrow_down(x_q3, row_box, box_top),
+        _tag(x_med, row_median, "median"),
+        arrow_down(x_med, row_median, box_top),
+        f'<line x1="{x_min:.1f}" y1="{axis_y:.1f}" x2="{x_max:.1f}" y2="{axis_y:.1f}" '
         f'stroke="#2a6f7a" stroke-width="3"></line>',
-        f'<line x1="{X(vmin):.1f}" y1="{78 + shift:.1f}" x2="{X(vmin):.1f}" y2="{186 + shift:.1f}" stroke="#2a6f7a" stroke-width="3"></line>',
-        f'<line x1="{X(vmax):.1f}" y1="{78 + shift:.1f}" x2="{X(vmax):.1f}" y2="{186 + shift:.1f}" stroke="#2a6f7a" stroke-width="3"></line>',
-        f'<rect x="{X(q1):.1f}" y="{86 + shift:.1f}" width="{X(q3) - X(q1):.1f}" height="92" '
+        f'<line x1="{x_min:.1f}" y1="{box_top - 8:.1f}" x2="{x_min:.1f}" y2="{box_bot + 8:.1f}" '
+        f'stroke="#2a6f7a" stroke-width="3"></line>',
+        f'<line x1="{x_max:.1f}" y1="{box_top - 8:.1f}" x2="{x_max:.1f}" y2="{box_bot + 8:.1f}" '
+        f'stroke="#2a6f7a" stroke-width="3"></line>',
+        f'<rect x="{x_q1:.1f}" y="{box_top:.1f}" width="{max(x_q3 - x_q1, 1):.1f}" height="{box_h}" '
         f'fill="#d7ebe8" stroke="#2a6f7a" stroke-width="2"></rect>',
-        f'<line x1="{X(med):.1f}" y1="{86 + shift:.1f}" x2="{X(med):.1f}" y2="{178 + shift:.1f}" stroke="#1c242c" '
+        f'<line x1="{x_med:.1f}" y1="{box_top:.1f}" x2="{x_med:.1f}" y2="{box_bot:.1f}" stroke="#1c242c" '
         f'stroke-width="3" stroke-dasharray="7 5"></line>',
     ]
     for value, lab in ticks:
         parts.append(
-            f'<text x="{X(value):.1f}" y="{214 + shift:.1f}" text-anchor="middle" font-size="15" fill="#1c242c" '
+            f'<text x="{X(value):.1f}" y="{num_y:.1f}" text-anchor="middle" font-size="16" fill="#1c242c" '
             f'font-family="Montserrat, sans-serif" font-weight="650">{lab}</text>'
         )
     return svg_wrap("".join(parts), width, height)
@@ -926,7 +977,7 @@ def slides_24():
         "Box plots",
         "Five numbers, drawn<br>on a scaled line.",
         "SECTION 2.4",
-        drawing(box_svg(1, 2, 7, 9, 11.5, ticks14, 460, 500, "MIN, Q1, MEDIAN, Q3, MAX"), 760, 110, 460, 500),
+        drawing(box_svg(1, 2, 7, 9, 11.5, ticks14, 460, 500, "WHAT EACH MARK IS CALLED"), 760, 110, 460, 500),
         "The box is Q1 to Q3. The dashed line is the median. Whiskers run to the minimum and the maximum, "
         "unless the plot marks outliers as dots. The axis has to be scaled or the picture lies.",
     ))
@@ -982,12 +1033,12 @@ def slides_24():
             + title("Whiskers out to the ends", 40),
             64, 16, 1150,
         ),
-        drawing(box_svg(1, 2, 7, 9, 11.5, ticks14, 1152, 280, "Q1 IS 2 · MEDIAN IS 7 · Q3 IS 9"), 64, 150, 1152, 280),
+        drawing(box_svg(1, 2, 7, 9, 11.5, ticks14, 1152, 340, "THE 14 VALUES"), 64, 112, 1152, 340),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;">'
             'The minimum is 1 and the maximum is 11.5. The box runs from 2 to 9, so the middle half covers 7 units. '
             'Start from a scaled number line. An unscaled box is not useful.</p>',
-            64, 480, 1150,
+            64, 500, 1150,
         ),
     ], notes="Figure 2.11. The two whiskers run from Q1 to the smallest value and from Q3 to the largest. The median is the dashed line."))
     out.append(section([
@@ -1015,12 +1066,12 @@ def slides_24():
             + title("Which quarter is the narrow one?", 34),
             64, 12, 1150,
         ),
-        drawing(box_svg(59, 64.5, 66, 70, 77, height_ticks, 1152, 270, "INCHES"), 64, 130, 1152, 270),
+        drawing(box_svg(59, 64.5, 66, 70, 77, height_ticks, 1152, 340, "HEIGHT IN INCHES"), 64, 108, 1152, 340),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             'The four quarters span 5.5, 1.5, 4, and 7 inches. The second quarter is the narrow one. The fourth is the widest. '
             'Range = 77 − 59 = 18. IQR = 70 − 64.5 = 5.5, so the middle 50% covers 5.5 inches.</p>',
-            64, 440, 1150,
+            64, 490, 1150,
         ),
     ], notes=(
         "Minimum 59, Q1 64.5, median 66, Q3 70, maximum 77. "
