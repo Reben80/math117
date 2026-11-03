@@ -158,6 +158,17 @@ def numbered(lines):
     return "".join(parts)
 
 
+def data_strip(label, text, top, height=96, left=72, width=1136):
+    return text_block(
+        card_shell(
+            f'<p style="margin:0;color:#2a6f7a;font-size:13px;font-weight:700;letter-spacing:0.12em;">{label}</p>'
+            f'<p style="margin:6px 0 0;color:#1c242c;font-size:18px;line-height:1.45;">{text}</p>',
+            height,
+        ),
+        left, top, width,
+    )
+
+
 def revealed_answers(pairs):
     parts = []
     for i, (question, answer) in enumerate(pairs):
@@ -668,13 +679,20 @@ def slides_23():
             "“The 70th percentile is 21.”",
             "A classmate stopped at i = (70 / 100) × (29 + 1) = 21.",
         ),
+        data_strip(
+            "29 AGES, ALREADY IN ORDER",
+            "1–10: 18, 21, 22, 25, 26, 27, 29, 30, 31, 33<br>"
+            "11–20: 36, 37, 41, 42, 47, 52, 55, 57, 58, 62<br>"
+            "21–29: 64, 67, 69, 71, 72, 73, 74, 76, 77",
+            155, 132,
+        ),
         text_block(
             revealed_answers([
                 ("What is 21?", "The place in the ordered list. It is not an age."),
-                ("What age sits in that place?", "The 21st age is 64."),
+                ("What age sits in that place?", "The 21st age is 64. It is the first age in the 21–29 row."),
                 ("What would you tell them?", "i says where to look. Then read the value."),
             ]),
-            72, 185, 1100,
+            72, 305, 1100,
         ),
     ], notes=(
         "Right-arrow once per answer. Ordered ages, position 21 is 64. "
@@ -712,13 +730,18 @@ def slides_23():
     out.append(section([
         backdrop(),
         activity_head("Example · read the list", "Now answer the warm-up"),
+        data_strip(
+            "THE SAME 14 VALUES, NOW IN ORDER",
+            "1, 1, 2, 2, 4, 6, 6.8, 7.2, 8, 8.3, 9, 10, 10, 11.5",
+            150, 88,
+        ),
         text_block(
             revealed_answers([
                 ("Which number is the middle?", "Order first. The median is (6.8 + 7.2) / 2 = 7."),
                 ("What has a quarter of the list at or below it?", "Q1 is 2."),
                 ("Why was the shuffled list hard?", "The middle is a position. You cannot see it until the list is ordered."),
             ]),
-            72, 160, 1100,
+            72, 255, 1100,
         ),
     ], notes="Right-arrow once per answer. Lower half 1, 1, 2, 2, 4, 6, 6.8, so Q1 is 2. n = 14, so 7 is the average of the two middle values and is not itself in either half."))
     out.append(section([
@@ -761,11 +784,16 @@ def slides_23():
             "What should we do with $5,500,000?",
             "A classmate says: “Delete it. It ruins the prices.” Do you agree?",
         ),
+        data_strip(
+            "THE 13 PRICES, ALREADY USED",
+            "Upper fence $1,159,375. One price, $5,500,000, sits above it.",
+            148, 78,
+        ),
         *three_cards([
             ("1 · Check it", "Is it a typo?", "One house can cost that much. Go back to the source if you can."),
             ("2 · If it is real, keep it", "It is information", "The fence already flags it. A potential outlier is not the same as a mistake."),
             ("3 · Report it", "Say what you did", "If you leave a price out, tell the reader which one and why."),
-        ], 185, 250),
+        ], 245, 230),
     ], notes=(
         "Same decision as the 12.3 km distance in section 2.1. "
         "The book keeps $5,500,000 in the list and calls it a potential outlier. Do not tell them to delete it."
@@ -853,9 +881,9 @@ def slides_23():
         ("Scoring in the 90th percentile means",
          [("A", "A grade of 90%"), ("B", "90% scored the same or lower"), ("C", "The mean is 90")],
          "B", "It is a position in the ordered list."),
-        ("For the 14 values, the IQR is",
+        ("The 14 values have Q1 = 2 and Q3 = 9. The IQR is",
          [("A", "7"), ("B", "11.5"), ("C", "2")], "A", "Q3 minus Q1 is 9 − 2."),
-        ("The night-class outliers are",
+        ("Night fences are 61.5 and 105.5. The outliers are",
          [("A", "None"), ("B", "25.5 and 45"), ("C", "98")], "B", "Both sit below the fence at 61.5."),
     ], "One right-arrow shows 1B, 2A, 3B. Homework 82 and 83."))
     out.append(section([
@@ -866,10 +894,10 @@ def slides_23():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Explain the half", "For the 14 values, why is the median 7 not inside either half?"),
-            ("Option B", "Compare two classes", "The night IQR is 11. The day IQR is 26.5. Which middle half is tighter?"),
-            ("Option C", "Use the fence", "Is the $120,000 salary a potential outlier? Name the fence you used."),
-        ], 185, 280),
+            ("Option A", "Explain the half", "n = 14. Ordered: 1, 1, 2, 2, 4, 6, 6.8, 7.2, 8, 8.3, 9, 10, 10, 11.5. Why is the median, 7, not inside either half?"),
+            ("Option B", "Compare two classes", "Day Q1 56, Q3 82.5, IQR 26.5. Night Q1 78, Q3 89, IQR 11. Which middle half is tighter?"),
+            ("Option C", "Use the fence", "Q1 $40,500, median $54,000, Q3 $69,000. Is $120,000 a potential outlier? Name the fence."),
+        ], 168, 360),
     ], notes=(
         "A: n = 14 is even, so the median averages the 7th and 8th values and is not placed in either half. "
         "B: the night class. Its middle 50% covers 11 points, not 26.5. "
@@ -965,13 +993,18 @@ def slides_24():
     out.append(section([
         backdrop(),
         activity_head("The same 14 values", "Now answer the warm-up"),
+        data_strip(
+            "FIVE NUMBERS FROM THE WARM-UP",
+            "Minimum 1 · Q1 2 · median 7 · Q3 9 · maximum 11.5",
+            150, 88,
+        ),
         text_block(
             revealed_answers([
                 ("Where does the box start and end?", "From Q1 to Q3: 2 to 9."),
                 ("Where does the line inside go?", "At the median, 7. It is not the center of the box."),
                 ("Why scale the axis?", "An unscaled box can make a short quarter look as wide as a long one."),
             ]),
-            72, 160, 1100,
+            72, 255, 1100,
         ),
     ], notes="Right-arrow once per answer. The distance from 2 to 7 is 5. The distance from 7 to 9 is 2. Equal widths on the page would be a lie."))
     height_ticks = [(59, "59"), (64.5, "64.5"), (66, "66"), (70, "70"), (77, "77")]
@@ -1002,13 +1035,18 @@ def slides_24():
             "Someone drew the four quarters the same width",
             "The height quarters span 5.5, 1.5, 4, and 7 inches.",
         ),
+        data_strip(
+            "40 HEIGHTS, IN INCHES",
+            "Minimum 59 · Q1 64.5 · median 66 · Q3 70 · maximum 77",
+            155, 88,
+        ),
         text_block(
             revealed_answers([
                 ("Which quarter did the drawing stretch?", "The second. It is only 1.5 inches, from 64.5 to 66."),
                 ("What does a scaled axis stop?", "Pretending each quarter covers the same distance."),
                 ("Which quarter is actually widest?", "The fourth. It runs 7 inches, from 70 to 77."),
             ]),
-            72, 185, 1100,
+            72, 260, 1100,
         ),
     ], notes="Right-arrow once per answer. About 25% of the students sit in each quarter. The widths are distances, not counts."))
     out.append(section([
@@ -1044,13 +1082,18 @@ def slides_24():
             "Should the principal buy equipment for one student?",
             "One of the 15 students exercised 300 minutes. The fence is 120.",
         ),
+        data_strip(
+            "FIFTEEN TIMES, IN MINUTES",
+            "Minimum 0 · Q1 20 · median 40 · Q3 60 · maximum 300. IQR = 40.",
+            155, 88,
+        ),
         text_block(
             revealed_answers([
                 ("What is typical here?", "Half the students are between 20 and 60 minutes. About 75% exercise 60 or less."),
                 ("What is 300?", "One student, past the fence. Not the class."),
                 ("What would you tell the principal?", "Fifteen students is a small sample. Ask more people before buying on this alone."),
             ]),
-            72, 185, 1100,
+            72, 260, 1100,
         ),
     ], notes="The book’s own caution: the principal should not buy equipment from this sample alone. If 300 is set aside, the new maximum is 120 and the middle half is still 20 to 60."))
     out.append(section([
@@ -1103,7 +1146,7 @@ def slides_24():
         ("The dashed line inside the box is",
          [("A", "The mean"), ("B", "The median"), ("C", "The maximum")],
          "B", "Q1 and Q3 are the ends of the box."),
-        ("300 minutes of exercise is",
+        ("300 minutes of exercise, with the fence at 120, is",
          [("A", "The median"), ("B", "A potential outlier"), ("C", "Q1")],
          "B", "The fence is 60 + 1.5 × 40 = 120."),
     ], "One right-arrow shows 1B, 2B, 3B. Homework 84 through 89."))
@@ -1115,10 +1158,10 @@ def slides_24():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Sketch the box", "Project times: min 2, Q1 3, median 3, Q3 4, max 11. Where is the outlier?"),
-            ("Option B", "Read the height box", "Why does the median line sit closer to 64.5 than to 70?"),
-            ("Option C", "Make the call", "One project took 11 hours. Should the assignment change?"),
-        ], 185, 280),
+            ("Option A", "Sketch the box", "Ordered times: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Five numbers 2, 3, 3, 4, 11. Where is the outlier?"),
+            ("Option B", "Read the height box", "Heights: 59, 64.5, 66, 70, 77. Why does 66 sit closer to 64.5 than to 70?"),
+            ("Option C", "Make the call", "Five numbers 2, 3, 3, 4, 11 hours. Upper fence 5.5. Should the assignment change?"),
+        ], 168, 360),
     ], notes=(
         "A: the upper fence is 4 + 1.5 × 1 = 5.5, so 11 is a potential outlier. "
         "B: 66 is 1.5 inches above Q1 and 4 inches below Q3. The second quarter is the narrow one. "
@@ -1232,13 +1275,18 @@ def slides_25():
             "“The median age is 20.5.”",
             "For the 40 patients, (40 + 1) / 2 = 20.5.",
         ),
+        data_strip(
+            "WHERE 20.5 POINTS",
+            "The 20th ordered age is 24. The 21st ordered age is 24. The mean of all 40 is 23.6.",
+            155, 88,
+        ),
         text_block(
             revealed_answers([
                 ("What is 20.5?", "A location. It sits between the 20th and 21st ages."),
                 ("What is the median age?", "24. Both of those ages are 24."),
                 ("What about the mean?", "23.6 years. Close to 24, not to 20.5."),
             ]),
-            72, 185, 1100,
+            72, 260, 1100,
         ),
     ], notes="Right-arrow once per answer. The location is not the median. Read the age that sits at that location."))
     out.append(section([
@@ -1273,13 +1321,18 @@ def slides_25():
     out.append(section([
         backdrop(),
         activity_head("Example 2.27", "Now answer the warm-up"),
+        data_strip(
+            "THE TOWN OF 50",
+            "49 people earn $30,000. One person earns $5,000,000. Mean $129,400. Median $30,000.",
+            150, 88,
+        ),
         text_block(
             revealed_answers([
                 ("Which one number?", "The median, $30,000."),
                 ("What did the average do?", "The mean is $129,400. The one income pulls it."),
                 ("Which number still describes the 49?", "The median. The mean followed the outlier."),
             ]),
-            72, 160, 1100,
+            72, 255, 1100,
         ),
     ], notes="Right-arrow once per answer. 49 × 30,000 = 1,470,000. Add 5,000,000 to get 6,470,000. Divide by 50 to get 129,400. The book prints the median only."))
     out.append(section([
@@ -1407,10 +1460,10 @@ def slides_25():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Report a center", "For the town, which center would you give a new resident, and why?"),
-            ("Option B", "Locate it", "n = 40. Why is 20.5 not the median age?"),
+            ("Option A", "Report a center", "49 people earn $30,000. One earns $5,000,000. Mean $129,400. Median $30,000. Which would you give a new resident?"),
+            ("Option B", "Locate it", "n = 40. (40+1)/2 = 20.5. The 20th and 21st ages are both 24. Why is 20.5 not the median age?"),
             ("Option C", "Name it", "The list is 430, 430, 480, 480, 495. What do you call the mode?"),
-        ], 185, 280),
+        ], 168, 360),
     ], notes=(
         "A: the median, $30,000. The mean, $129,400, follows the $5,000,000 income. "
         "B: 20.5 is the location between the 20th and 21st ages. The age there is 24. "
@@ -1601,13 +1654,18 @@ def slides_26():
             "“Terry is skewed left, because 3 is small.”",
             "Terry’s median is 3. Terry’s mean is 3.7.",
         ),
+        data_strip(
+            "TERRY’S TEN WORDS",
+            "7, 9, 3, 3, 3, 4, 1, 3, 2, 2",
+            155, 88,
+        ),
         text_block(
             revealed_answers([
                 ("Compare the two centers.", "The mean, 3.7, is above the median, 3."),
                 ("Which value pulls the mean?", "The 9."),
                 ("Which way does the tail point?", "Right. A small median is not a left tail."),
             ]),
-            72, 185, 1100,
+            72, 260, 1100,
         ),
     ], notes="Right-arrow once per answer. Davis is the left tail: mean 2.7 is below median 3, and the 1s do the pulling."))
     out.append(quick("Name the tail", [
@@ -1629,10 +1687,10 @@ def slides_26():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Name yesterday’s picture", "The calculus-finals polygon had a long tail toward the low scores. What is that shape?"),
-            ("Option B", "Predict the town", "One income is $5,000,000 and the rest are $30,000. Which way does the tail point?"),
-            ("Option C", "Use Davis", "Mean 2.7, median 3. Which side is the tail, and what pulls it?"),
-        ], 185, 280),
+            ("Option A", "Name yesterday’s picture", "Calculus finals: a long tail toward the low scores. The high scores are the crowd. What is that shape?"),
+            ("Option B", "Predict the town", "49 incomes are $30,000. One is $5,000,000. Mean $129,400. Median $30,000. Which way does the tail point?"),
+            ("Option C", "Use Davis", "3, 3, 3, 4, 1, 4, 3, 2, 3, 1. Mean 2.7, median 3. Which side is the tail, and what pulls it?"),
+        ], 168, 360),
     ], notes=(
         "A: skewed left. The mean often sits below the median. Section 2.2 already said that polygon’s long tail runs toward the low scores. "
         "B: skewed right. The mean is $129,400 and the median is $30,000. "
@@ -1719,13 +1777,18 @@ def slides_27():
     out.append(section([
         backdrop(),
         activity_head("Two supermarkets", "Now answer the warm-up"),
+        data_strip(
+            "THE TWO STORES",
+            "Store A: mean 5 minutes, standard deviation 2. Store B: mean 5 minutes, standard deviation 4.",
+            150, 88,
+        ),
         text_block(
             revealed_answers([
                 ("Is the mean enough?", "No. Both means are 5 minutes."),
                 ("What else did you need?", "The standard deviation. Store A is 2. Store B is 4."),
                 ("Which store worries you more?", "Store B. Its waits sit farther from 5, so a late wait is more likely."),
             ]),
-            72, 160, 1100,
+            72, 255, 1100,
         ),
     ], notes="Right-arrow once per answer. Store A: 5 + 2 = 7, still under 8. Store B: 5 + 4 = 9, which is the late wait from the warm-up. This is a rough picture, not a guarantee."))
     out.append(section([
@@ -1878,13 +1941,18 @@ def slides_27():
             "“Use σx. There are 20 of them.”",
             "The 20 fifth-graders are a sample, not every fifth-grader.",
         ),
+        data_strip(
+            "THE SAMPLE YOU JUST USED",
+            "n = 20. Mean 10.53 years. The book’s sample standard deviation is s = 0.72.",
+            155, 88,
+        ),
         text_block(
             revealed_answers([
                 ("What does σx divide by?", "N, the whole population."),
                 ("Which line should you read?", "Sx. A sample divides by n − 1."),
                 ("When is σx the right line?", "When the list is everyone you are describing."),
             ]),
-            72, 185, 1100,
+            72, 260, 1100,
         ),
     ], notes="Right-arrow once per answer. Example 2.32 already used s = 0.72 because the fifth-graders are a sample."))
     out.append(section([
@@ -1981,7 +2049,7 @@ def slides_27():
          "A", "σx is the population standard deviation."),
     ], "One right-arrow shows 1B, 2A, 3A. Homework 94 through 107. The chapter review starts at 108."))
     out.append(quick("Before Friday", [
-        ("The salary of $120,000 is",
+        ("The salary of $120,000, with the fence at $111,750, is",
          [("A", "The median"), ("B", "A potential outlier"), ("C", "Below the fence")],
          "B", "The fence is $111,750."),
         ("For the 60 houses, the better center is",
@@ -1999,10 +2067,10 @@ def slides_27():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Choose a line", "Both means are 5 minutes. You cannot be late. Which store, and which standard deviation?"),
-            ("Option B", "Read the screen", "The 20 fifth-graders are a sample. Do you read Sx or σx, and why?"),
-            ("Option C", "Say what 17.9 adds", "The 31 exam scores have mean 73.5 and s = 17.9. What does 17.9 tell you?"),
-        ], 185, 280),
+            ("Option A", "Choose a line", "Store A: mean 5, s = 2. Store B: mean 5, s = 4. You cannot be late. Which store?"),
+            ("Option B", "Read the screen", "20 fifth-graders, a sample. Mean 10.53, s = 0.72. Do you read Sx or σx?"),
+            ("Option C", "Say what 17.9 adds", "31 exam scores. Mean 73.5, median 73, s = 17.9, IQR 29. What does 17.9 tell you?"),
+        ], 168, 360),
     ], notes=(
         "A: store A, standard deviation 2. Store B’s standard deviation is 4, so its waits sit farther from 5. "
         "B: Sx. A sample divides by n − 1. σx divides by N. "
