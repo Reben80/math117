@@ -770,7 +770,7 @@ def slides_23():
             170,
         ), 64, 360, 1150, 170),
         text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;">The median is (6.8 + 7.2) / 2 = 7. The IQR is 9 − 2 = 7, the spread of the middle half.</p>',
+            '<p style="margin:0;color:#1c242c;font-size:22px;">Location of the median = (n + 1) / 2, so average the 7th and 8th: (6.8 + 7.2) / 2 = 7. IQR = Q3 − Q1 = 9 − 2 = 7.</p>',
             64, 560, 1150,
         ),
     ], notes=(
@@ -813,6 +813,8 @@ def slides_23():
             130,
         ), 640, 170, 560, 130),
         text_block(
+            '<p style="margin:0 0 12px;color:#2a6f7a;font-size:22px;font-weight:650;line-height:1.35;">'
+            'IQR = Q3 − Q1. Fences: Q1 − 1.5 × IQR and Q3 + 1.5 × IQR.</p>'
             '<p style="margin:0 0 12px;color:#1c242c;font-size:24px;line-height:1.35;">'
             '1.5 × 340,250 = 510,375.</p>'
             '<p style="margin:0 0 12px;color:#1c242c;font-size:24px;line-height:1.35;">'
@@ -863,11 +865,13 @@ def slides_23():
         text_block(
             card_shell(
                 '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
-                '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">'
-                'n = 11, so the median is the 6th salary. Q1 and Q3 are the middles of the two halves.</p>',
-                140,
+                '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">'
+                'n = 11, so the median is the 6th salary. Q1 and Q3 are the middles of the two halves.</p>'
+                '<p style="margin:10px 0 0;color:#2a6f7a;font-size:22px;font-weight:650;line-height:1.35;">'
+                'IQR = Q3 − Q1. A value above Q3 + 1.5 × IQR is a potential outlier.</p>',
+                200,
             ),
-            64, 420, 1100, 140,
+            64, 390, 1100, 200,
         ),
     ], notes="Give them about two minutes. The next slide is the check. Do not start the fence until Q1 and Q3 are on the board."))
     out.append(section([
@@ -880,12 +884,12 @@ def slides_23():
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Q1 · median · Q3</p>'
             '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">$40,500 · $54,000 · $69,000</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;">IQR = 69,000 − 40,500 = $28,500</p>',
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;">IQR = Q3 − Q1 = 69,000 − 40,500 = $28,500</p>',
             180,
         ), 64, 170, 1150, 180),
         text_block(
             '<p style="margin:0 0 10px;color:#1c242c;font-size:24px;line-height:1.35;">'
-            '1.5 × 28,500 = 42,750. The upper fence is 69,000 + 42,750 = $111,750.</p>'
+            '1.5 × IQR = 1.5 × 28,500 = 42,750. Upper fence = Q3 + 1.5 × IQR = 69,000 + 42,750 = $111,750.</p>'
             '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
             '$120,000 is above that fence. It is a potential outlier. Nothing falls below the lower fence.</p>',
             64, 400, 1150,
@@ -919,6 +923,7 @@ def slides_23():
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
             'The night scores sit higher, and their middle half is tighter. '
+            'IQR = Q3 − Q1. Fences: Q1 − 1.5 × IQR and Q3 + 1.5 × IQR. '
             'The day fences are 16.25 and 122.25. The night fences are 61.5 and 105.5.</p>',
             64, 460, 1150,
         ),
@@ -947,7 +952,7 @@ def slides_23():
         *three_cards([
             ("Option A", "Explain the half", "n = 14. Ordered: 1, 1, 2, 2, 4, 6, 6.8, 7.2, 8, 8.3, 9, 10, 10, 11.5. Why is the median, 7, not inside either half?"),
             ("Option B", "Compare two classes", "Day Q1 56, Q3 82.5, IQR 26.5. Night Q1 78, Q3 89, IQR 11. Which middle half is tighter?"),
-            ("Option C", "Use the fence", "Q1 $40,500, median $54,000, Q3 $69,000. Is $120,000 a potential outlier? Name the fence."),
+            ("Option C", "Use the fence", "Q1 $40,500, median $54,000, Q3 $69,000. IQR = Q3 − Q1. Upper fence = Q3 + 1.5 × IQR. Is $120,000 a potential outlier?"),
         ], 168, 360),
     ], notes=(
         "A: n = 14 is even, so the median averages the 7th and 8th values and is not placed in either half. "
@@ -1036,8 +1041,8 @@ def slides_24():
         drawing(box_svg(1, 2, 7, 9, 11.5, ticks14, 1152, 340, "THE 14 VALUES"), 64, 112, 1152, 340),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;">'
-            'The minimum is 1 and the maximum is 11.5. The box runs from 2 to 9, so the middle half covers 7 units. '
-            'Start from a scaled number line. An unscaled box is not useful.</p>',
+            'The minimum is 1 and the maximum is 11.5. The box runs from Q1 to Q3, so from 2 to 9. '
+            'IQR = Q3 − Q1 = 7. Start from a scaled number line. An unscaled box is not useful.</p>',
             64, 500, 1150,
         ),
     ], notes="Figure 2.11. The two whiskers run from Q1 to the smallest value and from Q3 to the largest. The median is the dashed line."))
@@ -1070,7 +1075,7 @@ def slides_24():
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             'The four quarters span 5.5, 1.5, 4, and 7 inches. The second quarter is the narrow one. The fourth is the widest. '
-            'Range = 77 − 59 = 18. IQR = 70 − 64.5 = 5.5, so the middle 50% covers 5.5 inches.</p>',
+            'Range = maximum − minimum = 77 − 59 = 18. IQR = Q3 − Q1 = 70 − 64.5 = 5.5.</p>',
             64, 490, 1150,
         ),
     ], notes=(
@@ -1109,8 +1114,8 @@ def slides_24():
         ),
         text_block(card_shell(
             '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.45;">Min 0 · Q1 20 · median 40 · Q3 60 · max 300</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:24px;line-height:1.45;">IQR = 60 − 20 = 40.</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:24px;line-height:1.45;">Q3 + 1.5 × IQR = 60 + 60 = 120.</p>'
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:24px;line-height:1.45;">IQR = Q3 − Q1 = 60 − 20 = 40.</p>'
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:24px;line-height:1.45;">Upper fence = Q3 + 1.5 × IQR = 60 + 60 = 120.</p>'
             '<p style="margin:14px 0 0;color:#2a6f7a;font-size:26px;font-weight:650;">300 is greater than 120, so it is a potential outlier.</p>',
             280,
         ), 64, 160, 1150, 280),
@@ -1161,10 +1166,11 @@ def slides_24():
         text_block(
             card_shell(
                 '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
-                '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;">Order the ten times first. n is even, so the median is the average of the 5th and 6th.</p>',
-                140,
+                '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">Order the ten times first. n is even, so the median is the average of the 5th and 6th. Its location is (n + 1) / 2.</p>'
+                '<p style="margin:10px 0 0;color:#2a6f7a;font-size:22px;font-weight:650;">IQR = Q3 − Q1. Upper fence = Q3 + 1.5 × IQR.</p>',
+                200,
             ),
-            64, 420, 1100, 140,
+            64, 390, 1100, 200,
         ),
     ], notes="Ordered: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Give them about two minutes."))
     out.append(section([
@@ -1177,7 +1183,7 @@ def slides_24():
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Min · Q1 · median · Q3 · max</p>'
             '<p style="margin:14px 0 0;color:#1c242c;font-size:32px;font-weight:650;">2 · 3 · 3 · 4 · 11</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:24px;">IQR = 4 − 3 = 1. The upper fence is 4 + 1.5 = 5.5.</p>',
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:22px;">IQR = Q3 − Q1 = 4 − 3 = 1. Upper fence = Q3 + 1.5 × IQR = 4 + 1.5 × 1 = 5.5.</p>',
             190,
         ), 64, 170, 1150, 190),
         text_block(
@@ -1209,7 +1215,7 @@ def slides_24():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Sketch the box", "Ordered times: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Five numbers 2, 3, 3, 4, 11. Where is the outlier?"),
+            ("Option A", "Sketch the box", "Ordered times: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Five numbers 2, 3, 3, 4, 11. Upper fence = Q3 + 1.5 × IQR. Where is the outlier?"),
             ("Option B", "Read the height box", "Heights: 59, 64.5, 66, 70, 77. Why does 66 sit closer to 64.5 than to 70?"),
             ("Option C", "Make the call", "Five numbers 2, 3, 3, 4, 11 hours. Upper fence 5.5. Should the assignment change?"),
         ], 168, 360),
@@ -1288,7 +1294,8 @@ def slides_25():
             220,
         ), 640, 200, 540, 220),
         text_block(
-            '<p style="margin:0;color:#1c242c;font-size:24px;">When someone says average, they mean this mean.</p>',
+            '<p style="margin:0;color:#2a6f7a;font-size:24px;font-weight:650;">Mean = (sum of the values) / n.</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;">μ uses the same formula for the whole population. When someone says average, they mean this mean.</p>',
             72, 480, 1000,
         ),
     ], notes=(
@@ -1304,7 +1311,7 @@ def slides_25():
             64, 28, 1150,
         ),
         text_block(card_shell(
-            '<p style="margin:0;color:#5d6670;font-size:18px;">Where the median sits</p>'
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Location of the median = (n + 1) / 2</p>'
             '<p style="margin:12px 0 0;color:#1c242c;font-size:32px;font-weight:650;">(40 + 1) / 2 = 20.5</p>'
             '<p style="margin:14px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">Between the 20th and 21st ages. Both are 24, so the median is 24.</p>',
             210,
@@ -1348,7 +1355,7 @@ def slides_25():
             64, 28, 1100,
         ),
         text_block(card_shell(
-            '<p style="margin:0;color:#5d6670;font-size:18px;">The mean</p>'
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Mean = (sum) / n</p>'
             '<p style="margin:10px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">(49 × 30,000 + 5,000,000) / 50</p>'
             '<p style="margin:10px 0 0;color:#1c242c;font-size:40px;font-weight:650;">$129,400</p>',
             190,
@@ -1399,11 +1406,12 @@ def slides_25():
         text_block(
             card_shell(
                 '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
-                '<p style="margin:12px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">'
-                'n = 60, so the median is the average of the 30th and 31st ordered prices.</p>',
-                140,
+                '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">'
+                'n = 60. Location of the median = (n + 1) / 2, so average the 30th and 31st ordered prices.</p>'
+                '<p style="margin:10px 0 0;color:#2a6f7a;font-size:22px;font-weight:650;">Mean = (sum of the prices) / n.</p>',
+                190,
             ),
-            64, 430, 1100, 140,
+            64, 400, 1100, 190,
         ),
     ], notes="Do not have them add all 60 prices by hand. The next slide shows both numbers."))
     out.append(section([
@@ -1414,7 +1422,7 @@ def slides_25():
             64, 28, 1100,
         ),
         text_block(card_shell(
-            '<p style="margin:0;color:#5d6670;font-size:18px;">The mean</p>'
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Mean = (sum) / n</p>'
             '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">(29 × 280,000 + 30 × 315,000 + 2,500,000) / 60</p>'
             '<p style="margin:10px 0 0;color:#1c242c;font-size:36px;font-weight:650;">$334,500</p>',
             200,
@@ -1663,7 +1671,12 @@ def slides_26():
             ("Terry", "7, 9, 3, 3, 3, 4, 1, 3, 2, 2", "Is the mean above the median, or below it?"),
             ("Davis", "3, 3, 3, 4, 1, 4, 3, 2, 3, 1", "Which values are pulling?"),
             ("Maris", "2, 3, 4, 4, 4, 6, 6, 6, 8, 3", "Do the two centers nearly agree?"),
-        ], 185, 250),
+        ], 175, 230),
+        text_block(
+            '<p style="margin:0;color:#2a6f7a;font-size:22px;font-weight:650;">'
+            'If you do add: mean = (sum) / n. Location of the median = (n + 1) / 2.</p>',
+            72, 430, 1136,
+        ),
     ], notes="Four minutes. Terry’s 9 pulls the mean up. Davis’s 1s pull it down. Maris is the roughly even one. The next slide has the means: 3.7, 2.7, and 4.6."))
     out.append(section([
         backdrop(),
@@ -1941,8 +1954,13 @@ def slides_27():
                 "Find the age two standard deviations below the mean.",
                 "What would s equal if every fifth-grader were the same age?",
             ]),
-            200,
-        ), 72, 200, 1136, 200),
+            190,
+        ), 72, 185, 1136, 190),
+        text_block(
+            '<p style="margin:0;color:#2a6f7a;font-size:22px;font-weight:650;">'
+            'One above: mean + s. Two below: mean − 2s.</p>',
+            72, 400, 1136,
+        ),
     ], notes=(
         "Three minutes. Answers on the next slide: 10.53 + 0.72 = 11.25, and 10.53 − 2(0.72) = 10.53 − 1.44 = 9.09. "
         "s is 0 only when every age is the same. "
@@ -1957,14 +1975,14 @@ def slides_27():
         ),
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">One standard deviation above</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">10.53 + 0.72 = 11.25</p>',
-            140,
-        ), 64, 170, 560, 140),
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;font-weight:650;">mean + s = 10.53 + 0.72 = 11.25</p>',
+            150,
+        ), 64, 165, 560, 150),
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Two standard deviations below</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">10.53 − 1.44 = 9.09</p>',
-            140,
-        ), 656, 170, 560, 140),
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;font-weight:650;">mean − 2s = 10.53 − 2(0.72) = 9.09</p>',
+            150,
+        ), 656, 165, 560, 150),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             'The ages are a sample, so the variance divides by 19, not by 20. '
@@ -2054,7 +2072,7 @@ def slides_27():
         text_block(
             card_shell(
                 '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
-                '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Clear L1 first. Read x̄ and Sx. Then compute x̄ + 2 Sx with the unrounded Sx.</p>',
+                '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Clear L1 first. Read x̄ and Sx. Two above the mean is x̄ + 2 Sx. Use the unrounded Sx.</p>',
                 120,
             ),
             64, 470, 1120, 120,
@@ -2074,7 +2092,7 @@ def slides_27():
         ), 64, 160, 1150, 140),
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Two standard deviations above the mean</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">30.68 + 2(6.09) = 42.86</p>',
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">x̄ + 2 Sx = 30.68 + 2(6.09) = 42.86</p>',
             140,
         ), 64, 320, 1150, 140),
         text_block(
