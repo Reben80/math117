@@ -1904,8 +1904,8 @@ def slides_27():
         "SECTION 2.7",
         drawing(sd_bands_svg(460, 500), 760, 110, 460, 500),
         "Standard deviation is never negative. It is small when the values hug the mean. "
-        "In practice, use a calculator. Concentrate on what the number tells you. "
-        "Select Sx for a sample and σx for a population.",
+        "In practice, use Desmos. Concentrate on what the number tells you. "
+        "stdev(L) for a sample, stdevp(L) for a population.",
     ))
     out.append(section([
         backdrop(),
@@ -2005,57 +2005,26 @@ def slides_27():
         text_block(kicker("Sample or population") + title("Divide by n − 1, or by N"), 64, 28, 1100),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:18px;font-weight:700;">SAMPLE</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by n − 1. The standard deviation is s. On a calculator, read Sx.</p>'
-            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Say it: s is “ess.” Sx is “ess x.” The mean x̄ is “x-bar.”</p>',
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by n − 1. The standard deviation is s. In Desmos, stdev(L).</p>'
+            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Say it: s is “ess.” The mean x̄ is “x-bar.”</p>',
             250,
         ), 64, 170, 560, 250),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:18px;font-weight:700;">POPULATION</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by N. The standard deviation is σ. On a calculator, read σx.</p>'
-            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Say it: σ is the Greek letter “sigma.” σx is “sigma x.” The mean μ is “mew.”</p>',
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by N. The standard deviation is σ. In Desmos, stdevp(L).</p>'
+            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Say it: σ is the Greek letter “sigma.” The mean μ is “mew.”</p>',
             250,
         ), 656, 170, 560, 250),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             'The deviations from the mean add to zero, so the calculation squares them. '
-            'Dividing a sample by n − 1 estimates the population variance better than dividing by n. Let the calculator do that arithmetic.</p>',
+            'Dividing a sample by n − 1 estimates the population variance better than dividing by n. Let Desmos do that arithmetic.</p>',
             64, 450, 1150,
         ),
     ], notes=(
         "Variance is in squared units. The standard deviation is the square root, back in the units of the data. "
         "s estimates σ when the sample looks like the population. "
-        "The next slide is the keystroke list. Walk it once, then Example 2.32. The fifth-graders are a sample, so the reading is Sx."
-    )))
-    out.append(section([
-        backdrop(),
-        text_block(
-            kicker("On the calculator")
-            + title("Let it do the arithmetic", 40),
-            64, 24, 1100,
-        ),
-        text_block(card_shell(
-            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">1 · ENTER THE LIST</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">STAT, then EDIT. Clear L1. Type one value per row.</p>',
-            150,
-        ), 64, 160, 560, 150),
-        text_block(card_shell(
-            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">2 · ONE-VARIABLE STATS</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">STAT, CALC, 1-Var Stats, then Calculate.</p>',
-            150,
-        ), 656, 160, 560, 150),
-        text_block(card_shell(
-            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">3 · READ THE RIGHT LINE</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">x̄ is the mean. Sx is the sample standard deviation. σx is the population one.</p>',
-            150,
-        ), 64, 340, 1150, 150),
-        text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;">Keep the calculator’s Sx unrounded while you still have steps to do. Round the final answer.</p>',
-            64, 530, 1150,
-        ),
-    ], notes=(
-        "TI-83 or TI-84. To clear a list: put the cursor on L1, CLEAR, ENTER. "
-        "STAT 4 is ClrList if someone asks. A phone calculator is enough for a mean. "
-        "Standard deviation is the reason the graphing calculator comes out today."
+        "In Desmos: type L = [values], then mean(L) and stdev(L). stdevp(L) is the population version. Next is Example 2.32. The fifth-graders are a sample, so use stdev."
     )))
     out.append(section([
         backdrop(),
@@ -2080,7 +2049,7 @@ def slides_27():
     ], notes=(
         "Three minutes. Answers on the next slide: 10.53 + 0.72 = 11.25, and 10.53 − 2(0.72) = 10.53 − 1.44 = 9.09. "
         "s is 0 only when every age is the same. "
-        "The calculator’s unrounded Sx is about 0.715891. This example uses the book’s already-rounded 10.53 and 0.72."
+        "Desmos stdev gives about 0.715891 unrounded. This example uses the book’s already-rounded 10.53 and 0.72."
     )))
     out.append(section([
         backdrop(),
@@ -2114,7 +2083,7 @@ def slides_27():
         "Ages: 9 once, 9.5 twice, 10 four times, 10.5 four times, 11 six times, 11.5 three times. n = 20. "
         "The deviation table uses the mean 10.525. The book then rounds the average to 10.53. "
         "Sum of f times squared deviations is 9.7375. Sample variance is 9.7375 / 19. "
-        "s = 0.72 to two decimals. The calculator’s Sx is about 0.715891. Use that unrounded value for further steps, then check the book’s rounded lines: "
+        "s = 0.72 to two decimals. Desmos stdev gives about 0.715891. Use that unrounded value for further steps, then check the book’s rounded lines: "
         "plus 1s is 11.25, minus 2s is 9.09, and plus or minus 1.5s is 11.61 and 9.45. "
         "The next slides reuse Monday’s 31 exam scores, then Try It 2.32, the baseball ages. "
         "Have them enter the ages. Do not compute s by hand."
@@ -2123,7 +2092,7 @@ def slides_27():
         backdrop(),
         activity_head(
             "Spot the mistake · 3 minutes",
-            "“Use σx. There are 20 of them.”",
+            "“Use stdevp. There are 20 of them.”",
             "The 20 fifth-graders are a sample, not every fifth-grader.",
         ),
         data_strip(
@@ -2133,9 +2102,9 @@ def slides_27():
         ),
         text_block(
             revealed_answers([
-                ("What does σx divide by?", "N, the whole population."),
-                ("Which line should you read?", "Sx. A sample divides by n − 1."),
-                ("When is σx the right line?", "When the list is everyone you are describing."),
+                ("What does stdevp divide by?", "N, the whole population."),
+                ("Which one should you use?", "stdev. A sample divides by n − 1."),
+                ("When is stdevp right?", "When the list is everyone you are describing."),
             ]),
             72, 260, 1100,
         ),
@@ -2144,7 +2113,7 @@ def slides_27():
         backdrop(),
         text_block(
             kicker("Example 2.33 · the same 31 exam scores")
-            + title("Monday’s list, on the calculator", 36),
+            + title("Monday’s list, in Desmos", 36),
             64, 20, 1150,
         ),
         text_block(card_shell(
@@ -2171,7 +2140,7 @@ def slides_27():
         ),
     ], notes=(
         "Scores: 33, 42, 49, 49, 53, 55, 55, 61, 63, 67, 68, 68, 69, 69, 72, 73, 74, 78, 80, 83, 88, 88, 88, 90, 92, 94, 94, 94, 94, 96, 100. "
-        "Unrounded mean is about 73.52 and Sx is about 17.92. The book rounds to 73.5 and 17.9. Q1 is 61 and Q3 is 90, so the IQR is 29."
+        "Unrounded mean is about 73.52 and stdev is about 17.92. The book rounds to 73.5 and 17.9. Q1 is 61 and Q3 is 90, so the IQR is 29."
     )))
     out.append(section([
         backdrop(),
@@ -2182,13 +2151,13 @@ def slides_27():
             '21, 21, 22, 23, 24, 24, 25, 25, 28, 29, 29, 31, 32,<br>'
             '33, 33, 34, 35, 36, 36, 36, 36, 38, 38, 38, 40</p>'
             + '<p style="margin:16px 0 0;color:#5d6670;font-size:22px;">'
-            'Use the calculator. Find the mean, Sx, and the age two standard deviations above the mean.</p>',
+            'Use Desmos. Find the mean, s, and the age two standard deviations above the mean.</p>',
             64, 70, 1120,
         ),
         text_block(
             card_shell(
                 '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">PAUSE</p>'
-                '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Clear L1 first. Read x̄ and Sx. Two above the mean is x̄ + 2 Sx. Use the unrounded Sx.</p>',
+                '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Type L = [ the 25 ages ]. Then mean(L) and stdev(L). Two above the mean is x̄ + 2s.</p>',
                 120,
             ),
             64, 470, 1120, 120,
@@ -2202,13 +2171,13 @@ def slides_27():
             64, 28, 1100,
         ),
         text_block(card_shell(
-            '<p style="margin:0;color:#5d6670;font-size:18px;">From 1-Var Stats</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">x̄ = 30.68 &nbsp;&nbsp; Sx = 6.09</p>',
+            '<p style="margin:0;color:#5d6670;font-size:18px;">From Desmos: mean(L) and stdev(L)</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">x̄ = 30.68 &nbsp;&nbsp; s = 6.09</p>',
             140,
         ), 64, 160, 1150, 140),
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Two standard deviations above the mean</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">x̄ + 2 Sx = 30.68 + 2(6.09) = 42.86</p>',
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">x̄ + 2s = 30.68 + 2(6.09) = 42.86</p>',
             140,
         ), 64, 320, 1150, 140),
         text_block(
@@ -2218,7 +2187,7 @@ def slides_27():
             64, 500, 1150,
         ),
     ], notes=(
-        "Sx to more places is about 6.0945, so two standard deviations above is about 42.87. "
+        "stdev to more places is about 6.0945, so two standard deviations above is about 42.87. "
         "The slide uses the two-decimal readings 30.68 and 6.09. "
         "40 is (40 − 30.68) / 6.09 ≈ 1.5 standard deviations above the mean, if someone asks."
     )))
@@ -2229,9 +2198,9 @@ def slides_27():
         ("Rosa’s wait of 7 minutes is",
          [("A", "One SD above the mean"), ("B", "Two SDs below the mean"), ("C", "The mean itself")],
          "A", "5 + 1 × 2 = 7."),
-        ("For a sample, the calculator reading is",
-         [("A", "Sx, divide by n − 1"), ("B", "σx, divide by N"), ("C", "The range")],
-         "A", "σx is the population standard deviation."),
+        ("For a sample, the Desmos command is",
+         [("A", "stdev, divide by n − 1"), ("B", "stdevp, divide by N"), ("C", "The range")],
+         "A", "stdevp is the population standard deviation."),
     ], "One right-arrow shows 1B, 2A, 3A. Homework 94 through 107. The chapter review starts at 108."))
     out.append(quick("Before Friday", [
         ("The salary of $120,000, with the fence at $111,750, is",
@@ -2253,12 +2222,12 @@ def slides_27():
         ),
         *three_cards([
             ("Option A", "Choose a line", "Store A: mean 5, s = 2. Store B: mean 5, s = 4. You cannot be late. Which store?"),
-            ("Option B", "Read the screen", "20 fifth-graders, a sample. Mean 10.53, s = 0.72. Do you read Sx or σx?"),
+            ("Option B", "Pick the command", "20 fifth-graders, a sample. Mean 10.53, s = 0.72. Do you use stdev or stdevp?"),
             ("Option C", "Say what 17.9 adds", "31 exam scores. Mean 73.5, median 73, s = 17.9, IQR 29. What does 17.9 tell you?"),
         ], 168, 360),
     ], notes=(
         "A: store A, standard deviation 2. Store B’s standard deviation is 4, so its waits sit farther from 5. "
-        "B: Sx. A sample divides by n − 1. σx divides by N. "
+        "B: stdev. A sample divides by n − 1. stdevp divides by N. "
         "C: a typical score sits about 18 points from 73.5. The mean alone does not say that. The IQR, 29, is the middle half instead."
     )))
     out.append(closing(
