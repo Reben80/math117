@@ -9,8 +9,19 @@ import shutil
 import zipfile
 from pathlib import Path
 
+import qrcode
+
 ROOT = Path(__file__).resolve().parent
 SAMPLE = Path("/Users/mac-mini/Downloads/slides_deck-8187f8-2")
+
+# Saved in the instructor's Desmos account. Built from desmos_graphs.js.
+GRAPHS = {
+    "2.3": "https://www.desmos.com/calculator/y0hzfaqwnu",
+    "2.4": "https://www.desmos.com/calculator/o9i3yfz0zy",
+    "2.5": "https://www.desmos.com/calculator/wnxrjiwd9b",
+    "2.6": "https://www.desmos.com/calculator/7nvhtknq2r",
+    "2.7": "https://www.desmos.com/calculator/yw8qtxdbbz",
+}
 
 _n = 0
 
@@ -169,13 +180,51 @@ def data_strip(label, text, top, height=96, left=72, width=1136):
     )
 
 
-def desmos_line(commands, top, left=64, width=1150):
+def desmos_line(commands, top, left=64, width=1150, graph=None):
+    label = '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS{}</span>'
+    if graph:
+        label = (f'<a href="{GRAPHS[graph]}" target="_blank" style="text-decoration:none;">'
+                 + label.format(" ↗") + '</a>')
+    else:
+        label = label.format("")
     return text_block(
         '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-        '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS</span>&nbsp;&nbsp;'
+        f'{label}&nbsp;&nbsp;'
         f'<span style="font-family:Menlo, Consolas, monospace;">{commands}</span></p>',
         left, top, width,
     )
+
+
+def qr_svg(url, size):
+    qr = qrcode.QRCode(border=1, error_correction=qrcode.constants.ERROR_CORRECT_M)
+    qr.add_data(url)
+    qr.make(fit=True)
+    m = qr.get_matrix()
+    n = len(m)
+    cells = "".join(
+        f'<rect x="{x}" y="{y}" width="1.02" height="1.02"></rect>'
+        for y, row in enumerate(m) for x, on in enumerate(row) if on
+    )
+    return (
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{size}" height="{size}" viewBox="0 0 {n} {n}" '
+        f'shape-rendering="crispEdges"><rect width="{n}" height="{n}" fill="#ffffff"></rect>'
+        f'<g fill="#1c242c">{cells}</g></svg>'
+    )
+
+
+def graph_card(graph, left, top, width=300, height=170):
+    url = GRAPHS[graph]
+    short = url.replace("https://www.", "")
+    return text_block(card_shell(
+        '<div style="display:flex;gap:16px;align-items:center;height:100%;">'
+        f'<a href="{url}" target="_blank" style="flex:none;line-height:0;">{qr_svg(url, 118)}</a>'
+        '<div>'
+        '<p style="margin:0;color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">CLASS GRAPH</p>'
+        '<p style="margin:8px 0 0;color:#1c242c;font-size:16px;line-height:1.3;">Every list from today, ready in Desmos.</p>'
+        f'<p style="margin:8px 0 0;font-size:12px;word-break:break-all;"><a href="{url}" target="_blank" style="color:#5d6670;">{short}</a></p>'
+        '</div></div>',
+        height,
+    ), left, top, width, height)
 
 
 def revealed_answers(pairs):
@@ -420,7 +469,7 @@ def opening(h1, subtitle, section_label, visual, notes):
     ], notes)
 
 
-def closing(kicker_text, heading, lines, nxt, practice, notes):
+def closing(kicker_text, heading, lines, nxt, practice, notes, graph=None):
     body = "".join(
         f'<p style="margin:0 0 14px;color:#1c242c;font-size:26px;line-height:1.35;">{line}</p>'
         for line in lines
@@ -434,11 +483,12 @@ def closing(kicker_text, heading, lines, nxt, practice, notes):
             f'<p style="margin:10px 0 0;color:#1c242c;font-size:28px;font-weight:650;">{nxt[0]}</p>'
             f'<p style="margin:8px 0 0;color:#5d6670;font-size:20px;">{nxt[1]}</p>',
             130,
-        ), 72, 430, 1080, 130),
+        ), 72, 430, 1080 if graph is None else 712, 130),
         text_block(
             f'<p style="margin:0;color:#5d6670;font-size:18px;">{practice}</p>',
-            72, 590, 900,
+            72, 590, 900 if graph is None else 712,
         ),
+        *([graph_card(graph, 808, 430, 344, 190)] if graph else []),
     ], notes)
 
 
@@ -782,7 +832,7 @@ def slides_23():
             '<p style="margin:0;color:#1c242c;font-size:22px;">Location of the median = (n + 1) / 2, so average the 7th and 8th: (6.8 + 7.2) / 2 = 7. IQR = Q3 − Q1 = 9 − 2 = 7.</p>',
             64, 560, 1150,
         ),
-        desmos_line("L = [1, 1, 2, 2, 4, 6, 6.8, 7.2, 8, 8.3, 9, 10, 10, 11.5] &nbsp;→&nbsp; quartile(L, 1), median(L), quartile(L, 3)", 640),
+        desmos_line("L = [1, 1, 2, 2, 4, 6, 6.8, 7.2, 8, 8.3, 9, 10, 10, 11.5] &nbsp;→&nbsp; quartile(L, 1), median(L), quartile(L, 3)", 640, graph="2.3"),
     ], notes=(
         "Unordered start: 1, 11.5, 6, 7.2, 4, 8, 9, 10, 6.8, 8.3, 2, 2, 10, 1. "
         "n = 14, so the median is the average of the 7th and 8th ordered values and is not itself in either half. "
@@ -883,7 +933,7 @@ def slides_23():
             ),
             64, 390, 1100, 200,
         ),
-        desmos_line("L = [the 11 salaries] &nbsp;→&nbsp; quartile(L, 1), median(L), quartile(L, 3)", 615),
+        desmos_line("L = [the 11 salaries] &nbsp;→&nbsp; quartile(L, 1), median(L), quartile(L, 3)", 615, graph="2.3"),
     ], notes="Give them about two minutes. The next slide is the check. Do not start the fence until Q1 and Q3 are on the board."))
     out.append(section([
         backdrop(),
@@ -982,6 +1032,7 @@ def slides_23():
         ("2.4 &nbsp; Box plots", "Those five numbers as a picture."),
         "Practice: OpenStax homework 82 and 83.",
         "Items 84 through 89 are the box-plot homework, section 2.4.",
+        graph="2.3",
     ))
     return out
 
@@ -1037,7 +1088,7 @@ def slides_24():
             'Some box plots mark an outlier with a dot and stop the whisker at the last value that is not an outlier.</p>',
             64, 400, 1150,
         ),
-        desmos_line("min(L), quartile(L, 1), median(L), quartile(L, 3), max(L)", 560),
+        desmos_line("min(L), quartile(L, 1), median(L), quartile(L, 3), max(L)", 560, graph="2.4"),
     ], notes=(
         "The median can sit on Q1 or on Q3. It does not have to be in the center of the box. "
         "Desmos matches the book’s quartiles: on the 14 values, quartile(L, 1) is 2 and quartile(L, 3) is 9. "
@@ -1184,7 +1235,7 @@ def slides_24():
             ),
             64, 390, 1100, 200,
         ),
-        desmos_line("L = [2, 3, 5, 3, 4, 4, 3, 11, 3, 2] &nbsp;→&nbsp; min(L), quartile(L, 1), median(L), quartile(L, 3), max(L)", 615),
+        desmos_line("L = [2, 3, 5, 3, 4, 4, 3, 11, 3, 2] &nbsp;→&nbsp; min(L), quartile(L, 1), median(L), quartile(L, 3), max(L)", 615, graph="2.4"),
     ], notes="Ordered: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Give them about two minutes."))
     out.append(section([
         backdrop(),
@@ -1249,6 +1300,7 @@ def slides_24():
         ("2.5 &nbsp; Center", "Mean, median, and mode."),
         "Practice: OpenStax homework 84 through 89.",
         "Section 2.5 homework is items 90 and 91.",
+        graph="2.4",
     ))
     return out
 
@@ -1311,7 +1363,7 @@ def slides_25():
             '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;">μ uses the same formula for the whole population. When someone says average, they mean this mean.</p>',
             72, 480, 1000,
         ),
-        desmos_line("L = [your values] &nbsp;→&nbsp; mean(L)", 610, 72, 1100),
+        desmos_line("L = [your values] &nbsp;→&nbsp; mean(L)", 610, 72, 1100, graph="2.5"),
     ], notes=(
         "Let Desmos do the adding: L = [values], then mean(L). "
         "That is x-bar. The Law of Large Numbers is the next idea: larger samples, and the sample mean "
@@ -1338,7 +1390,7 @@ def slides_25():
             '<p style="margin:6px 0 0;color:#1c242c;font-size:20px;line-height:1.35;">The 20th and 21st ages are the two 24s, at the end of row 11–20 and the start of row 21–30. The location 20.5 is not an age.</p>',
             170,
         ), 64, 292, 1150, 170),
-        desmos_line("L = [the 40 ages] &nbsp;→&nbsp; median(L) gives 24, mean(L) gives 23.6", 490),
+        desmos_line("L = [the 40 ages] &nbsp;→&nbsp; median(L) gives 24, mean(L) gives 23.6", 490, graph="2.5"),
     ], notes=(
         "Ordered ages: 3, 4, 8, 8, 10, 11, 12, 13, 14, 15, 15, 16, 16, 17, 17, 18, 21, 22, 22, 24, 24, 25, 26, 26, 27, 27, 29, 29, 31, 32, 33, 33, 34, 34, 35, 37, 40, 44, 44, 47. "
         "Position 20 is 24. Position 21 is 24. Desmos: mean(L) = 23.6, median(L) = 24. "
@@ -1522,7 +1574,7 @@ def slides_25():
             '<p style="margin:0;color:#1c242c;font-size:24px;">In practice Desmos does the arithmetic. Read the mean and the median, then say what they tell you.</p>',
             64, 470, 1150,
         ),
-        desmos_line("mean(L) &nbsp;·&nbsp; median(L)", 540),
+        desmos_line("mean(L) &nbsp;·&nbsp; median(L)", 540, graph="2.5"),
     ], notes=(
         "Desmos: L = [values], then mean(L) and median(L). Desmos has no mode command, so count by eye. "
         "x-bar is the sample mean. "
@@ -1567,6 +1619,7 @@ def slides_25():
         ("2.6 &nbsp; Skewness", "Which center rides the tail."),
         "Practice: OpenStax homework 90 and 91.",
         "Section 2.6 homework is items 92 and 93.",
+        graph="2.5",
     ))
     return out
 
@@ -1713,7 +1766,7 @@ def slides_26():
             'If you do add: mean = (sum) / n. Location of the median = (n + 1) / 2.</p>',
             72, 430, 1136,
         ),
-        desmos_line("T = [7, 9, 3, 3, 3, 4, 1, 3, 2, 2] &nbsp;→&nbsp; mean(T), median(T). Same for Davis and Maris.", 480, 72, 1136),
+        desmos_line("T = [7, 9, 3, 3, 3, 4, 1, 3, 2, 2] &nbsp;→&nbsp; mean(T), median(T). Same for Davis and Maris.", 480, 72, 1136, graph="2.6"),
     ], notes="Four minutes. Terry’s 9 pulls the mean up. Davis’s 1s pull it down. Maris is the roughly even one. The next slide has the means: 3.7, 2.7, and 4.6."))
     out.append(section([
         backdrop(),
@@ -1808,6 +1861,7 @@ def slides_26():
         ("2.7 &nbsp; Standard deviation", "How far the values sit from the mean."),
         "Practice: OpenStax homework 92 and 93.",
         "Section 2.7 homework is items 94 through 107.",
+        graph="2.6",
     ))
     return out
 
@@ -2155,7 +2209,7 @@ def slides_27():
             'That is the long left whisker from the box plot. s = 17.9 says a typical score sits about 18 points from 73.5.</p>',
             64, 470, 1150,
         ),
-        desmos_line("L = [the 31 scores] &nbsp;→&nbsp; mean(L), median(L), stdev(L), quartile(L, 1), quartile(L, 3)", 590),
+        desmos_line("L = [the 31 scores] &nbsp;→&nbsp; mean(L), median(L), stdev(L), quartile(L, 1), quartile(L, 3)", 590, graph="2.7"),
     ], notes=(
         "Scores: 33, 42, 49, 49, 53, 55, 55, 61, 63, 67, 68, 68, 69, 69, 72, 73, 74, 78, 80, 83, 88, 88, 88, 90, 92, 94, 94, 94, 94, 96, 100. "
         "Unrounded mean is about 73.52 and stdev is about 17.92. The book rounds to 73.5 and 17.9. Q1 is 61 and Q3 is 90, so the IQR is 29."
@@ -2260,6 +2314,7 @@ def slides_27():
         "Practice: OpenStax homework 94 through 107.",
         "Exam 1 is November 10 and 11 and covers Units 1, 2, and 3. "
         "Item 108 begins the chapter review. Do not start it as if it were a new section.",
+        graph="2.7",
     ))
     return out
 
