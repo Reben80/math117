@@ -1307,23 +1307,26 @@ def slides_25():
         backdrop(),
         text_block(
             kicker("Example 2.26 · 40 patients")
-            + title("The median has a location", 40),
-            64, 28, 1150,
+            + title("The median has a location", 34),
+            64, 16, 1150,
+        ),
+        data_strip(
+            "40 AGES, ALREADY IN ORDER",
+            "1–10: 3, 4, 8, 8, 10, 11, 12, 13, 14, 15<br>"
+            "11–20: 15, 16, 16, 17, 17, 18, 21, 22, 22, 24<br>"
+            "21–30: 24, 25, 26, 26, 27, 27, 29, 29, 31, 32<br>"
+            "31–40: 33, 33, 34, 34, 35, 37, 40, 44, 44, 47",
+            108, 168,
         ),
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Location of the median = (n + 1) / 2</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:32px;font-weight:650;">(40 + 1) / 2 = 20.5</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">Between the 20th and 21st ages. Both are 24, so the median is 24.</p>',
-            210,
-        ), 64, 180, 1150, 210),
-        text_block(
-            '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
-            'The mean of the 40 ages is 23.6 years. The location 20.5 is not the median. The median is the age that sits there.</p>',
-            64, 440, 1150,
-        ),
+            '<p style="margin:6px 0 0;color:#1c242c;font-size:26px;font-weight:650;">(40 + 1) / 2 = 20.5. The median is (24 + 24) / 2 = 24. The mean is 23.6.</p>'
+            '<p style="margin:6px 0 0;color:#1c242c;font-size:20px;line-height:1.35;">The 20th and 21st ages are the two 24s, at the end of row 11–20 and the start of row 21–30. The location 20.5 is not an age.</p>',
+            170,
+        ), 64, 292, 1150, 170),
     ], notes=(
-        "Ordered ages, 40 of them, from 3, 4, 8, 8 up to 44, 44, 47. "
-        "The 20th and 21st are the two 24s. Calculator: clear L1, STAT EDIT, 1-Var Stats. x-bar = 23.6, Med = 24. "
+        "Ordered ages: 3, 4, 8, 8, 10, 11, 12, 13, 14, 15, 15, 16, 16, 17, 17, 18, 21, 22, 22, 24, 24, 25, 26, 26, 27, 27, 29, 29, 31, 32, 33, 33, 34, 34, 35, 37, 40, 44, 44, 47. "
+        "Position 20 is 24. Position 21 is 24. Calculator: clear L1, STAT EDIT, 1-Var Stats. x-bar = 23.6, Med = 24. "
         "If n is odd, the location (n+1)/2 is a single ordered value. If n is even, average the two middle values."
     )))
     out.append(section([
@@ -1334,25 +1337,29 @@ def slides_25():
             "For the 40 patients, (40 + 1) / 2 = 20.5.",
         ),
         data_strip(
-            "WHERE 20.5 POINTS",
-            "The 20th ordered age is 24. The 21st ordered age is 24. The mean of all 40 is 23.6.",
-            155, 88,
+            "40 AGES, ALREADY IN ORDER",
+            "1–10: 3, 4, 8, 8, 10, 11, 12, 13, 14, 15 &nbsp;·&nbsp; "
+            "11–20: 15, 16, 16, 17, 17, 18, 21, 22, 22, 24<br>"
+            "21–30: 24, 25, 26, 26, 27, 27, 29, 29, 31, 32 &nbsp;·&nbsp; "
+            "31–40: 33, 33, 34, 34, 35, 37, 40, 44, 44, 47",
+            148, 160,
         ),
         text_block(
             revealed_answers([
                 ("What is 20.5?", "A location. It sits between the 20th and 21st ages."),
-                ("What is the median age?", "24. Both of those ages are 24."),
+                ("What is the median age?", "24. The last age in row 11–20 and the first in row 21–30 are both 24."),
                 ("What about the mean?", "23.6 years. Close to 24, not to 20.5."),
             ]),
-            72, 260, 1100,
+            72, 325, 1100,
         ),
     ], notes="Right-arrow once per answer. The location is not the median. Read the age that sits at that location."))
     out.append(section([
         backdrop(),
         text_block(
             kicker("Example 2.27 · a town of 50 people")
-            + title("One income pulls the mean", 38),
-            64, 28, 1100,
+            + title("One income pulls the mean", 36)
+            + '<p style="margin:10px 0 0;color:#1c242c;font-size:20px;">49 people earn $30,000. One person earns $5,000,000.</p>',
+            64, 18, 1100,
         ),
         text_block(card_shell(
             '<p style="margin:0;color:#5d6670;font-size:18px;">Mean = (sum) / n</p>'
@@ -1435,7 +1442,7 @@ def slides_25():
         ), 656, 170, 560, 200),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">'
-            'The median is the better center. The house worth $2,500,000 pulls the mean up.</p>',
+            '29 houses at $280,000, 30 at $315,000, one at $2,500,000. The $2,500,000 house pulls the mean up. The median stays with the 30 houses at $315,000.</p>',
             64, 430, 1150,
         ),
     ], notes="29 times 280000 is 8120000. 30 times 315000 is 9450000. Add 2500000 to get 20070000. Divide by 60 to get 334500."))
@@ -1443,22 +1450,27 @@ def slides_25():
         backdrop(),
         text_block(kicker("The mode") + title("The value that appears most"), 72, 28, 1100),
         text_block(card_shell(
-            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">EXAMPLE 2.28</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">Twenty exam scores. 72 appears five times.</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">The mode is 72.</p>',
-            180,
-        ), 64, 170, 560, 180),
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">EXAMPLE 2.28 · 20 SCORES</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:18px;line-height:1.45;">'
+            '50, 53, 59, 59, 63, 63, 72, 72, 72, 72, 72, 76, 78, 81, 83, 84, 84, 84, 90, 93</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;font-weight:650;">72 appears five times. The mode is 72.</p>',
+            200,
+        ), 64, 155, 1150, 200),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">EXAMPLE 2.29</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:24px;line-height:1.35;">430, 430, 480, 480, 495.</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:28px;font-weight:650;">Two modes. Bimodal.</p>',
-            180,
-        ), 656, 170, 560, 180),
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">430, 430, 480, 480, 495</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;font-weight:650;">Two modes. Bimodal.</p>',
+            130,
+        ), 64, 375, 560, 130),
+        text_block(card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">WORDS, SAME IDEA</p>'
+            '<p style="margin:10px 0 0;color:#1c242c;font-size:20px;line-height:1.35;">red, red, red, green, green, yellow, purple, black, blue</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;font-weight:650;">The mode is red.</p>',
+            130,
+        ), 656, 375, 560, 130),
         text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
-            'The mode works for words too. In red, red, red, green, green, yellow, purple, black, blue, the mode is red. '
-            'A weight-loss ad can quote a mean loss of 6 pounds while the mode is 2 pounds.</p>',
-            64, 400, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:22px;">A weight-loss ad can quote a mean loss of 6 pounds while the mode is 2 pounds.</p>',
+            64, 530, 1150,
         ),
     ], notes=(
         "The 20 scores: 50, 53, 59, 59, 63, 63, 72, 72, 72, 72, 72, 76, 78, 81, 83, 84, 84, 84, 90, 93. "
@@ -1504,10 +1516,10 @@ def slides_25():
         ("For the town, the better center is",
          [("A", "The mean, $129,400"), ("B", "The median, $30,000"), ("C", "The maximum")],
          "B", "One income of $5,000,000 pulls the mean."),
-        ("The mode of the 20 exam scores is 72 because",
+        ("20 scores: 50, 53, 59, 59, 63, 63, 72, 72, 72, 72, 72, 76, 78, 81, 83, 84, 84, 84, 90, 93. The mode is 72 because",
          [("A", "It is the middle score"), ("B", "It appears five times"), ("C", "It is the largest")],
          "B", "84 appears three times."),
-        ("For 40 ages, the median is located",
+        ("40 ages. (40 + 1) / 2 = 20.5. The median is located",
          [("A", "At the 20th age"), ("B", "Between the 20th and 21st"), ("C", "At the mean")],
          "B", "(40 + 1) / 2 = 20.5."),
     ], "One right-arrow shows 1B, 2B, 3B. Homework 90 and 91."))
@@ -1565,13 +1577,13 @@ def slides_26():
             "Three book examples. The shape names come next.",
         ),
         *three_cards([
-            ("List 1", "7, 7, and 7", "Mean, median, and mode."),
-            ("List 2", "6.3, 6.5, and 7", "Mean, then median, then mode."),
-            ("List 3", "7.7, 7.5, and 7", "Mean, then median, then mode."),
-        ], 185, 220),
+            ("List 1", "4, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 9, 10", "Mean 7, median 7, mode 7."),
+            ("List 2", "4, 5, 6, 6, 6, 7, 7, 7, 7, 8", "Mean 6.3, median 6.5, mode 7."),
+            ("List 3", "6, 7, 7, 7, 7, 8, 8, 8, 9, 10", "Mean 7.7, median 7.5, mode 7."),
+        ], 168, 280),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;">Which is even? Which tail points left? Which tail points right?</p>',
-            72, 450, 1100,
+            72, 470, 1100,
         ),
     ], notes="Two minutes. Do not name the shapes yet. After the three histograms: list 1 is symmetric, list 2 is skewed left, list 3 is skewed right."))
     out.append(section([
@@ -1626,13 +1638,20 @@ def slides_26():
     out.append(section([
         backdrop(),
         activity_head("The three lists", "Now answer the warm-up"),
+        data_strip(
+            "THE LISTS FROM THE WARM-UP",
+            "List 1: 4, 5, 6, 6, 6, 7, 7, 7, 7, 7, 7, 8, 8, 8, 9, 10<br>"
+            "List 2: 4, 5, 6, 6, 6, 7, 7, 7, 7, 8<br>"
+            "List 3: 6, 7, 7, 7, 7, 8, 8, 8, 9, 10",
+            140, 150,
+        ),
         text_block(
             revealed_answers([
                 ("Mean 7, median 7, mode 7.", "Symmetric. The picture is a mirror around 7."),
                 ("Mean 6.3, median 6.5, mode 7.", "Skewed left. The mean is the smallest, pulled toward the tail."),
                 ("Mean 7.7, median 7.5, mode 7.", "Skewed right. The mean is the largest."),
             ]),
-            72, 160, 1100,
+            72, 310, 1100,
         ),
     ], notes="Right-arrow once per answer. The next slide says this pattern is often true, not always, and the usual exceptions are discrete data."))
     out.append(section([
@@ -1654,8 +1673,9 @@ def slides_26():
             180,
         ), 850, 190, 360, 180),
         text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;">This is not true for every list. The usual exceptions are discrete data. The median stays nearer the high point. The mean rides out on the tail.</p>',
-            64, 430, 1150,
+            '<p style="margin:0;color:#5d6670;font-size:20px;">The three lists: 7, 7, 7 · 6.3, 6.5, 7 · 7.7, 7.5, 7.</p>'
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">This is not true for every list. The usual exceptions are discrete data. The median stays nearer the high point. The mean rides out on the tail.</p>',
+            64, 410, 1150,
         ),
     ], notes=(
         "The next two slides are Example 2.31. Let them name the tail from the raw lists, then show the means."
@@ -1751,7 +1771,7 @@ def slides_26():
             "On paper. One or two sentences is enough.",
         ),
         *three_cards([
-            ("Option A", "Name yesterday’s picture", "Calculus finals: a long tail toward the low scores. The high scores are the crowd. What is that shape?"),
+            ("Option A", "Name yesterday’s picture", "Calculus finals, low scores to high: counts 5, 10, 30, 40, 15. The tail is the low scores. The crowd is the high scores. What is that shape?"),
             ("Option B", "Predict the town", "49 incomes are $30,000. One is $5,000,000. Mean $129,400. Median $30,000. Which way does the tail point?"),
             ("Option C", "Use Davis", "3, 3, 3, 4, 1, 4, 3, 2, 3, 1. Mean 2.7, median 3. Which side is the tail, and what pulls it?"),
         ], 168, 360),
