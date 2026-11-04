@@ -1796,12 +1796,12 @@ def slides_26():
 
 
 def sd_bands_svg(width=1152, height=320, heading=None, show_s=True):
-    """Mean ± one standard deviation for the two stores.
+    """Mean and one standard deviation each way, drawn as distances on a number line.
 
-    The shaded band is a distance from the mean. The book does not list the waits,
-    so the marks are not pretend data.
+    Not a box plot: there is no Q1 or Q3 here. The book does not list the waits,
+    so nothing on the line stands for a customer.
     """
-    left = 108 if width > 700 else 72
+    left = 116 if width > 700 else 40
     right = 36
     xmin, xmax = 0.0, 10.0
 
@@ -1812,55 +1812,86 @@ def sd_bands_svg(width=1152, height=320, heading=None, show_s=True):
         heading = (
             "HOW FAR FROM THE MEAN"
             if width < 700
-            else "ONE STANDARD DEVIATION ON EACH SIDE OF THE MEAN"
+            else "ONE STANDARD DEVIATION ON EACH SIDE OF THE MEAN · MINUTES"
         )
-    axes = (0.40, 0.74) if height >= 400 else (0.40, 0.76)
+    font = 'font-family="Montserrat, sans-serif"'
+    axes = (0.40, 0.76) if height >= 400 else (0.42, 0.80)
     parts = [
         f'<rect x="0" y="0" width="{width}" height="{height}" rx="18" fill="#ffffff" '
         f'stroke="#e4e1da" stroke-width="1.4"></rect>',
-        f'<text x="22" y="28" font-size="13" fill="#2a6f7a" font-family="Montserrat, sans-serif" '
+        f'<text x="22" y="28" font-size="13" fill="#2a6f7a" {font} '
         f'font-weight="700" letter-spacing="1.1">{heading}</text>',
     ]
+
+    def arrow_head(x, y, pointing_right):
+        d = 7 if pointing_right else -7
+        return (
+            f'<polygon points="{x:.1f},{y:.1f} {x - d:.1f},{y - 4.5:.1f} {x - d:.1f},{y + 4.5:.1f}" '
+            f'fill="#2a6f7a"></polygon>'
+        )
+
     for y_frac, store, sdev in ((axes[0], "A", 2), (axes[1], "B", 4)):
-        y_axis = height * y_frac
-        band_h = 32 if height >= 400 else 26
-        x1, x2 = X(5 - sdev), X(5 + sdev)
-        parts.append(
-            f'<text x="18" y="{y_axis + 6:.0f}" font-size="18" fill="#2a6f7a" '
-            f'font-family="Montserrat, sans-serif" font-weight="700">{store}</text>'
-        )
-        parts.append(
-            f'<rect x="{x1:.1f}" y="{y_axis - band_h / 2:.1f}" width="{x2 - x1:.1f}" '
-            f'height="{band_h}" rx="7" fill="#d7ebe8"></rect>'
-        )
-        parts.append(
-            f'<line x1="{X(0):.1f}" y1="{y_axis:.1f}" x2="{X(10):.1f}" y2="{y_axis:.1f}" '
-            f'stroke="#2a6f7a" stroke-width="2.4"></line>'
-        )
-        parts.append(
-            f'<line x1="{X(5):.1f}" y1="{y_axis - band_h / 2:.1f}" x2="{X(5):.1f}" '
-            f'y2="{y_axis + band_h / 2:.1f}" stroke="#1c242c" stroke-width="3"></line>'
-        )
-        for edge in (5 - sdev, 5 + sdev):
+        y = height * y_frac
+        lo, hi = 5 - sdev, 5 + sdev
+        if width < 700:
+            tag = f"Store {store} · s = {sdev}" if show_s else f"Store {store}"
             parts.append(
-                f'<line x1="{X(edge):.1f}" y1="{y_axis - band_h / 2:.1f}" '
-                f'x2="{X(edge):.1f}" y2="{y_axis + band_h / 2:.1f}" stroke="#2a6f7a" stroke-width="2"></line>'
+                f'<text x="22" y="{y - 58:.0f}" font-size="17" fill="#2a6f7a" {font} font-weight="700">'
+                f'{tag}</text>'
             )
-        if show_s:
+        else:
             parts.append(
-                f'<text x="{X(5):.1f}" y="{y_axis - band_h / 2 - 8:.0f}" text-anchor="middle" '
-                f'font-size="14" fill="#2a6f7a" font-family="Montserrat, sans-serif" font-weight="700">'
-                f's = {sdev}</text>'
+                f'<text x="20" y="{y + 6:.0f}" font-size="18" fill="#2a6f7a" {font} font-weight="700">'
+                f'Store {store}</text>'
             )
-        num_y = y_axis + band_h / 2 + 22
+            if show_s:
+                parts.append(
+                    f'<text x="20" y="{y + 26:.0f}" font-size="14" fill="#5d6670" {font}>s = {sdev}</text>'
+                )
         parts.append(
-            f'<text x="{X(5):.1f}" y="{num_y:.0f}" text-anchor="middle" font-size="15" fill="#1c242c" '
-            f'font-family="Montserrat, sans-serif" font-weight="700">mean 5</text>'
+            f'<line x1="{X(lo):.1f}" y1="{y:.1f}" x2="{X(hi):.1f}" y2="{y:.1f}" '
+            f'stroke="#d7ebe8" stroke-width="10" stroke-linecap="round"></line>'
         )
-        for edge in (5 - sdev, 5 + sdev):
+        parts.append(
+            f'<line x1="{X(0):.1f}" y1="{y:.1f}" x2="{X(10):.1f}" y2="{y:.1f}" '
+            f'stroke="#2a6f7a" stroke-width="2"></line>'
+        )
+        for v in range(0, 11):
             parts.append(
-                f'<text x="{X(edge):.1f}" y="{num_y:.0f}" text-anchor="middle" font-size="14" '
-                f'fill="#5d6670" font-family="Montserrat, sans-serif">{edge:g}</text>'
+                f'<line x1="{X(v):.1f}" y1="{y - 5:.1f}" x2="{X(v):.1f}" y2="{y + 5:.1f}" '
+                f'stroke="#9fb7b4" stroke-width="1.4"></line>'
+            )
+            strong = v in (lo, 5, hi)
+            size, color, weight = (15, "#1c242c", "700") if strong else (12, "#9aa3a8", "400")
+            parts.append(
+                f'<text x="{X(v):.1f}" y="{y + 24:.0f}" text-anchor="middle" '
+                f'font-size="{size}" fill="{color}" {font} font-weight="{weight}">{v}</text>'
+            )
+        parts.append(
+            f'<text x="{X(5):.1f}" y="{y + 42:.0f}" text-anchor="middle" font-size="13" '
+            f'fill="#1c242c" {font} font-weight="700">mean</text>'
+        )
+        for edge in (lo, hi):
+            parts.append(
+                f'<line x1="{X(edge):.1f}" y1="{y - 12:.1f}" x2="{X(edge):.1f}" y2="{y + 8:.1f}" '
+                f'stroke="#2a6f7a" stroke-width="2.4"></line>'
+            )
+        parts.append(f'<circle cx="{X(5):.1f}" cy="{y:.1f}" r="7" fill="#1c242c"></circle>')
+        ay = y - 24
+        parts.append(
+            f'<line x1="{X(5):.1f}" y1="{ay - 6:.1f}" x2="{X(5):.1f}" y2="{y - 8:.1f}" '
+            f'stroke="#1c242c" stroke-width="1.6" stroke-dasharray="3 3"></line>'
+        )
+        for edge in (lo, hi):
+            x_from, x_to = X(5), X(edge)
+            parts.append(
+                f'<line x1="{x_from:.1f}" y1="{ay:.1f}" x2="{x_to:.1f}" y2="{ay:.1f}" '
+                f'stroke="#2a6f7a" stroke-width="1.8"></line>'
+            )
+            parts.append(arrow_head(x_to, ay, x_to > x_from))
+            parts.append(
+                f'<text x="{(x_from + x_to) / 2:.1f}" y="{ay - 8:.0f}" text-anchor="middle" '
+                f'font-size="14" fill="#2a6f7a" {font} font-weight="700">{sdev} min</text>'
             )
     return svg_wrap("".join(parts), width, height)
 
@@ -1911,9 +1942,9 @@ def slides_27():
         drawing(sd_bands_svg(1152, 320), 64, 148, 1152, 320),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
-            'Both means are 5 minutes. The shaded band is one standard deviation on each side of 5. '
-            'Store A runs from 3 to 7. Store B runs from 1 to 9. A larger band means the values are more spread out. '
-            'The book does not list the waits, so the band is the distance, not a list of customers.</p>',
+            'Both means are 5 minutes. Each arrow is one standard deviation: 2 minutes at store A, 4 at store B. '
+            'So store A’s band runs 5 − 2 = 3 to 5 + 2 = 7, and store B’s runs 1 to 9. This is not a box plot: 3 and 7 are not Q1 and Q3. '
+            'The book does not list the waits, so nothing here is a customer.</p>',
             64, 488, 1150,
         ),
     ], notes="The book uses minutes at the checkout. Do not invent a list of waits. The given facts are the two means and the two standard deviations."))
