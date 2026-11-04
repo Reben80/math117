@@ -1795,7 +1795,7 @@ def slides_26():
     return out
 
 
-def sd_bands_svg(width=1152, height=320):
+def sd_bands_svg(width=1152, height=320, heading=None, show_s=True):
     """Mean ± one standard deviation for the two stores.
 
     The shaded band is a distance from the mean. The book does not list the waits,
@@ -1808,11 +1808,12 @@ def sd_bands_svg(width=1152, height=320):
     def X(v):
         return left + (v - xmin) / (xmax - xmin) * (width - left - right)
 
-    heading = (
-        "HOW FAR FROM THE MEAN"
-        if width < 700
-        else "ONE STANDARD DEVIATION ON EACH SIDE OF THE MEAN"
-    )
+    if heading is None:
+        heading = (
+            "HOW FAR FROM THE MEAN"
+            if width < 700
+            else "ONE STANDARD DEVIATION ON EACH SIDE OF THE MEAN"
+        )
     axes = (0.40, 0.74) if height >= 400 else (0.40, 0.76)
     parts = [
         f'<rect x="0" y="0" width="{width}" height="{height}" rx="18" fill="#ffffff" '
@@ -1845,11 +1846,12 @@ def sd_bands_svg(width=1152, height=320):
                 f'<line x1="{X(edge):.1f}" y1="{y_axis - band_h / 2:.1f}" '
                 f'x2="{X(edge):.1f}" y2="{y_axis + band_h / 2:.1f}" stroke="#2a6f7a" stroke-width="2"></line>'
             )
-        parts.append(
-            f'<text x="{X(5):.1f}" y="{y_axis - band_h / 2 - 8:.0f}" text-anchor="middle" '
-            f'font-size="14" fill="#2a6f7a" font-family="Montserrat, sans-serif" font-weight="700">'
-            f's = {sdev}</text>'
-        )
+        if show_s:
+            parts.append(
+                f'<text x="{X(5):.1f}" y="{y_axis - band_h / 2 - 8:.0f}" text-anchor="middle" '
+                f'font-size="14" fill="#2a6f7a" font-family="Montserrat, sans-serif" font-weight="700">'
+                f's = {sdev}</text>'
+            )
         num_y = y_axis + band_h / 2 + 22
         parts.append(
             f'<text x="{X(5):.1f}" y="{num_y:.0f}" text-anchor="middle" font-size="15" fill="#1c242c" '
@@ -1879,17 +1881,24 @@ def slides_27():
         activity_head(
             "Warm-up · 2 minutes",
             "Same average. Which line do you join?",
-            "Both stores have a mean wait of 5 minutes. You need to be somewhere in 8 minutes.",
+            "The two stores from the title picture. Both have a mean wait of 5 minutes. You need to be somewhere in 8 minutes.",
         ),
         text_block(card_shell(
             numbered([
                 "Is the mean enough to choose a store?",
-                "What else would you want to know?",
+                "In the picture, what is different about the two stores?",
                 "A wait of 9 minutes makes you late. Which store worries you more?",
             ]),
-            210,
-        ), 72, 185, 1136, 210),
-    ], notes="Two minutes. The next slide gives the missing fact: store A has standard deviation 2, store B has standard deviation 4. Do not invent a list of waits."))
+            190,
+        ), 72, 165, 1136, 190),
+        drawing(sd_bands_svg(1136, 270, "THE TWO STORES FROM THE TITLE SLIDE · WAIT IN MINUTES", show_s=False), 72, 380, 1136, 270),
+    ], notes=(
+        "Two minutes. This is the title picture again. Do not name the standard deviation yet. "
+        "Let them say it in their own words: store B’s band is wider, so its waits wander farther from 5. "
+        "Store B’s band reaches 9, the late wait. Store A’s stops at 7. "
+        "The next slide names it: the band is one standard deviation on each side of the mean, 2 for store A and 4 for store B. "
+        "The book does not list the waits. Do not invent a list."
+    )))
     out.append(section([
         backdrop(),
         text_block(
@@ -1919,7 +1928,7 @@ def slides_27():
         text_block(
             revealed_answers([
                 ("Is the mean enough?", "No. Both means are 5 minutes."),
-                ("What else did you need?", "The standard deviation. Store A is 2. Store B is 4."),
+                ("What is different in the picture?", "Store B’s band is wider. That width is the standard deviation: 2 for store A, 4 for store B."),
                 ("Which store worries you more?", "Store B. Its waits sit farther from 5, so a late wait is more likely."),
             ]),
             72, 255, 1100,
