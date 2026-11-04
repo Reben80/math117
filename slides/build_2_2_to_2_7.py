@@ -1795,23 +1795,81 @@ def slides_26():
     return out
 
 
+def sd_bands_svg(width=1152, height=320):
+    """Mean ± one standard deviation for the two stores.
+
+    The shaded band is a distance from the mean. The book does not list the waits,
+    so the marks are not pretend data.
+    """
+    left = 108 if width > 700 else 72
+    right = 36
+    xmin, xmax = 0.0, 10.0
+
+    def X(v):
+        return left + (v - xmin) / (xmax - xmin) * (width - left - right)
+
+    heading = (
+        "HOW FAR FROM THE MEAN"
+        if width < 700
+        else "ONE STANDARD DEVIATION ON EACH SIDE OF THE MEAN"
+    )
+    axes = (0.40, 0.74) if height >= 400 else (0.40, 0.76)
+    parts = [
+        f'<rect x="0" y="0" width="{width}" height="{height}" rx="18" fill="#ffffff" '
+        f'stroke="#e4e1da" stroke-width="1.4"></rect>',
+        f'<text x="22" y="28" font-size="13" fill="#2a6f7a" font-family="Montserrat, sans-serif" '
+        f'font-weight="700" letter-spacing="1.1">{heading}</text>',
+    ]
+    for y_frac, store, sdev in ((axes[0], "A", 2), (axes[1], "B", 4)):
+        y_axis = height * y_frac
+        band_h = 32 if height >= 400 else 26
+        x1, x2 = X(5 - sdev), X(5 + sdev)
+        parts.append(
+            f'<text x="18" y="{y_axis + 6:.0f}" font-size="18" fill="#2a6f7a" '
+            f'font-family="Montserrat, sans-serif" font-weight="700">{store}</text>'
+        )
+        parts.append(
+            f'<rect x="{x1:.1f}" y="{y_axis - band_h / 2:.1f}" width="{x2 - x1:.1f}" '
+            f'height="{band_h}" rx="7" fill="#d7ebe8"></rect>'
+        )
+        parts.append(
+            f'<line x1="{X(0):.1f}" y1="{y_axis:.1f}" x2="{X(10):.1f}" y2="{y_axis:.1f}" '
+            f'stroke="#2a6f7a" stroke-width="2.4"></line>'
+        )
+        parts.append(
+            f'<line x1="{X(5):.1f}" y1="{y_axis - band_h / 2:.1f}" x2="{X(5):.1f}" '
+            f'y2="{y_axis + band_h / 2:.1f}" stroke="#1c242c" stroke-width="3"></line>'
+        )
+        for edge in (5 - sdev, 5 + sdev):
+            parts.append(
+                f'<line x1="{X(edge):.1f}" y1="{y_axis - band_h / 2:.1f}" '
+                f'x2="{X(edge):.1f}" y2="{y_axis + band_h / 2:.1f}" stroke="#2a6f7a" stroke-width="2"></line>'
+            )
+        parts.append(
+            f'<text x="{X(5):.1f}" y="{y_axis - band_h / 2 - 8:.0f}" text-anchor="middle" '
+            f'font-size="14" fill="#2a6f7a" font-family="Montserrat, sans-serif" font-weight="700">'
+            f's = {sdev}</text>'
+        )
+        num_y = y_axis + band_h / 2 + 22
+        parts.append(
+            f'<text x="{X(5):.1f}" y="{num_y:.0f}" text-anchor="middle" font-size="15" fill="#1c242c" '
+            f'font-family="Montserrat, sans-serif" font-weight="700">mean 5</text>'
+        )
+        for edge in (5 - sdev, 5 + sdev):
+            parts.append(
+                f'<text x="{X(edge):.1f}" y="{num_y:.0f}" text-anchor="middle" font-size="14" '
+                f'fill="#5d6670" font-family="Montserrat, sans-serif">{edge:g}</text>'
+            )
+    return svg_wrap("".join(parts), width, height)
+
+
 def slides_27():
     out = []
     out.append(opening(
         "Standard<br>deviation",
         "How far the values sit<br>from the mean.",
         "SECTION 2.7",
-        drawing(svg_wrap(
-            '<rect x="0" y="0" width="460" height="500" rx="18" fill="#ffffff" stroke="#e4e1da"></rect>'
-            '<text x="36" y="64" font-size="16" fill="#2a6f7a" font-family="Montserrat, sans-serif" font-weight="700" letter-spacing="1.4">BOTH MEANS ARE 5</text>'
-            '<text x="36" y="130" font-size="18" fill="#5d6670" font-family="Montserrat, sans-serif">Store A</text>'
-            '<text x="36" y="180" font-size="42" fill="#1c242c" font-family="Montserrat, sans-serif" font-weight="650">s = 2</text>'
-            '<text x="36" y="250" font-size="18" fill="#5d6670" font-family="Montserrat, sans-serif">Store B</text>'
-            '<text x="36" y="300" font-size="42" fill="#2a6f7a" font-family="Montserrat, sans-serif" font-weight="650">s = 4</text>'
-            '<text x="36" y="380" font-size="20" fill="#1c242c" font-family="Montserrat, sans-serif">B’s waits vary more.</text>'
-            '<text x="36" y="420" font-size="18" fill="#5d6670" font-family="Montserrat, sans-serif">The mean does not say that.</text>',
-            460, 500,
-        ), 760, 110, 460, 500),
+        drawing(sd_bands_svg(460, 500), 760, 110, 460, 500),
         "Standard deviation is never negative. It is small when the values hug the mean. "
         "In practice, use a calculator. Concentrate on what the number tells you. "
         "Select Sx for a sample and σx for a population.",
@@ -1836,26 +1894,18 @@ def slides_27():
         backdrop(),
         text_block(
             kicker("Two supermarkets")
-            + title("Same mean, different spread", 40),
-            64, 36, 1100,
+            + title("Same mean, different spread", 36)
+            + '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;">'
+            'The standard deviation measures how far the values sit from the mean.</p>',
+            64, 14, 1150,
         ),
-        text_block(card_shell(
-            '<p style="margin:0;color:#2a6f7a;font-size:18px;font-weight:700;">STORE A</p>'
-            '<p style="margin:16px 0 0;color:#1c242c;font-size:28px;font-weight:650;">Mean wait 5 minutes</p>'
-            '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Standard deviation 2 minutes</p>'
-            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;">The waits sit closer to 5.</p>',
-            240,
-        ), 64, 190, 560, 240),
-        text_block(card_shell(
-            '<p style="margin:0;color:#2a6f7a;font-size:18px;font-weight:700;">STORE B</p>'
-            '<p style="margin:16px 0 0;color:#1c242c;font-size:28px;font-weight:650;">Mean wait 5 minutes</p>'
-            '<p style="margin:10px 0 0;color:#1c242c;font-size:24px;">Standard deviation 4 minutes</p>'
-            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;">The waits are more spread out.</p>',
-            240,
-        ), 656, 190, 560, 240),
+        drawing(sd_bands_svg(1152, 320), 64, 148, 1152, 320),
         text_block(
-            '<p style="margin:0;color:#1c242c;font-size:24px;">A larger standard deviation means more variation about the mean.</p>',
-            64, 480, 1100,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            'Both means are 5 minutes. The shaded band is one standard deviation on each side of 5. '
+            'Store A runs from 3 to 7. Store B runs from 1 to 9. A larger band means the values are more spread out. '
+            'The book does not list the waits, so the band is the distance, not a list of customers.</p>',
+            64, 488, 1150,
         ),
     ], notes="The book uses minutes at the checkout. Do not invent a list of waits. The given facts are the two means and the two standard deviations."))
     out.append(section([
@@ -1897,7 +1947,8 @@ def slides_27():
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             'value = mean + (number of standard deviations) × (standard deviation). '
-            'Two standard deviations from the mean is a rough flag that a value is far. The shape of the data changes that call.</p>',
+            'Rosa’s 7 is the right edge of store A’s band. Binh’s 1 is another step past that band. '
+            'Two standard deviations from the mean is a rough flag that a value is far.</p>',
             64, 400, 1150,
         ),
     ], notes=(
@@ -2005,8 +2056,8 @@ def slides_27():
         ), 656, 165, 560, 150),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
-            'The ages are a sample, so the variance divides by 19, not by 20. '
-            'The standard deviation is zero only when every age is the same. A small standard deviation means the ages hug 10.53.</p>',
+            's = 0.72 measures a typical distance from the mean, 10.53. The ages are a sample, so the variance divides by 19, not by 20. '
+            'The standard deviation is zero only when every age is the same.</p>',
             64, 360, 1150,
         ),
         text_block(
