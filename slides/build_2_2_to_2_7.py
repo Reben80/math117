@@ -1974,21 +1974,24 @@ def slides_27():
         ),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">ROSA WAITS 7 MINUTES</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:28px;font-weight:650;">5 + (1)(2) = 7</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">One standard deviation above the mean.</p>',
-            180,
-        ), 64, 170, 560, 180),
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">7 − 5 = 2 minutes above the mean.</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;">2 ÷ 2 = <b>1 standard deviation</b> above.</p>'
+            '<p style="margin:12px 0 0;color:#5d6670;font-size:20px;">Book’s way: 5 + (1)(2) = 7</p>',
+            200,
+        ), 64, 165, 560, 200),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:16px;font-weight:700;">BINH WAITS 1 MINUTE</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:28px;font-weight:650;">5 + (−2)(2) = 1</p>'
-            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">Two standard deviations below the mean.</p>',
-            180,
-        ), 656, 170, 560, 180),
+            '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;">1 − 5 = −4, so 4 minutes below the mean.</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;">−4 ÷ 2 = <b>−2 standard deviations</b>.</p>'
+            '<p style="margin:12px 0 0;color:#5d6670;font-size:20px;">Book’s way: 5 + (−2)(2) = 1</p>',
+            200,
+        ), 656, 165, 560, 200),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
-            'value = mean + (number of standard deviations) × (standard deviation). '
-            'Rosa’s 7 is the right edge of store A’s band. Binh’s 1 is another step past that band. '
-            'Two standard deviations from the mean is a rough flag that a value is far.</p>',
+            'Store A: mean 5, standard deviation 2. Think of 2 minutes as one step. '
+            'Rosa is one step right of 5. Binh is two steps left. '
+            'Book’s formula: value = mean + (number of steps) × (size of one step). '
+            'Two or more steps from the mean is a rough flag that a value is far.</p>',
             64, 400, 1150,
         ),
     ], notes=(
