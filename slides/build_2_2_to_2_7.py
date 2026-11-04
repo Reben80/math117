@@ -169,6 +169,15 @@ def data_strip(label, text, top, height=96, left=72, width=1136):
     )
 
 
+def desmos_line(commands, top, left=64, width=1150):
+    return text_block(
+        '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
+        '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS</span>&nbsp;&nbsp;'
+        f'<span style="font-family:Menlo, Consolas, monospace;">{commands}</span></p>',
+        left, top, width,
+    )
+
+
 def revealed_answers(pairs):
     parts = []
     for i, (question, answer) in enumerate(pairs):
@@ -773,6 +782,7 @@ def slides_23():
             '<p style="margin:0;color:#1c242c;font-size:22px;">Location of the median = (n + 1) / 2, so average the 7th and 8th: (6.8 + 7.2) / 2 = 7. IQR = Q3 − Q1 = 9 − 2 = 7.</p>',
             64, 560, 1150,
         ),
+        desmos_line("L = [1, 1, 2, 2, 4, 6, 6.8, 7.2, 8, 8.3, 9, 10, 10, 11.5] &nbsp;→&nbsp; quartile(L, 1), median(L), quartile(L, 3)", 640),
     ], notes=(
         "Unordered start: 1, 11.5, 6, 7.2, 4, 8, 9, 10, 6.8, 8.3, 2, 2, 10, 1. "
         "n = 14, so the median is the average of the 7th and 8th ordered values and is not itself in either half. "
@@ -873,6 +883,7 @@ def slides_23():
             ),
             64, 390, 1100, 200,
         ),
+        desmos_line("L = [the 11 salaries] &nbsp;→&nbsp; quartile(L, 1), median(L), quartile(L, 3)", 615),
     ], notes="Give them about two minutes. The next slide is the check. Do not start the fence until Q1 and Q3 are on the board."))
     out.append(section([
         backdrop(),
@@ -1026,10 +1037,11 @@ def slides_24():
             'Some box plots mark an outlier with a dot and stop the whisker at the last value that is not an outlier.</p>',
             64, 400, 1150,
         ),
+        desmos_line("min(L), quartile(L, 1), median(L), quartile(L, 3), max(L)", 560),
     ], notes=(
         "The median can sit on Q1 or on Q3. It does not have to be in the center of the box. "
-        "Calculator steps stay in the notes: STAT, CALC, 1-Var Stats, then the box-plot plot type. "
-        "Do not spend the slide on keystrokes."
+        "Desmos matches the book’s quartiles: on the 14 values, quartile(L, 1) is 2 and quartile(L, 3) is 9. "
+        "Desmos can also draw one: boxplot(L)."
     )))
     out.append(section([
         backdrop(),
@@ -1082,7 +1094,7 @@ def slides_24():
         "Minimum 59, Q1 64.5, median 66, Q3 70, maximum 77. "
         "Each quarter holds about 25% of the heights. "
         "The book also notes that 59 through 65 holds more than 25%, so it holds more heights than 66 through 70. "
-        "TI: enter the 40 heights, 1-Var Stats. Read minX, Q1, Med, Q3, maxX. The plot type is a box plot."
+        "In Desmos: L = [the 40 heights], then min, quartile(L, 1), median, quartile(L, 3), max, or boxplot(L)."
     )))
     out.append(section([
         backdrop(),
@@ -1172,6 +1184,7 @@ def slides_24():
             ),
             64, 390, 1100, 200,
         ),
+        desmos_line("L = [2, 3, 5, 3, 4, 4, 3, 11, 3, 2] &nbsp;→&nbsp; min(L), quartile(L, 1), median(L), quartile(L, 3), max(L)", 615),
     ], notes="Ordered: 2, 2, 3, 3, 3, 3, 4, 4, 5, 11. Give them about two minutes."))
     out.append(section([
         backdrop(),
@@ -1256,7 +1269,7 @@ def slides_25():
             '<text x="36" y="430" font-size="18" fill="#5d6670" font-family="Montserrat, sans-serif">years of age</text>',
             460, 500,
         ), 760, 110, 460, 500),
-        "Example 2.26. The calculator result is a mean of 23.6 and a median of 24. "
+        "Example 2.26. In Desmos, mean(L) is 23.6 and median(L) is 24. "
         "Say average when you mean the arithmetic mean. The symbols: x-bar for a sample, μ for a population.",
     ))
     out.append(section([
@@ -1298,9 +1311,10 @@ def slides_25():
             '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;">μ uses the same formula for the whole population. When someone says average, they mean this mean.</p>',
             72, 480, 1000,
         ),
+        desmos_line("L = [your values] &nbsp;→&nbsp; mean(L)", 610, 72, 1100),
     ], notes=(
-        "Let a calculator do the adding. STAT, EDIT, type the list, STAT, CALC, 1-Var Stats. "
-        "Read x-bar. The Law of Large Numbers is the next idea: larger samples, and the sample mean "
+        "Let Desmos do the adding: L = [values], then mean(L). "
+        "That is x-bar. The Law of Large Numbers is the next idea: larger samples, and the sample mean "
         "is very likely to move toward μ. The book returns to that later. One sentence is enough today."
     )))
     out.append(section([
@@ -1324,9 +1338,10 @@ def slides_25():
             '<p style="margin:6px 0 0;color:#1c242c;font-size:20px;line-height:1.35;">The 20th and 21st ages are the two 24s, at the end of row 11–20 and the start of row 21–30. The location 20.5 is not an age.</p>',
             170,
         ), 64, 292, 1150, 170),
+        desmos_line("L = [the 40 ages] &nbsp;→&nbsp; median(L) gives 24, mean(L) gives 23.6", 490),
     ], notes=(
         "Ordered ages: 3, 4, 8, 8, 10, 11, 12, 13, 14, 15, 15, 16, 16, 17, 17, 18, 21, 22, 22, 24, 24, 25, 26, 26, 27, 27, 29, 29, 31, 32, 33, 33, 34, 34, 35, 37, 40, 44, 44, 47. "
-        "Position 20 is 24. Position 21 is 24. Calculator: clear L1, STAT EDIT, 1-Var Stats. x-bar = 23.6, Med = 24. "
+        "Position 20 is 24. Position 21 is 24. Desmos: mean(L) = 23.6, median(L) = 24. "
         "If n is odd, the location (n+1)/2 is a single ordered value. If n is even, average the two middle values."
     )))
     out.append(section([
@@ -1504,12 +1519,13 @@ def slides_25():
             220,
         ), 64, 200, 1150, 220),
         text_block(
-            '<p style="margin:0;color:#1c242c;font-size:24px;">In practice a calculator or software does the arithmetic. Read the mean and the median, then say what they tell you.</p>',
+            '<p style="margin:0;color:#1c242c;font-size:24px;">In practice Desmos does the arithmetic. Read the mean and the median, then say what they tell you.</p>',
             64, 470, 1150,
         ),
+        desmos_line("mean(L) &nbsp;·&nbsp; median(L)", 540),
     ], notes=(
-        "Keystrokes if someone asks: STAT 4 to clear L1, STAT EDIT to type, STAT CALC 1-Var Stats. "
-        "x-bar is the sample mean. Med is the median. "
+        "Desmos: L = [values], then mean(L) and median(L). Desmos has no mode command, so count by eye. "
+        "x-bar is the sample mean. "
         "A sampling distribution is a relative-frequency picture of many sample means. Do not open that chapter today."
     )))
     out.append(quick("Which center?", [
@@ -1697,6 +1713,7 @@ def slides_26():
             'If you do add: mean = (sum) / n. Location of the median = (n + 1) / 2.</p>',
             72, 430, 1136,
         ),
+        desmos_line("T = [7, 9, 3, 3, 3, 4, 1, 3, 2, 2] &nbsp;→&nbsp; mean(T), median(T). Same for Davis and Maris.", 480, 72, 1136),
     ], notes="Four minutes. Terry’s 9 pulls the mean up. Davis’s 1s pull it down. Maris is the roughly even one. The next slide has the means: 3.7, 2.7, and 4.6."))
     out.append(section([
         backdrop(),
@@ -2138,6 +2155,7 @@ def slides_27():
             'That is the long left whisker from the box plot. s = 17.9 says a typical score sits about 18 points from 73.5.</p>',
             64, 470, 1150,
         ),
+        desmos_line("L = [the 31 scores] &nbsp;→&nbsp; mean(L), median(L), stdev(L), quartile(L, 1), quartile(L, 3)", 590),
     ], notes=(
         "Scores: 33, 42, 49, 49, 53, 55, 55, 61, 63, 67, 68, 68, 69, 69, 72, 73, 74, 78, 80, 83, 88, 88, 88, 90, 92, 94, 94, 94, 94, 96, 100. "
         "Unrounded mean is about 73.52 and stdev is about 17.92. The book rounds to 73.5 and 17.9. Q1 is 61 and Q3 is 90, so the IQR is 29."
