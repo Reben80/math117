@@ -42,6 +42,24 @@ window.M117 = (function () {
   var FOURTEEN = [1, 11.5, 6, 7.2, 4, 8, 9, 10, 6.8, 8.3, 2, 2, 10, 1];
 
   var specs = {
+    "2.2": function (g) {
+      g.text("MATH 117 · 2.2 Histograms. The book prints the counts, not the 100 heights, so each list below repeats a bar's label that many times. histogram( ) draws it. Change the bin width and the shape changes.");
+      g.open("Example 2.7 · 100 soccer players, heights in inches");
+      g.text("Bar labels and counts from the slide: 60 (5), 62 (3), 64 (15), 66 (40), 68 (17), 70 (12), 72 (7), 74 (1).");
+      g.ex("H=" + op("join", [rep(60, 5), rep(62, 3), rep(64, 15), rep(66, 40), rep(68, 17), rep(70, 12), rep(72, 7), rep(74, 1)].join(",")));
+      g.ex(op("length", "H"));
+      g.ex(op("histogram", "H,2"));
+      g.text("The book's bars are 2 inches wide, starting at 59.95. Desmos places its own edges, so compare the counts, not the edges.");
+      g.close();
+      g.open("Example 2.8 · books bought by 50 students", true);
+      g.text("Counts: 1 book (11), 2 (10), 3 (16), 4 (6), 5 (5), 6 (2).");
+      g.ex("K=" + op("join", [rep(1, 11), rep(2, 10), rep(3, 16), rep(4, 6), rep(5, 5), rep(6, 2)].join(",")));
+      g.ex(op("length", "K"));
+      g.ex(op("histogram", "K,1"), { hidden: true });
+      g.text("Turn the histogram on. The bar for 3 runs from 2.5 to 3.5 in the book, and 16 of the 50 bought three books.");
+      g.close();
+      return { left: 58, right: 76, bottom: -5, top: 50 };
+    },
     "2.3": function (g) {
       g.text("MATH 117 · 2.3 Quartiles and percentiles. Every list is from OpenStax Introductory Statistics 2e. Open a folder and change any number.");
       g.open("Warm-up · the 14 values");

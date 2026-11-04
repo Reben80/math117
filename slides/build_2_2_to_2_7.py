@@ -16,6 +16,7 @@ SAMPLE = Path("/Users/mac-mini/Downloads/slides_deck-8187f8-2")
 
 # Saved in the instructor's Desmos account. Built from desmos_graphs.js.
 GRAPHS = {
+    "2.2": "https://www.desmos.com/calculator/yoeqvfiuf4",
     "2.3": "https://www.desmos.com/calculator/y0hzfaqwnu",
     "2.4": "https://www.desmos.com/calculator/o9i3yfz0zy",
     "2.5": "https://www.desmos.com/calculator/wnxrjiwd9b",
@@ -672,6 +673,7 @@ def slides_22():
         ("2.3 &nbsp; Quartiles", "Where a value sits in an ordered list."),
         "Practice: OpenStax homework 76 through 81.",
         "Items 76 to 81 are the histogram homework. Section 2.3 starts at item 82.",
+        graph="2.2",
     ))
     return out
 
