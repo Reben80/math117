@@ -2005,19 +2005,21 @@ def slides_27():
         text_block(kicker("Sample or population") + title("Divide by n − 1, or by N"), 64, 28, 1100),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:18px;font-weight:700;">SAMPLE</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by n − 1. The standard deviation is s. On a calculator, read Sx.</p>',
-            200,
-        ), 64, 180, 560, 200),
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by n − 1. The standard deviation is s. On a calculator, read Sx.</p>'
+            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Say it: s is “ess.” Sx is “ess x.” The mean x̄ is “x-bar.”</p>',
+            250,
+        ), 64, 170, 560, 250),
         text_block(card_shell(
             '<p style="margin:0;color:#2a6f7a;font-size:18px;font-weight:700;">POPULATION</p>'
-            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by N. The standard deviation is σ. On a calculator, read σx.</p>',
-            200,
-        ), 656, 180, 560, 200),
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:26px;line-height:1.35;">The variance divides by N. The standard deviation is σ. On a calculator, read σx.</p>'
+            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Say it: σ is the Greek letter “sigma.” σx is “sigma x.” The mean μ is “mew.”</p>',
+            250,
+        ), 656, 170, 560, 250),
         text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             'The deviations from the mean add to zero, so the calculation squares them. '
             'Dividing a sample by n − 1 estimates the population variance better than dividing by n. Let the calculator do that arithmetic.</p>',
-            64, 430, 1150,
+            64, 450, 1150,
         ),
     ], notes=(
         "Variance is in squared units. The standard deviation is the square root, back in the units of the data. "
