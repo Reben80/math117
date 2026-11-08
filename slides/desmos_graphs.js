@@ -33,6 +33,17 @@ window.M117 = (function () {
     this.ex(op("quartile", v + ",3"));
     this.ex(op("max", v));
   };
+  Graph.prototype.table = function (xi, xs, yi, ys) {
+    this.items.push({
+      type: "table",
+      id: this.id(),
+      folderId: this.folder,
+      columns: [
+        { latex: xi, values: xs.map(String) },
+        { latex: yi, values: ys.map(String), color: "#2a6f7a", lines: false },
+      ],
+    });
+  };
   Graph.prototype.fences = function (v, name) {
     this.ex(name + "=" + op("quartile", v + ",3") + "-" + op("quartile", v + ",1"));
     this.ex(op("quartile", v + ",1") + "-1.5" + name);
@@ -188,6 +199,71 @@ window.M117 = (function () {
       g.ex(op("mean", "B") + "+2" + op("stdev", "B"));
       g.close();
       return { left: 8, right: 12.5, bottom: -1, top: 8 };
+    },
+    "12.1": function (g) {
+      g.text("MATH 117 · 12.1 Linear equations. Every equation is from OpenStax. The scales differ, so turn one line on at a time.");
+      g.open("Example 12.2 · y = -1 + 2x");
+      g.ex("y=-1+2x");
+      g.close();
+      g.open("Example 12.1 and Try It 12.1", true);
+      g.ex("y=3+2x", { hidden: true });
+      g.ex("y=-0.01+1.2x", { hidden: true });
+      g.ex("y=-0.125-3.5x", { hidden: true });
+      g.text("Try It 12.1 falls: the slope is -3.5.");
+      g.close();
+      g.open("Example 12.3 · tax return, dollars", true);
+      g.ex("y=31.50+32x", { hidden: true });
+      g.text("31.50 is the one-time charge. 32 is the price of one more hour.");
+      g.close();
+      g.open("Try It 12.3 · Emma", true);
+      g.ex("y=50+20x", { hidden: true });
+      g.close();
+      g.open("Example 12.4 · Svetlana, and Try It 12.4 · Ethan", true);
+      g.ex("y=25+15x", { hidden: true });
+      g.ex("y=25+20x", { hidden: true });
+      g.close();
+      return { left: -3, right: 10, bottom: -8, top: 20 };
+    },
+    "12.2": function (g) {
+      g.text("MATH 117 · 12.2 Scatter plots. No line yet. That is section 12.3. Hide one table before you read the other, because the vertical scales are different.");
+      g.open("Example 12.5 · age and vocabulary");
+      g.table("x_1", [3, 4, 6, 7], "y_1", [655, 1098, 2463, 3195]);
+      g.text("Four children. The points climb.");
+      g.close();
+      g.open("Try It 12.5 · Amelia's six games", true);
+      g.table("x_2", [5, 7, 9, 10, 11, 12], "y_2", [15, 22, 28, 31, 33, 36]);
+      g.text("Hours of jump-shot practice and points in the game. Hide the vocabulary table to see these six points.");
+      g.close();
+      return { left: 2, right: 8, bottom: 0, top: 3600 };
+    },
+    "12.3": function (g) {
+      g.text("MATH 117 · 12.3 The regression line. Desmos prints R^2, not r. r is the square root of R^2, with the same sign as b. The book rounds the exam line to y-hat = -173.51 + 4.83x and r = 0.6631.");
+      g.open("Example 12.6 · third exam and final exam");
+      g.table("x_1", [65, 67, 71, 71, 66, 75, 67, 70, 71, 69, 69], "y_1", [175, 133, 185, 163, 126, 198, 153, 163, 159, 151, 159]);
+      g.ex("y_1\\sim a+bx_1");
+      g.close();
+      g.open("Try It 12.6 · dive depth and maximum time", true);
+      g.table("x_2", [50, 60, 70, 80, 90, 100], "y_2", [80, 55, 45, 35, 25, 22]);
+      g.ex("y_2\\sim c+dx_2", { hidden: true });
+      g.text("Turn the line on. At 110 feet the line is past the data: the depths stop at 100. Section 12.5 calls that extrapolation.");
+      g.close();
+      return { left: 60, right: 80, bottom: 80, top: 230 };
+    },
+    "12.5": function (g) {
+      g.text("MATH 117 · 12.5 Prediction. The line is the book's rounded line. Drag p. Scores from 65 to 75 are interpolation. 50 and 90 are extrapolation.");
+      g.open("Third exam and final exam");
+      g.ex("y=-173.51+4.83x");
+      g.ex("p=73", { sliderBounds: { min: "50", max: "90", step: "1" } });
+      g.ex("-173.51+4.83p");
+      g.ex("\\left(p,-173.51+4.83p\\right)");
+      g.text("The book: x = 73 gives 179.08, x = 66 gives 145.27, and x = 90 gives 261.19, which cannot be a score out of 200.");
+      g.close();
+      g.open("Try It 12.11 · instrument practice and a math score", true);
+      g.ex("y=72.5+2.8t", { hidden: true });
+      g.ex("t=5", { hidden: true, sliderBounds: { min: "0", max: "10", step: "1" } });
+      g.text("The book does not list the observed hours. At 5 hours the line gives 72.5 + 14 = 86.5.");
+      g.close();
+      return { left: 50, right: 95, bottom: 80, top: 280 };
     },
   };
 

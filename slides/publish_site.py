@@ -25,6 +25,10 @@ DECKS = [
     ("2", "2.5-center", "2.5", "Center", "Mean, median, and mode."),
     ("2", "2.6-skewness", "2.6", "Skewness", "How the mean rides the tail."),
     ("2", "2.7-spread", "2.7", "Standard deviation", "How far the values sit from the mean."),
+    ("3", "12.1-lines", "12.1", "Linear equations", "The line y = a + bx, before any data."),
+    ("3", "12.2-scatter", "12.2", "Scatter plots", "One point for each pair, and the direction it shows."),
+    ("3", "12.3-regression", "12.3", "The regression line", "The least-squares line, r, and r squared."),
+    ("3", "12.5-prediction", "12.5", "Prediction", "Use the line inside the data. Stop outside it."),
 ]
 
 # Dates and sections follow the Fall 2026 second-half calendar.
@@ -32,7 +36,7 @@ DECKS = [
 WEEKS = [
     ("October 28 – November 1", "Unit 1 · Sampling and Data", "OpenStax Introductory Statistics 2e, sections 1.1–1.4", "Homework, test, and discussion due November 1", "1"),
     ("November 2 – 6", "Unit 2 · Descriptive Statistics", "OpenStax Introductory Statistics 2e, sections 2.1–2.7", "Homework, test, and discussion due November 6", "2"),
-    ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", ""),
+    ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", "3"),
     ("November 10 – 11", "Exam 1", "Units 1, 2, and 3", "", ""),
     ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", ""),
     ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", ""),
