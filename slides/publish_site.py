@@ -259,8 +259,6 @@ def landing():
     {schedule}
   </ol>
   <footer>
-    <h3>The college</h3>
-    <p>Montgomery College is the public community college of Montgomery County, Maryland, with campuses in Rockville, Germantown, and Takoma Park/Silver Spring. This page holds the lecture decks for MATH 117, Elements of Statistics, CRN 22470, Fall 2026 second half, October 28–December 20. Prof. Rebin Muhammad. College information is at <a href="https://www.montgomerycollege.edu/">montgomerycollege.edu</a>. Homework, tests, and announcements stay on Blackboard.</p>
     <h3>The book</h3>
     <p>The decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a> by Barbara Illowsky and Susan Dean, published by OpenStax at Rice University. Examples, tables, and numbers come from that book. The diagrams are redrawn for class. Access for free at <a href="https://openstax.org">openstax.org</a>.</p>
     <p>Textbook content is © 2026 Rice University, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. These decks are shared for teaching under the same terms.</p>
