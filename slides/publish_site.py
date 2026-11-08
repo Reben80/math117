@@ -260,9 +260,7 @@ def landing():
   </ol>
   <footer>
     <h3>The book</h3>
-    <p>The decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a> by Barbara Illowsky and Susan Dean, published by OpenStax at Rice University. Examples, tables, and numbers come from that book. The diagrams are redrawn for class. Access for free at <a href="https://openstax.org">openstax.org</a>.</p>
-    <p>Textbook content is © 2026 Rice University, licensed <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. These decks are shared for teaching under the same terms.</p>
-    <p>Unit S1 follows chapter 12 of <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>, second edition, by Mine Çetinkaya-Rundel and Johanna Hardin, OpenIntro. That book is free and licensed <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>.</p>
+    <p>These decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a>. Unit S1 follows <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>.</p>
     <h3>Calculators</h3>
     <p><a href="https://rsubedi.com/calculators/">Subedi Calculators</a></p>
     <p><a href="https://lock5stat.com/StatKey/">StatKey</a></p>
