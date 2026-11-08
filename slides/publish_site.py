@@ -262,7 +262,7 @@ def landing():
     <h3>The book</h3>
     <p>These decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a>. Unit S1 follows <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>.</p>
     <h3>Calculators</h3>
-    <p><a href="https://rsubedi.com/calculators/">Subedi Calculators</a></p>
+    <p><a href="https://www.desmos.com/calculator">Desmos</a></p>
     <p><a href="https://lock5stat.com/StatKey/">StatKey</a></p>
   </footer>
 </main>
