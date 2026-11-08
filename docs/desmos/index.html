@@ -14,9 +14,9 @@
     font-family: Montserrat, sans-serif;
   }
   main {
-    max-width: 820px;
+    max-width: 980px;
     margin: 0 auto;
-    padding: 72px 28px 96px;
+    padding: 56px 28px 80px;
   }
   .back {
     color: #2a6f7a;
@@ -38,7 +38,7 @@
     line-height: 1.4;
   }
   .group {
-    margin-top: 40px;
+    margin-top: 32px;
   }
   h2 {
     margin: 0;
@@ -46,39 +46,37 @@
     letter-spacing: -0.03em;
   }
   .dates {
-    margin: 6px 0 0;
+    margin: 4px 0 0;
     color: #2a6f7a;
     font-size: 15px;
     font-weight: 700;
   }
-  ul {
-    list-style: none;
-    margin: 14px 0 0;
-    padding: 0;
+  .matrix {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
     background: #fff;
     border: 1px solid #e4e1da;
-    border-radius: 18px;
-    overflow: hidden;
+    border-radius: 16px;
   }
-  li {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: stretch;
-    border-top: 1px solid #e4e1da;
-  }
-  li:first-child { border-top: 0; }
+  .cell:hover { border-color: #2a6f7a; }
   .tool {
     display: block;
-    padding: 18px 22px;
+    flex: 1;
+    padding: 16px 16px 6px;
     text-decoration: none;
     color: inherit;
   }
-  .tool:hover { background: #f4fbfa; }
   .tool:hover .name { color: #2a6f7a; }
   .sec {
     display: block;
     color: #2a6f7a;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -87,22 +85,16 @@
     display: block;
     margin-top: 4px;
     color: #1c242c;
-    font-size: 22px;
+    font-size: 20px;
+    line-height: 1.2;
     font-weight: 650;
     letter-spacing: -0.02em;
   }
-  .what {
-    display: block;
-    margin-top: 6px;
-    color: #5d6670;
-    font-size: 16px;
-    line-height: 1.4;
-  }
   .slides {
-    align-self: center;
-    margin-right: 18px;
+    display: inline-block;
+    margin: 8px 16px 14px;
     color: #2a6f7a;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     text-decoration: none;
   }
@@ -114,10 +106,12 @@
     line-height: 1.5;
   }
   .note a { color: #2a6f7a; }
-  @media (max-width: 640px) {
+  @media (max-width: 800px) {
+    .matrix { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 520px) {
     h1 { font-size: 40px; }
-    li { grid-template-columns: 1fr; }
-    .slides { margin: 0 22px 16px; }
+    .matrix { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -126,7 +120,7 @@
   <a class="back" href="../">Lecture decks</a>
   <h1>Desmos</h1>
   <p class="lead">Class graphs for the sections that have one. The numbers are from the book. Click a title to open the graph.</p>
-  <section class="group"><h2>Unit 2 · Descriptive statistics</h2><p class="dates">November 2–6</p><ul><li><a class="tool" href="https://www.desmos.com/calculator/yoeqvfiuf4" target="_blank" rel="noopener"><span class="sec">Section 2.2</span><span class="name">Histograms</span><span class="what">Soccer-player heights and books bought. Change the bin width and the shape changes.</span></a><a class="slides" href="../2.2-histograms/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/y0hzfaqwnu" target="_blank" rel="noopener"><span class="sec">Section 2.3</span><span class="name">Quartiles and percentiles</span><span class="what">The 14 values, 29 ages, house prices, and salaries. quartile( ) matches the book.</span></a><a class="slides" href="../2.3-location/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/o9i3yfz0zy" target="_blank" rel="noopener"><span class="sec">Section 2.4</span><span class="name">Box plots</span><span class="what">The 14 values, and the ten project times. Change a number and the box moves.</span></a><a class="slides" href="../2.4-boxplots/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/wnxrjiwd9b" target="_blank" rel="noopener"><span class="sec">Section 2.5</span><span class="name">Mean, median, and mode</span><span class="what">Patient ages, town incomes, and 20 scores. Desmos has no mode command.</span></a><a class="slides" href="../2.5-center/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/7nvhtknq2r" target="_blank" rel="noopener"><span class="sec">Section 2.6</span><span class="name">Skewness</span><span class="what">Compare the mean and the median. Then Terry, Davis, and Maris.</span></a><a class="slides" href="../2.6-skewness/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/yw8qtxdbbz" target="_blank" rel="noopener"><span class="sec">Section 2.7</span><span class="name">Standard deviation</span><span class="what">stdev( ) is the sample s. Fifth-graders, exam scores, and baseball ages.</span></a><a class="slides" href="../2.7-spread/">Slides</a></li></ul></section><section class="group"><h2>Unit 3 · Linear regression and correlation</h2><p class="dates">November 7–9</p><ul><li><a class="tool" href="https://www.desmos.com/calculator/95xebowpci" target="_blank" rel="noopener"><span class="sec">Section 12.1</span><span class="name">Linear equations</span><span class="what">The book's lines, y = a + bx. Turn one folder on at a time.</span></a><a class="slides" href="../12.1-lines/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/mxsh8gz3ls" target="_blank" rel="noopener"><span class="sec">Section 12.2</span><span class="name">Scatter plots</span><span class="what">Age and vocabulary, and Amelia's six games. Points only. The line is section 12.3.</span></a><a class="slides" href="../12.2-scatter/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/3c07limkyp" target="_blank" rel="noopener"><span class="sec">Section 12.3</span><span class="name">The regression line</span><span class="what">The eleven exams, and the six dive times. Desmos prints R². r takes the sign of the slope.</span></a><a class="slides" href="../12.3-regression/">Slides</a></li><li><a class="tool" href="https://www.desmos.com/calculator/86veidxfbr" target="_blank" rel="noopener"><span class="sec">Section 12.5</span><span class="name">Prediction</span><span class="what">Drag a third-exam score along the book's line. 65 to 75 stays inside the data. 90 does not.</span></a><a class="slides" href="../12.5-prediction/">Slides</a></li></ul></section>
+  <section class="group"><h2>Unit 2 · Descriptive statistics</h2><p class="dates">November 2–6</p><div class="matrix" style="--cols:3"><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/yoeqvfiuf4" target="_blank" rel="noopener" title="Soccer-player heights and books bought. Change the bin width and the shape changes."><span class="sec">Section 2.2</span><span class="name">Histograms</span></a><a class="slides" href="../2.2-histograms/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/y0hzfaqwnu" target="_blank" rel="noopener" title="The 14 values, 29 ages, house prices, and salaries. quartile( ) matches the book."><span class="sec">Section 2.3</span><span class="name">Quartiles and percentiles</span></a><a class="slides" href="../2.3-location/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/o9i3yfz0zy" target="_blank" rel="noopener" title="The 14 values, and the ten project times. Change a number and the box moves."><span class="sec">Section 2.4</span><span class="name">Box plots</span></a><a class="slides" href="../2.4-boxplots/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/wnxrjiwd9b" target="_blank" rel="noopener" title="Patient ages, town incomes, and 20 scores. Desmos has no mode command."><span class="sec">Section 2.5</span><span class="name">Mean, median, and mode</span></a><a class="slides" href="../2.5-center/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/7nvhtknq2r" target="_blank" rel="noopener" title="Compare the mean and the median. Then Terry, Davis, and Maris."><span class="sec">Section 2.6</span><span class="name">Skewness</span></a><a class="slides" href="../2.6-skewness/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/yw8qtxdbbz" target="_blank" rel="noopener" title="stdev( ) is the sample s. Fifth-graders, exam scores, and baseball ages."><span class="sec">Section 2.7</span><span class="name">Standard deviation</span></a><a class="slides" href="../2.7-spread/">Slides</a></div></div></section><section class="group"><h2>Unit 3 · Linear regression and correlation</h2><p class="dates">November 7–9</p><div class="matrix" style="--cols:2"><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/95xebowpci" target="_blank" rel="noopener" title="The book's lines, y = a + bx. Turn one folder on at a time."><span class="sec">Section 12.1</span><span class="name">Linear equations</span></a><a class="slides" href="../12.1-lines/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/mxsh8gz3ls" target="_blank" rel="noopener" title="Age and vocabulary, and Amelia's six games. Points only. The line is section 12.3."><span class="sec">Section 12.2</span><span class="name">Scatter plots</span></a><a class="slides" href="../12.2-scatter/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/3c07limkyp" target="_blank" rel="noopener" title="The eleven exams, and the six dive times. Desmos prints R². r takes the sign of the slope."><span class="sec">Section 12.3</span><span class="name">The regression line</span></a><a class="slides" href="../12.3-regression/">Slides</a></div><div class="cell"><a class="tool" href="https://www.desmos.com/calculator/86veidxfbr" target="_blank" rel="noopener" title="Drag a third-exam score along the book's line. 65 to 75 stays inside the data. 90 does not."><span class="sec">Section 12.5</span><span class="name">Prediction</span></a><a class="slides" href="../12.5-prediction/">Slides</a></div></div></section>
   <p class="note">A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
 </main>
 </body>

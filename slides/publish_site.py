@@ -312,27 +312,28 @@ def landing():
 
 
 def desmos_page():
+    # Unit 2 is six graphs, a 3 by 2 block. Unit 3 is four, a 2 by 2 block.
+    columns = {"2": 3, "3": 2}
     groups = []
     for unit, (title, dates) in DESMOS_UNITS.items():
-        rows = []
+        cells = []
         for row_unit, section, folder, name, blurb, url in DESMOS:
             if row_unit != unit:
                 continue
-            rows.append(
-                f'<li>'
-                f'<a class="tool" href="{url}" target="_blank" rel="noopener">'
+            cells.append(
+                f'<div class="cell">'
+                f'<a class="tool" href="{url}" target="_blank" rel="noopener" title="{blurb}">'
                 f'<span class="sec">Section {section}</span>'
                 f'<span class="name">{name}</span>'
-                f'<span class="what">{blurb}</span>'
                 f'</a>'
                 f'<a class="slides" href="../{folder}/">Slides</a>'
-                f'</li>'
+                f'</div>'
             )
         groups.append(
             f'<section class="group">'
             f'<h2>{title}</h2>'
             f'<p class="dates">{dates}</p>'
-            f'<ul>{"".join(rows)}</ul>'
+            f'<div class="matrix" style="--cols:{columns[unit]}">{"".join(cells)}</div>'
             f'</section>'
         )
     return f"""<!DOCTYPE html>
@@ -351,9 +352,9 @@ def desmos_page():
     font-family: Montserrat, sans-serif;
   }}
   main {{
-    max-width: 820px;
+    max-width: 980px;
     margin: 0 auto;
-    padding: 72px 28px 96px;
+    padding: 56px 28px 80px;
   }}
   .back {{
     color: #2a6f7a;
@@ -375,7 +376,7 @@ def desmos_page():
     line-height: 1.4;
   }}
   .group {{
-    margin-top: 40px;
+    margin-top: 32px;
   }}
   h2 {{
     margin: 0;
@@ -383,39 +384,37 @@ def desmos_page():
     letter-spacing: -0.03em;
   }}
   .dates {{
-    margin: 6px 0 0;
+    margin: 4px 0 0;
     color: #2a6f7a;
     font-size: 15px;
     font-weight: 700;
   }}
-  ul {{
-    list-style: none;
-    margin: 14px 0 0;
-    padding: 0;
+  .matrix {{
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+  }}
+  .cell {{
+    display: flex;
+    flex-direction: column;
     background: #fff;
     border: 1px solid #e4e1da;
-    border-radius: 18px;
-    overflow: hidden;
+    border-radius: 16px;
   }}
-  li {{
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: stretch;
-    border-top: 1px solid #e4e1da;
-  }}
-  li:first-child {{ border-top: 0; }}
+  .cell:hover {{ border-color: #2a6f7a; }}
   .tool {{
     display: block;
-    padding: 18px 22px;
+    flex: 1;
+    padding: 16px 16px 6px;
     text-decoration: none;
     color: inherit;
   }}
-  .tool:hover {{ background: #f4fbfa; }}
   .tool:hover .name {{ color: #2a6f7a; }}
   .sec {{
     display: block;
     color: #2a6f7a;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -424,22 +423,16 @@ def desmos_page():
     display: block;
     margin-top: 4px;
     color: #1c242c;
-    font-size: 22px;
+    font-size: 20px;
+    line-height: 1.2;
     font-weight: 650;
     letter-spacing: -0.02em;
   }}
-  .what {{
-    display: block;
-    margin-top: 6px;
-    color: #5d6670;
-    font-size: 16px;
-    line-height: 1.4;
-  }}
   .slides {{
-    align-self: center;
-    margin-right: 18px;
+    display: inline-block;
+    margin: 8px 16px 14px;
     color: #2a6f7a;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     text-decoration: none;
   }}
@@ -451,10 +444,12 @@ def desmos_page():
     line-height: 1.5;
   }}
   .note a {{ color: #2a6f7a; }}
-  @media (max-width: 640px) {{
+  @media (max-width: 800px) {{
+    .matrix {{ grid-template-columns: 1fr 1fr; }}
+  }}
+  @media (max-width: 520px) {{
     h1 {{ font-size: 40px; }}
-    li {{ grid-template-columns: 1fr; }}
-    .slides {{ margin: 0 22px 16px; }}
+    .matrix {{ grid-template-columns: 1fr; }}
   }}
 </style>
 </head>
