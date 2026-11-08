@@ -47,6 +47,46 @@ WEEKS = [
     ("December 2 – 5", "Unit 8 · Hypothesis testing for means", "OpenStax Introductory Statistics 2e, sections 9.5, 10.1, and 10.4", "Homework, test, and discussion due December 5", ""),
 ]
 
+# Saved class graphs. Each click opens that section's Desmos activity.
+# unit, section, deck folder, title, what the graph holds, url
+DESMOS = [
+    ("2", "2.2", "2.2-histograms", "Histograms",
+     "Soccer-player heights and books bought. Change the bin width and the shape changes.",
+     "https://www.desmos.com/calculator/yoeqvfiuf4"),
+    ("2", "2.3", "2.3-location", "Quartiles and percentiles",
+     "The 14 values, 29 ages, house prices, and salaries. quartile( ) matches the book.",
+     "https://www.desmos.com/calculator/y0hzfaqwnu"),
+    ("2", "2.4", "2.4-boxplots", "Box plots",
+     "The 14 values, and the ten project times. Change a number and the box moves.",
+     "https://www.desmos.com/calculator/o9i3yfz0zy"),
+    ("2", "2.5", "2.5-center", "Mean, median, and mode",
+     "Patient ages, town incomes, and 20 scores. Desmos has no mode command.",
+     "https://www.desmos.com/calculator/wnxrjiwd9b"),
+    ("2", "2.6", "2.6-skewness", "Skewness",
+     "Compare the mean and the median. Then Terry, Davis, and Maris.",
+     "https://www.desmos.com/calculator/7nvhtknq2r"),
+    ("2", "2.7", "2.7-spread", "Standard deviation",
+     "stdev( ) is the sample s. Fifth-graders, exam scores, and baseball ages.",
+     "https://www.desmos.com/calculator/yw8qtxdbbz"),
+    ("3", "12.1", "12.1-lines", "Linear equations",
+     "The book's lines, y = a + bx. Turn one folder on at a time.",
+     "https://www.desmos.com/calculator/95xebowpci"),
+    ("3", "12.2", "12.2-scatter", "Scatter plots",
+     "Age and vocabulary, and Amelia's six games. Points only. The line is section 12.3.",
+     "https://www.desmos.com/calculator/mxsh8gz3ls"),
+    ("3", "12.3", "12.3-regression", "The regression line",
+     "The eleven exams, and the six dive times. Desmos prints R². r takes the sign of the slope.",
+     "https://www.desmos.com/calculator/3c07limkyp"),
+    ("3", "12.5", "12.5-prediction", "Prediction",
+     "Drag a third-exam score along the book's line. 65 to 75 stays inside the data. 90 does not.",
+     "https://www.desmos.com/calculator/86veidxfbr"),
+]
+
+DESMOS_UNITS = {
+    "2": ("Unit 2 · Descriptive statistics", "November 2–6"),
+    "3": ("Unit 3 · Linear regression and correlation", "November 7–9"),
+}
+
 
 def rewrite(html):
     return (
@@ -262,9 +302,169 @@ def landing():
     <h3>The book</h3>
     <p>These decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a>. Unit S1 follows <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>.</p>
     <h3>Calculators</h3>
-    <p><a href="https://www.desmos.com/calculator">Desmos</a></p>
+    <p><a href="desmos/">Desmos</a></p>
     <p><a href="https://lock5stat.com/StatKey/">StatKey</a></p>
   </footer>
+</main>
+</body>
+</html>
+"""
+
+
+def desmos_page():
+    groups = []
+    for unit, (title, dates) in DESMOS_UNITS.items():
+        rows = []
+        for row_unit, section, folder, name, blurb, url in DESMOS:
+            if row_unit != unit:
+                continue
+            rows.append(
+                f'<li>'
+                f'<a class="tool" href="{url}" target="_blank" rel="noopener">'
+                f'<span class="sec">Section {section}</span>'
+                f'<span class="name">{name}</span>'
+                f'<span class="what">{blurb}</span>'
+                f'</a>'
+                f'<a class="slides" href="../{folder}/">Slides</a>'
+                f'</li>'
+            )
+        groups.append(
+            f'<section class="group">'
+            f'<h2>{title}</h2>'
+            f'<p class="dates">{dates}</p>'
+            f'<ul>{"".join(rows)}</ul>'
+            f'</section>'
+        )
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATH 117 · Desmos</title>
+<link rel="stylesheet" href="../lib/fonts/montserrat/montserrat.css">
+<style>
+  * {{ box-sizing: border-box; }}
+  body {{
+    margin: 0;
+    background: #eef6f4;
+    color: #1c242c;
+    font-family: Montserrat, sans-serif;
+  }}
+  main {{
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 72px 28px 96px;
+  }}
+  .back {{
+    color: #2a6f7a;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+  }}
+  h1 {{
+    margin: 22px 0 0;
+    font-size: 56px;
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    font-weight: 700;
+  }}
+  .lead {{
+    margin: 18px 0 0;
+    max-width: 640px;
+    font-size: 20px;
+    line-height: 1.4;
+  }}
+  .group {{
+    margin-top: 40px;
+  }}
+  h2 {{
+    margin: 0;
+    font-size: 22px;
+    letter-spacing: -0.03em;
+  }}
+  .dates {{
+    margin: 6px 0 0;
+    color: #2a6f7a;
+    font-size: 15px;
+    font-weight: 700;
+  }}
+  ul {{
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    background: #fff;
+    border: 1px solid #e4e1da;
+    border-radius: 18px;
+    overflow: hidden;
+  }}
+  li {{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: stretch;
+    border-top: 1px solid #e4e1da;
+  }}
+  li:first-child {{ border-top: 0; }}
+  .tool {{
+    display: block;
+    padding: 18px 22px;
+    text-decoration: none;
+    color: inherit;
+  }}
+  .tool:hover {{ background: #f4fbfa; }}
+  .tool:hover .name {{ color: #2a6f7a; }}
+  .sec {{
+    display: block;
+    color: #2a6f7a;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }}
+  .name {{
+    display: block;
+    margin-top: 4px;
+    color: #1c242c;
+    font-size: 22px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+  }}
+  .what {{
+    display: block;
+    margin-top: 6px;
+    color: #5d6670;
+    font-size: 16px;
+    line-height: 1.4;
+  }}
+  .slides {{
+    align-self: center;
+    margin-right: 18px;
+    color: #2a6f7a;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+  }}
+  .slides:hover {{ text-decoration: underline; }}
+  .note {{
+    margin: 28px 0 0;
+    color: #5d6670;
+    font-size: 15px;
+    line-height: 1.5;
+  }}
+  .note a {{ color: #2a6f7a; }}
+  @media (max-width: 640px) {{
+    h1 {{ font-size: 40px; }}
+    li {{ grid-template-columns: 1fr; }}
+    .slides {{ margin: 0 22px 16px; }}
+  }}
+</style>
+</head>
+<body>
+<main>
+  <a class="back" href="../">Lecture decks</a>
+  <h1>Desmos</h1>
+  <p class="lead">Class graphs for the sections that have one. The numbers are from the book. Click a title to open the graph.</p>
+  {"".join(groups)}
+  <p class="note">A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
 </main>
 </body>
 </html>
@@ -279,6 +479,9 @@ def main():
     shutil.copytree(LIB_SOURCE, DOCS / "lib", ignore=shutil.ignore_patterns(".DS_Store"))
     (DOCS / ".nojekyll").write_text("")
     (DOCS / "index.html").write_text(landing())
+    desmos = DOCS / "desmos"
+    desmos.mkdir()
+    (desmos / "index.html").write_text(desmos_page())
     for _unit, folder, _number, _name, _blurb in DECKS:
         source = SLIDES / folder
         if not (source / "index.html").is_file():
