@@ -29,6 +29,8 @@ DECKS = [
     ("3", "12.2-scatter", "12.2", "Scatter plots", "One point for each pair, and the direction it shows."),
     ("3", "12.3-regression", "12.3", "The regression line", "The least-squares line, r, and r squared."),
     ("3", "12.5-prediction", "12.5", "Prediction", "Use the line inside the data. Stop outside it."),
+    ("4", "6.1-standard-normal", "6.1", "The standard normal", "A z-score counts standard deviations from the mean."),
+    ("4", "6.2-normal-area", "6.2", "Area under the curve", "The probability is the area. A percentile goes back to x."),
 ]
 
 # Dates and sections follow the Fall 2026 second-half calendar.
@@ -38,7 +40,7 @@ WEEKS = [
     ("November 2 – 6", "Unit 2 · Descriptive Statistics", "OpenStax Introductory Statistics 2e, sections 2.1–2.7", "Homework, test, and discussion due November 6", "2"),
     ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", "3"),
     ("November 10 – 11", "Exam 1", "Units 1, 2, and 3", "", ""),
-    ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", ""),
+    ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", "4"),
     ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", ""),
     ("November 20 – 21", "Unit S1 · Bootstrap Confidence Intervals", "Introduction to Modern Statistics, chapter 12", "Homework, test, and discussion due November 21", ""),
     ("November 22 – 23", "Exam 2", "Units 4 and 5. Unit S1 is not on this exam.", "", ""),

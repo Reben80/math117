@@ -265,6 +265,60 @@ window.M117 = (function () {
       g.close();
       return { left: 50, right: 95, bottom: 80, top: 280 };
     },
+    "6.1": function (g) {
+      g.text("MATH 117 · 6.1 The standard normal. Every number is from OpenStax. z = (x − mean) / sd. A positive z is to the right of the mean.");
+      g.open("Example 6.1 · X ~ N(5, 6)");
+      g.ex("\\frac{17-5}{6}");
+      g.ex("\\frac{1-5}{6}");
+      g.text("x = 17 is z = 2. x = 1 is z = −0.67, to two decimals.");
+      g.close();
+      g.open("Try It 6.1 · X ~ N(12, 3)", true);
+      g.ex("\\frac{1-12}{3}");
+      g.text("z = −3.67. The value 1 is 3.67 standard deviations left of 12.");
+      g.close();
+      g.open("Example 6.3 · Chile, 2009 to 2010, X ~ N(170, 6.28)", true);
+      g.ex("\\frac{168-170}{6.28}");
+      g.ex("170+1.27\\cdot 6.28");
+      g.text("168 cm is z = −0.32. A z-score of 1.27 is 177.98 cm.");
+      g.close();
+      g.open("Example 6.5 · mean 50, standard deviation 6", true);
+      g.ex("50-6");
+      g.ex("50+6");
+      g.ex("50-2\\cdot 6");
+      g.ex("50+2\\cdot 6");
+      g.ex("50-3\\cdot 6");
+      g.ex("50+3\\cdot 6");
+      g.text("68% from 44 to 56. 95% from 38 to 62. 99.7% from 32 to 68.");
+      g.close();
+      return { left: -4, right: 20, bottom: -5, top: 5 };
+    },
+    "6.2": function (g) {
+      g.text("MATH 117 · 6.2 Area under the normal curve. cdf is the area to the left, or between two values. inversecdf is the percentile. The book rounds these.");
+      g.open("Example 6.8 · final exams, N(63, 5)");
+      g.ex("N=\\operatorname{normaldist}\\left(63,5\\right)");
+      g.ex("1-N.\\operatorname{cdf}\\left(65\\right)");
+      g.ex("N.\\operatorname{cdf}\\left(85\\right)");
+      g.ex("N.\\operatorname{inversecdf}\\left(0.90\\right)");
+      g.ex("N.\\operatorname{inversecdf}\\left(0.70\\right)");
+      g.text("More than 65 is 0.3446. Less than 85 rounds to 1. The 90th percentile is 69.4. The 70th is 65.6.");
+      g.close();
+      g.open("Try It 6.8 · golf, N(68, 3)", true);
+      g.ex("\\operatorname{normaldist}\\left(68,3\\right).\\operatorname{cdf}\\left(65\\right)");
+      g.text("65 is one standard deviation below 68. The area to the left is 0.1587. The book does not print this Try It.");
+      g.close();
+      g.open("Example 6.9 · computer hours, N(2, 0.5)", true);
+      g.ex("\\operatorname{normaldist}\\left(2,0.5\\right).\\operatorname{cdf}\\left(1.8,2.75\\right)");
+      g.ex("\\operatorname{normaldist}\\left(2,0.5\\right).\\operatorname{inversecdf}\\left(0.25\\right)");
+      g.text("Between 1.8 and 2.75 hours is 0.5886. The 25th percentile is 1.66 hours.");
+      g.close();
+      g.open("Example 6.11 · smartphone ages, N(36.9, 13.9)", true);
+      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.25\\right)");
+      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.75\\right)");
+      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.60\\right)");
+      g.text("Q1 = 27.5246, Q3 = 46.2754, IQR = 18.8. Forty percent are at least 40.4 years.");
+      g.close();
+      return { left: -1, right: 8, bottom: -1, top: 4 };
+    },
   };
 
   return {
