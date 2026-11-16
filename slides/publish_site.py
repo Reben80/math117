@@ -130,8 +130,8 @@ def landing():
             calculator, notebook = tool_links[folder]
             tools = (
                 '<p class="tools">'
-                f'<a href="{calculator}" target="_blank" rel="noopener">Calculator</a>'
-                f'<a href="{notebook}" target="_blank" rel="noopener">Notebook</a>'
+                f'<a href="{calculator}" target="_blank" rel="noopener">Desmos calculator</a>'
+                f'<a href="{notebook}" target="_blank" rel="noopener">Desmos notebook</a>'
                 '</p>'
             )
         cards_by_unit.setdefault(unit, []).append(
@@ -308,8 +308,9 @@ def landing():
     font-weight: 700;
   }}
   .tools a {{
+    display: inline-block;
     color: #2a6f7a;
-    margin-right: 16px;
+    margin: 4px 16px 0 0;
   }}
   footer {{
     margin-top: 64px;
@@ -353,8 +354,11 @@ def landing():
   <footer>
     <h3>The book</h3>
     <p>These decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a>. Unit S1 follows <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>.</p>
-    <h3>Calculators</h3>
-    <p><a href="desmos/">Desmos</a></p>
+    <h3>Desmos</h3>
+    <p>Every section on the <a href="desmos/">Desmos page</a> has a class calculator. A notebook, the short lesson, is ready for sections 6.2 and 7.1.</p>
+    <p><a href="https://www.desmos.com/calculator/xa9guvmgpd" target="_blank" rel="noopener">6.2 calculator</a> · <a href="https://www.desmos.com/notebook/s3ainmd7q6" target="_blank" rel="noopener">6.2 notebook</a></p>
+    <p><a href="https://www.desmos.com/calculator/r2hamz4ymv" target="_blank" rel="noopener">7.1 calculator</a> · <a href="https://www.desmos.com/notebook/alc4ousjbu" target="_blank" rel="noopener">7.1 notebook</a></p>
+    <h3>StatKey</h3>
     <p><a href="https://lock5stat.com/StatKey/">StatKey</a></p>
   </footer>
 </main>
@@ -509,9 +513,9 @@ def desmos_page():
 <main>
   <a class="back" href="../">Lecture decks</a>
   <h1>Desmos</h1>
-  <p class="lead">Class graphs for the sections that have one. The numbers are from the book. Click a title to open the graph.</p>
+  <p class="lead">A calculator is the class graph, with the book's numbers ready to use. A notebook is a short lesson. Notebooks are ready for 6.2 and 7.1. The other sections have a calculator only.</p>
   {"".join(groups)}
-  <p class="note">A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
+  <p class="note">Sections 6.2 and 7.1 each have both a calculator and a notebook. A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
 </main>
 </body>
 </html>
