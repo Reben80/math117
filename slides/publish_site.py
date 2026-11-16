@@ -32,6 +32,10 @@ DECKS = [
     ("4", "6.1-standard-normal", "6.1", "The standard normal", "A z-score counts standard deviations from the mean."),
     ("4", "6.2-normal-area", "6.2", "Area under the curve", "The probability is the area. A percentile goes back to x."),
     ("4", "7.1-sample-means", "7.1", "The average of a sample", "Sample means have the same center and a smaller standard error."),
+    ("5", "8.1-known-sigma", "8.1", "A known standard deviation", "The sample mean, plus and minus a margin of error."),
+    ("5", "8.2-t-interval", "8.2", "The t interval", "When the population standard deviation is unknown, use s."),
+    ("5", "8.3-proportion", "8.3", "A proportion", "Successes divided by n, plus and minus a margin of error."),
+    ("S1", "s1-bootstrap", "12", "Bootstrap intervals", "Resample the data. The middle 95% of those proportions is the interval."),
 ]
 
 # Dates and sections follow the Fall 2026 second-half calendar.
@@ -42,8 +46,8 @@ WEEKS = [
     ("November 7 – 9", "Unit 3 · Linear Regression and Correlation", "OpenStax Introductory Statistics 2e, sections 12.1–12.3 and 12.5", "Homework, test, and discussion due November 9", "3"),
     ("November 10 – 11", "Exam 1", "Units 1, 2, and 3", "", ""),
     ("November 12 – 16", "Unit 4 · Normal Distribution, CLT", "OpenStax Introductory Statistics 2e, sections 6.1, 6.2, and 7.1", "Homework, test, and discussion due November 16", "4"),
-    ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", ""),
-    ("November 20 – 21", "Unit S1 · Bootstrap Confidence Intervals", "Introduction to Modern Statistics, chapter 12", "Homework, test, and discussion due November 21", ""),
+    ("November 17 – 19", "Unit 5 · Confidence Intervals", "OpenStax Introductory Statistics 2e, sections 8.1–8.3", "Homework, test, and discussion due November 19", "5"),
+    ("November 20 – 21", "Unit S1 · Bootstrap Confidence Intervals", "Introduction to Modern Statistics, chapter 12", "Homework, test, and discussion due November 21", "S1"),
     ("November 22 – 23", "Exam 2", "Units 4 and 5. Unit S1 is not on this exam.", "", ""),
     ("November 24 – 28", "Unit 6 · Hypothesis Testing, introduction", "OpenStax Introductory Statistics 2e, sections 9.1–9.4", "Homework, test, and discussion due November 28", ""),
     ("November 29 – December 1", "Unit 7 · Hypothesis testing for proportions", "OpenStax Introductory Statistics 2e, sections 9.5 and 10.3", "Homework, test, and discussion due December 1", ""),
@@ -98,12 +102,38 @@ DESMOS = [
     ("4", "7.1", "7.1-sample-means", "Notebook",
      "The same examples as a short lesson: sampling distribution, standard error, and sample means.",
      "https://www.desmos.com/notebook/alc4ousjbu"),
+    ("5", "8.1", "8.1-known-sigma", "Calculator",
+     "Class graph. Exams, the error bound, and the pizza deliveries. Turn one folder on at a time.",
+     "https://www.desmos.com/calculator/jrublef2f5"),
+    ("5", "8.1", "8.1-known-sigma", "Notebook",
+     "The same examples as a short lesson: point estimate, margin of error, and the exam intervals.",
+     "https://www.desmos.com/notebook/k5kigk35he"),
+    ("5", "8.2", "8.2-t-interval", "Calculator",
+     "Class graph. Acupuncture, cord blood, and hours of sleep. tdist uses the area to the left.",
+     "https://www.desmos.com/calculator/xs264vqhhe"),
+    ("5", "8.2", "8.2-t-interval", "Notebook",
+     "The same examples as a short lesson: s, degrees of freedom, and the t interval.",
+     "https://www.desmos.com/notebook/xg33if0c12"),
+    ("5", "8.3", "8.3-proportion", "Calculator",
+     "Class graph. Smartphones, voters, plus four, and tablets.",
+     "https://www.desmos.com/calculator/82gqmz8nj9"),
+    ("5", "8.3", "8.3-proportion", "Notebook",
+     "The same examples as a short lesson: sample proportion, error bound, and plus four.",
+     "https://www.desmos.com/notebook/z7eemsa93g"),
+    ("S1", "12", "s1-bootstrap", "Calculator",
+     "Class graph. The consultant’s 0 to 0.113, and the book’s ten tapper resamples.",
+     "https://www.desmos.com/calculator/ybx1acxbuo"),
+    ("S1", "12", "s1-bootstrap", "Notebook",
+     "The same examples as a short lesson: resample, percentile interval, and one draw versus the interval.",
+     "https://www.desmos.com/notebook/574zl9ghhq"),
 ]
 
 DESMOS_UNITS = {
     "2": ("Unit 2 · Descriptive statistics", "November 2–6"),
     "3": ("Unit 3 · Linear regression and correlation", "November 7–9"),
     "4": ("Unit 4 · The normal distribution", "November 12–16"),
+    "5": ("Unit 5 · Confidence intervals", "November 17–19"),
+    "S1": ("Unit S1 · Bootstrap confidence intervals", "November 20–21"),
 }
 
 
@@ -131,6 +161,22 @@ def landing():
             "7.1-sample-means": (
                 "https://www.desmos.com/calculator/r2hamz4ymv",
                 "https://www.desmos.com/notebook/alc4ousjbu",
+            ),
+            "8.1-known-sigma": (
+                "https://www.desmos.com/calculator/jrublef2f5",
+                "https://www.desmos.com/notebook/k5kigk35he",
+            ),
+            "8.2-t-interval": (
+                "https://www.desmos.com/calculator/xs264vqhhe",
+                "https://www.desmos.com/notebook/xg33if0c12",
+            ),
+            "8.3-proportion": (
+                "https://www.desmos.com/calculator/82gqmz8nj9",
+                "https://www.desmos.com/notebook/z7eemsa93g",
+            ),
+            "s1-bootstrap": (
+                "https://www.desmos.com/calculator/ybx1acxbuo",
+                "https://www.desmos.com/notebook/574zl9ghhq",
             ),
         }
         if folder in tool_links:
@@ -366,7 +412,7 @@ def landing():
     <h3>The book</h3>
     <p>These decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a>. Unit S1 follows <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>.</p>
     <h3>Desmos</h3>
-    <p>A notebook, the short lesson, is ready for sections 6.1, 6.2, and 7.1. Section 6.1 has a notebook. The other sections on the <a href="desmos/">Desmos page</a> have a class calculator.</p>
+    <p>Notebooks are ready for sections 6.1, 6.2, 7.1, 8.1, 8.2, 8.3, and chapter 12. Section 6.1 has a notebook. The other sections on the <a href="desmos/">Desmos page</a> have a class calculator.</p>
     <h3>StatKey</h3>
     <p><a href="https://lock5stat.com/StatKey/">StatKey</a></p>
   </footer>
@@ -378,7 +424,7 @@ def landing():
 
 def desmos_page():
     # Unit 2 is six graphs, a 3 by 2 block. Unit 3 is four, a 2 by 2 block.
-    columns = {"2": 3, "3": 2, "4": 2}
+    columns = {"2": 3, "3": 2, "4": 2, "5": 3, "S1": 2}
     groups = []
     for unit, (title, dates) in DESMOS_UNITS.items():
         cells = []
@@ -522,9 +568,9 @@ def desmos_page():
 <main>
   <a class="back" href="../">Lecture decks</a>
   <h1>Desmos</h1>
-  <p class="lead">A calculator is the class graph, with the book's numbers ready to use. A notebook is a short lesson. Notebooks are ready for 6.1, 6.2, and 7.1. Section 6.1 has a notebook only.</p>
+  <p class="lead">A calculator is the class graph, with the book's numbers ready to use. A notebook is a short lesson. Notebooks are ready for 6.1, 6.2, 7.1, 8.1, 8.2, 8.3, and chapter 12. Section 6.1 has a notebook only.</p>
   {"".join(groups)}
-  <p class="note">Section 6.1 has a notebook. Sections 6.2 and 7.1 each have both a calculator and a notebook. A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
+  <p class="note">Section 6.1 has a notebook. Sections 6.2, 7.1, 8.1, 8.2, 8.3, and chapter 12 each have both a calculator and a notebook. A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
 </main>
 </body>
 </html>
