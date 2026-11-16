@@ -89,9 +89,12 @@ DESMOS = [
     ("4", "6.2", "6.2-normal-area", "Notebook",
      "The same examples as a short lesson: area, complement, cdf, and inversecdf.",
      "https://www.desmos.com/notebook/s3ainmd7q6"),
-    ("4", "7.1", "7.1-sample-means", "The average of a sample",
-     "Sample means for an unknown distribution, soccer, and iPad ages. The step is the standard error.",
+    ("4", "7.1", "7.1-sample-means", "Calculator",
+     "Class graph. Sample means, soccer, and iPad ages. The second number is the standard error.",
      "https://www.desmos.com/calculator/r2hamz4ymv"),
+    ("4", "7.1", "7.1-sample-means", "Notebook",
+     "The same examples as a short lesson: sampling distribution, standard error, and sample means.",
+     "https://www.desmos.com/notebook/alc4ousjbu"),
 ]
 
 DESMOS_UNITS = {
@@ -113,11 +116,22 @@ def landing():
     cards_by_unit = {}
     for unit, folder, number, name, blurb in DECKS:
         tools = ""
-        if folder == "6.2-normal-area":
+        tool_links = {
+            "6.2-normal-area": (
+                "https://www.desmos.com/calculator/xa9guvmgpd",
+                "https://www.desmos.com/notebook/s3ainmd7q6",
+            ),
+            "7.1-sample-means": (
+                "https://www.desmos.com/calculator/r2hamz4ymv",
+                "https://www.desmos.com/notebook/alc4ousjbu",
+            ),
+        }
+        if folder in tool_links:
+            calculator, notebook = tool_links[folder]
             tools = (
                 '<p class="tools">'
-                '<a href="https://www.desmos.com/calculator/xa9guvmgpd" target="_blank" rel="noopener">Calculator</a>'
-                '<a href="https://www.desmos.com/notebook/s3ainmd7q6" target="_blank" rel="noopener">Notebook</a>'
+                f'<a href="{calculator}" target="_blank" rel="noopener">Calculator</a>'
+                f'<a href="{notebook}" target="_blank" rel="noopener">Notebook</a>'
                 '</p>'
             )
         cards_by_unit.setdefault(unit, []).append(

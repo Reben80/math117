@@ -249,8 +249,10 @@ def slides():
         "Homework: OpenStax 7.1, items 61 through 71. Unit 4 is due today.",
         "Items 72 and up are sums, section 7.2, and the later sections 7.3 and 7.4. This unit stops at 7.1. "
         "Exam 2 is Monday, November 23. It covers Units 4 and 5: sections 6.1, 6.2, 7.1, 8.1, 8.2, and 8.3. The bootstrap unit is not on it. "
+        "The calculator card is the class graph. The notebook card is the same examples as a short lesson. "
         "The third fact is the Central Limit Theorem. Do not add conditions they have not seen.",
         graph="7.1",
+        notebook="https://www.desmos.com/notebook/alc4ousjbu",
     ))
     return out
 
