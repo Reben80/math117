@@ -37,6 +37,25 @@ def slides():
     out.append(b.section([
         b.backdrop(),
         b.text_block(
+            b.kicker("One sample, one average")
+            + b.title("Three samples, three sample means", 40),
+            64, 24, 1150,
+        ),
+        sample_card(72, 155, "SAMPLE 1", "90"),
+        sample_card(460, 155, "SAMPLE 2", "87"),
+        sample_card(848, 155, "SAMPLE 3", "93"),
+        means_line(64, 390, 1152, 180),
+        b.text_block(
+            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">The population mean is one fixed center. '
+            'Each sample of five students gives one sample mean. Many sample means together form the sampling distribution.</p>',
+            64, 590, 1150,
+        ),
+    ], "Say: take five students and average them. That one number is a sample mean. A different five students give a different sample mean, 87 or 93 instead of 90. "
+       "Point at the three dots. Those averages are not the population. If we kept taking samples, the pile of averages is the sampling distribution. "
+       "Misconception: calling 90 the population mean. On this slide 90 is just one sample's average. The population mean is the center those averages scatter around."))
+    out.append(b.section([
+        b.backdrop(),
+        b.text_block(
             b.kicker("Two different distributions")
             + b.title("Same center, smaller spread", 40),
             64, 24, 1150,
@@ -54,12 +73,12 @@ def slides():
             656, 560, 560,
         ),
         b.text_block(
-            '<p style="margin:0;color:#5d6670;font-size:20px;line-height:1.35;">A larger sample makes the averages less variable. '
-            'The Central Limit Theorem says the sample means are approximately normal. A skewed population needs a larger n.</p>',
+            '<p style="margin:0;color:#5d6670;font-size:20px;line-height:1.35;">These curves are sketches. The original population need not be normal. '
+            'The Central Limit Theorem says the sample means are approximately normal, and a larger n makes them less variable.</p>',
             64, 620, 1150,
         ),
     ], "Say the two names before any formula. Left is one observation, X, with population mean mu and population standard deviation sigma. Right is the sample mean, X-bar, from samples of 25. Same center. The spread on the right is the standard error, sigma over the square root of n. "
-       "Larger n makes that spread smaller. The Central Limit Theorem is why the right-hand curve is a bell even when the population is not. If the population is badly skewed, 25 may not be enough. "
+       "Say the curves are sketches, not a promise that the population is a bell. Larger n makes that spread smaller. The Central Limit Theorem is why the right-hand curve is approximately a bell even when the population is not. If the population is badly skewed, 25 may not be enough. "
        "Misconception: students think the population itself got narrower. It did not. Only the distribution of the averages did."))
     out.append(b.section([
         b.backdrop(),
@@ -115,7 +134,7 @@ def slides():
         b.activity_head(
             "Your turn · Try It 7.1 · 3 minutes",
             "Mean 45, standard deviation 8, n = 30",
-            "Find " + s.m(r"P(42 < \bar{X} < 50)") + ". The book does not print this one.",
+            "Find " + s.m(r"P(42 < \bar{X} < 50)") + ". OpenStax prints this question.",
         ),
         s.bell_at(64, 175, 700, 370, "SAMPLE MEANS", mean=45, sd=8 / math.sqrt(30),
                   shade=(42, 50), shade_label="P(42 to 50)",
@@ -126,7 +145,7 @@ def slides():
             790, 210, 430,
         ),
         calc_line("normaldist(45, 8/sqrt(30))", "then Inner, 42 to 50", 580),
-    ], "Try It 7.1. The book does not print this answer. Three minutes. They type the monospace command, then Inner from 42 to 50. "
+    ], "Try It 7.1. OpenStax prints the question. It does not print this decimal. The worked answer is the next slide. Three minutes. They type the monospace command, then Inner from 42 to 50. "
        "The standard error is 8/√30 ≈ 1.46, so 42 and 50 are each more than two standard errors from 45. A strong student can say about 98% before typing. "
        "The precise probability is 0.9797. If they report a number near 0.5, they used 8, the population standard deviation, instead of the standard error. "
        "Misconception: this probability is about individual observations. It is about sample means."))
@@ -143,12 +162,12 @@ def slides():
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.35;">8 / √30 ≈ 1.46</p>'
             '<p style="margin:12px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">' + s.m(r"P(42 < \bar{X} < 50) = 0.9797") + '</p>'
-            '<p style="margin:12px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">That is 97.97% of the sample means, not of the individual observations. The book does not print this Try It.</p>',
+            '<p style="margin:12px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">That is 97.97% of the sample means, not of individual scores. The book prints the question. This is the worked answer.</p>',
             790, 190, 430,
         ),
-        calc_line("normaldist(45, 8/sqrt(30))", "the 1.46 is the standard error", 590),
+        calc_line("normaldist(45, 8/sqrt(30))", "then Inner, 42 to 50", 590),
     ], "Say the standard error once: the square root of 30 is about 5.5, and 8 divided by 5.5 is about 1.46. That 1.46 is the second number inside normaldist. "
-       "Then 0.9797 is 97.97%, about 98 of 100 samples. Ask them to move the decimal two places. "
+       "Then 0.9797 is 97.97%, about 98 of 100 samples. Ask them to move the decimal two places. Tell them the book prints the question and this slide is our worked answer. "
        "Misconception: reading 98% as a share of individual scores. Those would use standard deviation 8, and the probability would be much smaller. Then go to the soccer matches."))
     out.append(b.section([
         b.backdrop(),
@@ -187,14 +206,14 @@ def slides():
                   marks=[(30, "30"), (34, "34")], label_size=18),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">Standard error 15/√100 = 1.5 years. '
-            '36.5 is the 95th percentile of the sample mean ages, not of individual ages. '
+            'About 95% of the sample means are below 36.5 years, not 95% of individual ages. '
             + s.m(r"P(\bar{X} > 30) = 0.9962") + '.</p>',
             64, 480, 1150,
         ),
         calc_line("normaldist(34, 15/sqrt(100)).inversecdf(0.95)", "percentile, gives 36.5", 572),
         calc_line("normaldist(34, 15/sqrt(100))", "then Right from 30, gives 0.9962", 616),
     ], "This slide can wait if 6.2 ran long. Say: 100 users, so the standard error shrinks from 15 years to 1.5 years. "
-       "inversecdf finds a cutoff. inversecdf(0.95) is 36.467, and the book rounds it to 36.5. Ninety-five percent of the sample means are 36.5 or younger. A person’s 95th percentile would use 15, not 1.5: 34 + 1.64(15) is about 59. "
+       "inversecdf finds a cutoff. inversecdf(0.95) is 36.467, and the book rounds it to 36.5. About 95% of the sample means are below 36.5 years. A person’s 95th percentile would use 15, not 1.5: 34 + 1.64(15) is about 59. "
        "The right graph is a probability, not a percentile. Type the same normaldist, then Right from 30. The book’s area is 0.9962, because 30 is about 2.7 standard errors below 34. "
        "Example 7.4, only if asked: app engagement, mean 8.2 minutes, standard deviation 1, n = 60. Standard error 1/√60 ≈ 0.129. The 90th percentile is 8.37 minutes. Between 8 and 8.5 is 0.9293. "
        "Try It 7.4, only if asked: cola cans, mean 16 ounces, standard deviation 0.143, n = 34. The probability the sample mean exceeds 16.01 is about 0.342. The book does not print it. "
@@ -227,6 +246,40 @@ def slides():
         "The third fact is the Central Limit Theorem. Do not add conditions they have not seen.",
     ))
     return out
+
+
+def sample_card(left, top, label, average):
+    return b.text_block(b.card_shell(
+        '<p style="margin:0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">' + label + '</p>'
+        '<p style="margin:14px 0 0;color:#1c242c;font-size:48px;font-weight:650;line-height:1;">' + average + '</p>'
+        '<p style="margin:10px 0 0;color:#5d6670;font-size:20px;line-height:1.3;">Five students. One sample mean.</p>',
+        200,
+    ), left, top, 360, 200)
+
+
+def means_line(left, top, width, height):
+    """Three sample means, not a made-up list of student scores."""
+    lo, hi = 84.0, 96.0
+    pad_l, pad_r = 90, 90
+    axis = 88
+
+    def X(v):
+        return pad_l + (v - lo) / (hi - lo) * (width - pad_l - pad_r)
+
+    parts = [
+        s._panel(width, height),
+        f'<text x="18" y="28" font-size="14" fill="#2a6f7a" font-family="{s.FONT}" '
+        f'font-weight="700" letter-spacing="1.1">THREE SAMPLE MEANS</text>',
+        f'<line x1="{X(lo):.0f}" y1="{axis}" x2="{X(hi):.0f}" y2="{axis}" stroke="#d5e0de" stroke-width="3"></line>',
+    ]
+    for value in (87, 90, 93):
+        x = X(value)
+        parts.append(
+            f'<circle cx="{x:.0f}" cy="{axis}" r="9" fill="#2a6f7a"></circle>'
+            f'<text x="{x:.0f}" y="132" text-anchor="middle" font-size="22" fill="#1c242c" '
+            f'font-family="{s.FONT}" font-weight="650">{value}</text>'
+        )
+    return b.drawing(b.svg_wrap("".join(parts), width, height), left, top, width, height)
 
 
 def one_curve(left, top, width, height, sd, heading):
