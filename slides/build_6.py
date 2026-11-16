@@ -25,7 +25,7 @@ MATH_STYLE = (
 )
 
 
-def opening(h1, subtitle, section_label, visual, notes):
+def opening(h1, subtitle, section_label, visual, notes, unit_line="Unit 4 · The normal distribution"):
     return b.section([
         MATH_STYLE,
         b.backdrop(),
@@ -33,7 +33,7 @@ def opening(h1, subtitle, section_label, visual, notes):
             '<p style="margin:0;">'
             '<span style="color:#ffffff;background:#2a6f7a;padding:6px 12px;'
             'letter-spacing:0.12em;font-weight:700;font-size:16px;">MATH 117</span>'
-            '<span style="color:#5d6670;font-size:20px;"> &nbsp; Unit 4 · The normal distribution</span></p>',
+            '<span style="color:#5d6670;font-size:20px;"> &nbsp; ' + unit_line + '</span></p>',
             72, 148, 700, 48,
         ),
         b.text_block(

@@ -319,6 +319,28 @@ window.M117 = (function () {
       g.close();
       return { left: -1, right: 8, bottom: -1, top: 4 };
     },
+    "7.1": function (g) {
+      g.text("MATH 117 · 7.1 The average of a sample. The step inside normaldist is σ divided by the square root of n. The book rounds these.");
+      g.open("Example 7.1 · unknown distribution, mean 90, sd 15, n = 25");
+      g.ex("\\operatorname{normaldist}\\left(90,15/\\sqrt{25}\\right).\\operatorname{cdf}\\left(85,92\\right)");
+      g.ex("90+2\\cdot 3");
+      g.text("Between 85 and 92 is 0.6997. Two standard errors above 90 is 96.");
+      g.close();
+      g.open("Try It 7.1 · mean 45, sd 8, n = 30", true);
+      g.ex("\\operatorname{normaldist}\\left(45,8/\\sqrt{30}\\right).\\operatorname{cdf}\\left(42,50\\right)");
+      g.text("The book does not print this. The area is 0.9797.");
+      g.close();
+      g.open("Example 7.2 · soccer, mean 2, sd 0.5, n = 50", true);
+      g.ex("\\operatorname{normaldist}\\left(2,0.5/\\sqrt{50}\\right).\\operatorname{cdf}\\left(1.8,2.3\\right)");
+      g.text("The average is 0.9977. One match, with step 0.5, is about 38%, which the book does not print.");
+      g.close();
+      g.open("Example 7.3 · iPad ages, mean 34, sd 15, n = 100", true);
+      g.ex("\\operatorname{normaldist}\\left(34,15/\\sqrt{100}\\right).\\operatorname{cdf}\\left(30\\right)");
+      g.ex("\\operatorname{normaldist}\\left(34,1.5\\right).\\operatorname{inversecdf}\\left(0.95\\right)");
+      g.text("Over 30 is 0.9962. The 95th percentile of the average is 36.5.");
+      g.close();
+      return { left: -1, right: 8, bottom: -1, top: 4 };
+    },
   };
 
   return {
