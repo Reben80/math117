@@ -490,7 +490,8 @@ def slides_62():
         ),
     ], "Point at the shade: that small left piece is 0.0228, which is 2.28%. The unshaded rest of the curve is the complement, 1 − 0.0228 = 0.9772. Have them add the two decimals and get 1, the whole area. "
        "The line is z = −2. The book does not name an x for this picture. Write P(X > a) = 1 − P(X ≤ a) once. On a smooth curve, less-than and less-than-or-equal have the same area. "
-       "Try It 6.7, only if asked: 0.012 is 1.2% on the left, so the right area is 0.988, or 98.8%."))
+       "Try It 6.7, only if asked: 0.012 is 1.2% on the left, so the right area is 0.988, or 98.8%. "
+       "This is a probability: the shade is an area. A percentile question would hand back a score instead."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
@@ -566,7 +567,8 @@ def slides_62():
         desmos_how("normaldist(68, 3)", "then Left, to 65", 590),
     ], "Try It 6.8. OpenStax prints the question. It does not print this decimal. The worked answer is the next slide. Three minutes. "
        "They type normaldist(68, 3), then Left to 65. A strong student sees z = (65−68)/3 = −1 first: one standard deviation below the mean, so the left tail is about 16%. "
-       "The precise probability is 0.1587. If they report about 0.84, they found the area above 65."))
+       "The precise probability is 0.1587. If they report about 0.84, they found the area above 65. "
+       "The score 65 is given, so this is a probability. inversecdf is the other question: the area is given and the score is unknown."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
@@ -583,7 +585,8 @@ def slides_62():
             830, 190, 390,
         ),
     ], "Point at 65, one standard deviation below 68. The shade is the left tail. The middle 68% leaves about 32% split into two tails, so each is about 16%. Desmos makes it 0.1587, or 15.87%. "
-       "Tell them the book prints the question and this slide is the worked answer. Ask them to move the decimal two places."))
+       "Tell them the book prints the question and this slide is the worked answer. Ask them to move the decimal two places. "
+       "The shade is the probability. A percentile question would have given about 16% and asked for the score."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
@@ -629,6 +632,7 @@ def slides_62():
     ], "This slide can wait if the hour is gone. The shade is the middle half, from the first quartile to the third. The book prints Q1 = 27.5246 and Q3 = 46.2754. The graph rounds those to 27.52 and 46.28. The difference is 18.75, and the book rounds the IQR to 18.8 years. "
        "The 40.4 question is separate. Forty percent are at least 40.4, so the area to the left of that age is 60%. inversecdf(0.60) = 40.4215, and the book rounds to 40.4. "
        "The trap is typing 0.40. That returns the age with 40% younger, the wrong side. "
+       "Q1, Q3, and 40.4 are cutoffs, so use inversecdf. A probability question would start with an age and return an area. "
        "Example 6.10, only if asked: between 23 and 64.7 is 0.8186, at most 50.8 is 0.8413, the 80th percentile is 48.6. "
        "Example 6.12, only if asked: mandarin oranges, mean 5.85 cm, standard deviation 0.24. Over 6 cm is 0.2660. The 90th percentile is 6.16 cm."))
     out.append(b.quick("Area or percentile", [
