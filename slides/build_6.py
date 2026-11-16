@@ -72,7 +72,7 @@ def _panel(width, height):
 
 def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
             marks=(), shade_label="", z0=-3.2, z1=3.2, pins=True, label_size=None,
-            extras=()):
+            extras=(), label_gap=64):
     """A bell in the book's units. shade is (lo, hi); None means the edge of the window.
     marks are (value, label) in the same units as the mean. A label may contain a newline.
     extras are (z, text) labels inside the plot."""
@@ -149,9 +149,9 @@ def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
     placed.sort()
     for i, (x, y, label) in enumerate(placed):
         anchor = "middle"
-        if i and x - placed[i - 1][0] < 64:
+        if i and x - placed[i - 1][0] < label_gap:
             anchor = "start"
-        if i + 1 < len(placed) and placed[i + 1][0] - x < 64 and anchor == "middle":
+        if i + 1 < len(placed) and placed[i + 1][0] - x < label_gap and anchor == "middle":
             anchor = "end"
         if pins:
             parts.append(
@@ -170,41 +170,46 @@ def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
     return b.drawing(b.svg_wrap("".join(parts), width, height), left, top, width, height)
 
 
-def bell(width, height, heading, shade=None, marks=(), shade_label=""):
+def bell(width, height, heading, shade=None, marks=(), shade_label="", label_gap=64):
     """The title-slide bell. Marks are already in z-scores."""
     return bell_at(760, 110, width, height, heading, shade=shade, marks=marks,
-                   shade_label=shade_label, pins=False)
+                   shade_label=shade_label, pins=False, label_gap=label_gap)
 
 
 def hop_line(left, top, width, height):
-    """The book's own check: center 5, step 2, three steps land on 11."""
+    """Mean 5, standard deviation 2. x = 5, 7, 9, 11 and z = 0, 1, 2, 3."""
     values = [5, 7, 9, 11]
-    pad_l, pad_r = 64, 64
-    y = 210
+    pad_l, pad_r = 72, 48
+    y = 198
     xs = [pad_l + i * (width - pad_l - pad_r) / 3 for i in range(4)]
     parts = [
         _panel(width, height),
-        f'<text x="18" y="32" font-size="13" fill="#2a6f7a" font-family="{FONT}" '
-        f'font-weight="700" letter-spacing="1.2">CENTER 5, ONE STEP IS 2</text>',
+        f'<text x="18" y="28" font-size="13" fill="#2a6f7a" font-family="{FONT}" '
+        f'font-weight="700" letter-spacing="1.1">MEAN 5, STANDARD DEVIATION 2</text>',
         f'<line x1="{xs[0]:.0f}" y1="{y}" x2="{xs[-1]:.0f}" y2="{y}" stroke="#d5e0de" stroke-width="3"></line>',
+        f'<text x="16" y="112" font-size="13" fill="#5d6670" font-family="{FONT}" font-weight="700">x</text>',
     ]
     for i, (x, value) in enumerate(zip(xs, values)):
         parts.append(
             f'<circle cx="{x:.0f}" cy="{y}" r="8" fill="#2a6f7a"></circle>'
-            f'<text x="{x:.0f}" y="118" text-anchor="middle" font-size="32" fill="#1c242c" '
+            f'<text x="{x:.0f}" y="112" text-anchor="middle" font-size="30" fill="#1c242c" '
             f'font-family="{FONT}" font-weight="650">{value}</text>'
-            f'<text x="{x:.0f}" y="268" text-anchor="middle" font-size="18" fill="#5d6670" '
+            f'<text x="{x:.0f}" y="248" text-anchor="middle" font-size="18" fill="#5d6670" '
             f'font-family="{FONT}">z = {i}</text>'
         )
         if i:
             mid = (xs[i - 1] + x) / 2
             parts.append(
-                f'<text x="{mid:.0f}" y="168" text-anchor="middle" font-size="16" fill="#2a6f7a" '
+                f'<text x="{mid:.0f}" y="158" text-anchor="middle" font-size="15" fill="#2a6f7a" '
                 f'font-family="{FONT}" font-weight="700">+2</text>'
+                f'<text x="{mid:.0f}" y="176" text-anchor="middle" font-size="13" fill="#2a6f7a" '
+                f'font-family="{FONT}">1 SD</text>'
             )
     parts.append(
-        f'<text x="{width / 2:.0f}" y="340" text-anchor="middle" font-size="18" fill="#1c242c" '
-        f'font-family="{FONT}">5 + 3(2) = 11, so z = 3</text>'
+        f'<text x="{width / 2:.0f}" y="308" text-anchor="middle" font-size="16" fill="#1c242c" '
+        f'font-family="{FONT}">Each move of 2 is one standard deviation.</text>'
+        f'<text x="{width / 2:.0f}" y="336" text-anchor="middle" font-size="16" fill="#1c242c" '
+        f'font-family="{FONT}">z = (11 − 5) / 2 = 3, and x = 5 + 3(2) = 11</text>'
     )
     return b.drawing(b.svg_wrap("".join(parts), width, height), left, top, width, height)
 
@@ -244,13 +249,18 @@ def slides_61():
     out = []
     out.append(opening(
         "The bell curve",
-        "Most values sit near the mean.<br>A z-score says how many steps away.",
+        "The mean is the center.<br>"
+        "The standard deviation tells how<br>spread out the values are.<br>"
+        "One standard deviation is one step from the mean.",
         "SECTION 6.1",
         bell(460, 480, "THE BELL", shade=(-1, 1), shade_label="most",
-             marks=[(-2, "−2"), (-1, "−1"), (0, "mean"), (1, "+1"), (2, "+2")]),
-        "Say: the mean and the standard deviation are the ones from Unit 2. The new picture is a bell. A distribution is only the pattern of the values. A normal distribution is this bell. "
-        "Point at the peak and call it the mean. Point at one tick and call it one step, one standard deviation. "
+             marks=[(-2, "−2"), (-1, "−1"), (0, "mean"), (1, "+1"), (2, "+2")],
+             label_gap=36),
+        "Say: the mean is the center of this bell. The standard deviation tells how spread out the values are. "
+        "One standard deviation can be thought of as one step away from the mean. A z-score counts those standard deviations. "
+        "Point at the peak and call it the mean. Point from the peak to the next tick and call it one standard deviation. The shade is where most values sit. "
         "Do not say random variable, density, or probability on this slide. Probability is the next deck. "
+        "Watch for: hearing 'step' as a new unit, separate from the standard deviation. "
         "About 25 minutes for 6.1, then 6.2 in the same hour. Thursday and Friday are Exam 1, Units 1 through 3 only. Skip the class-height activity in the book.",
     ))
     out.append(b.section([
@@ -258,212 +268,268 @@ def slides_61():
         b.text_block(
             b.kicker("Before any formula")
             + b.title("The center, the step, the pattern", 44),
-            64, 36, 1150,
+            64, 28, 1150,
         ),
-        bell_at(64, 168, 1152, 430, "WHERE THE VALUES SIT", shade=(-1, 1), shade_label="most values",
-                marks=[(-1, "one step left"), (0, "mean"), (1, "one step right")]),
+        bell_at(64, 158, 1152, 420, "WHERE THE VALUES SIT", shade=(-1, 1), shade_label="most values",
+                marks=[(-1, "1 SD below"), (0, "mean"), (1, "1 SD above")], label_gap=36),
         b.text_block(
-            '<p style="margin:0;color:#5d6670;font-size:20px;line-height:1.4;">'
-            'The mean is the center. One standard deviation is one step. The distribution is this pattern: most values near the mean, few far out.</p>',
-            64, 620, 1150,
+            '<p style="margin:0;color:#5d6670;font-size:20px;line-height:1.35;">'
+            'The mean is the center of the distribution. The standard deviation tells how spread out the values are. '
+            'One standard deviation is one step away from the mean.</p>',
+            64, 600, 1150,
         ),
-    ], "Point at the peak and say mean. Point from the peak to the next tick and say one step, the standard deviation from Unit 2. "
-       "The shaded middle is where most values sit. The two tails are the few. "
-       "Say the three words out loud. Mean is the center. Standard deviation is one step. Distribution means the pattern, not a formula. "
-       "Ask: where do most of the values sit? Near the middle. "
-       "If someone asks what X means later, say X is one value drawn from this pattern. Do not build a definition of a random variable."))
+    ], "Point at the peak: that is the mean, the center. The width of the bell is the standard deviation, how spread out the values are. "
+       "Then say one standard deviation is one step from the mean, left or right. The shaded middle is where most values sit. The tails are the few. "
+       "Ask: where do most of the values sit? Near the mean. "
+       "Watch for: calling the spread a step before connecting it to the standard deviation from Unit 2. "
+       "If someone asks what X means later, say x is an individual value from this pattern. Do not build a definition of a random variable."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("The only new arithmetic")
-            + b.title("How many steps, and which value", 40),
-            64, 36, 1150,
+            + b.title("How many standard deviations, and which value", 36),
+            64, 24, 1150,
         ),
         b.text_block(
-            '<p style="margin:0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">HOW MANY STEPS</p>'
-            '<p style="margin:8px 0 0;color:#1c242c;font-size:30px;">' + M(r"z = \frac{x - \mu}{\sigma}") + '</p>'
-            '<p style="margin:4px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">μ is the mean. σ is one step. The sign is the side.</p>'
-            '<p style="margin:22px 0 0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">WHICH VALUE</p>'
-            '<p style="margin:8px 0 0;color:#1c242c;font-size:30px;">' + M(r"x = \mu + z\sigma") + '</p>'
-            '<p style="margin:4px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Start at the mean. Add the steps.</p>',
-            64, 160, 500,
+            '<p style="margin:0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">HOW MANY STANDARD DEVIATIONS</p>'
+            '<p style="margin:4px 0 0;color:#1c242c;font-size:28px;">' + M(r"z = \frac{x - \mu}{\sigma}") + '</p>'
+            '<p style="margin:2px 0 0;color:#5d6670;font-size:18px;line-height:1.3;">μ population mean. σ population standard deviation. x an individual value. z how many standard deviations from the mean. Positive is above the mean. Negative is below.</p>'
+            '<p style="margin:14px 0 0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">WHICH VALUE</p>'
+            '<p style="margin:4px 0 0;color:#1c242c;font-size:28px;">' + M(r"x = \mu + z\sigma") + '</p>'
+            '<p style="margin:2px 0 0;color:#5d6670;font-size:18px;line-height:1.3;">Start at the mean. Move z standard deviations.</p>',
+            64, 140, 510,
         ),
-        hop_line(590, 160, 626, 400),
+        hop_line(590, 148, 626, 400),
         b.text_block(
-            '<p style="margin:0;color:#5d6670;font-size:20px;">Read ' + m(r"X \sim N(\mu, \sigma)") + ' as a bell with that center and that step.</p>',
-            64, 600, 520,
+            '<p style="margin:0;color:#5d6670;font-size:18px;line-height:1.3;">Read '
+            + m(r"X \sim N(\mu, \sigma)")
+            + ' as a bell with that mean and that standard deviation.</p>',
+            64, 640, 520,
         ),
-    ], "Say: z is not a new kind of data. It is the number of steps from the mean. Do the book’s check on the board: start at 5, three steps of 2, land on 11. "
-       "Then read the shorthand once: X ~ N(μ, σ) means a normal bell with that center and that step. Z ~ N(0, 1) is the bell whose center is 0 and whose step is 1. "
-       "Watch for: students treating μ and σ as two more variables to solve for. They are given. x is the value. z is the steps."))
+    ], "Say: z is not a new measurement. It is how many standard deviations the individual value x is from the mean. "
+       "μ is the population mean. σ is the population standard deviation. They are given. "
+       "Positive z is above the mean. Negative z is below the mean. "
+       "To find z, subtract the mean and divide by σ. To find x, start at the mean and add z times σ. "
+       "The number line is mean 5, standard deviation 2. x = 5 is z = 0, x = 7 is z = 1, x = 9 is z = 2, x = 11 is z = 3. Each move of 2 is one standard deviation. "
+       "On the board: (11 − 5) / 2 = 3, and 5 + 3(2) = 11. "
+       "Watch for: forgetting to divide by σ, so 11 − 5 = 6 and they call that z. "
+       "Read X ~ N(μ, σ) once, as a bell with that mean and that standard deviation. Do not ask them to memorize the tilde."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.1")
-            + b.title("Mean 5, one step is 6", 44),
+            + b.title("Mean 5, standard deviation 6", 40),
             64, 28, 1150,
         ),
-        bell_at(64, 155, 760, 420, "MEAN 5, STEP 6", mean=5, sd=6,
-                marks=[(1, "1"), (5, "5"), (17, "17")]),
+        bell_at(64, 155, 760, 420, "MEAN 5, SD 6", mean=5, sd=6,
+                marks=[(1, "1"), (5, "mean\n5"), (17, "17")], label_gap=36),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;"><b>17 is z = 2.</b> Two steps of 6 above 5. Check: 5 + 2(6) = 17.</p>'
-            '<p style="margin:16px 0 0;color:#1c242c;font-size:22px;line-height:1.35;"><b>1 is z = −0.67.</b> (1 − 5) / 6 = −0.666…, below the mean. The book rounds to −0.67.</p>'
-            '<p style="margin:16px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">Positive is the right side. Negative is the left side.</p>',
-            850, 180, 370,
+            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;"><b>17 is z = 2.</b> The standard deviation is 6, so 17 is two steps above the mean 5. Check: 5 + 2(6) = 17.</p>'
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:22px;line-height:1.35;"><b>1 is z = −0.67.</b> (1 − 5) / 6 = −0.666…, below the mean. The book rounds to −0.67.</p>'
+            '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">A positive z-score is above the mean. A negative z-score is below the mean.</p>',
+            850, 175, 370,
         ),
         b.desmos_line("(17-5)/6 &nbsp;&nbsp; (1-5)/6", 600),
-    ], "Say: cover the formula and ask how many steps of 6 it takes to get from 5 to 17. Two. Then show (17−5)/6 = 2 so the formula matches the count. "
-       "For 1, the subtraction comes out negative, so the value is below the mean. (1−5)/6 = −0.666…, book −0.67. "
-       "The check 5 + (−0.67)(6) is about 1, not exactly 1, because −0.67 was rounded. "
-       "Watch for: a positive 0.67. The sign is the side."))
+    ], "The peak is the mean, 5. The standard deviation is 6. Point at 17, two standard deviations above the mean: (17−5)/6 = 2. The check is 5 + 2(6) = 17. "
+       "Point at 1, on the left of the mean: (1−5)/6 = −0.666…, and the book rounds to −0.67. A positive z-score is above the mean. A negative z-score is below the mean. "
+       "Watch for: a positive 0.67, which drops the sign, or z = 12, which forgets to divide by σ. "
+       "The check 5 + (−0.67)(6) is about 1, not exactly 1, because −0.67 was rounded."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.2 · pounds lost in a month")
-            + b.title("Average loss 5, one step is 2", 40),
+            + b.title("Mean loss 5, standard deviation 2", 40),
             64, 28, 1150,
         ),
         scale_line(
-            64, 170, 1152, 300, -5, 12,
-            [(-3, "−3", "gained 3 lb"), (5, "5", "average loss"), (10, "10", "lost 10 lb")],
-            "POUNDS LOST. A GAIN IS NEGATIVE.",
-            "(10 − 5) / 2 = 2.5 steps right.    (−3 − 5) / 2 = −4 steps left.",
+            64, 160, 1152, 340, -5, 12,
+            [(-3, "−3", "gained 3 lb"), (5, "5", "mean"), (10, "10", "lost 10 lb")],
+            "POUNDS LOST. MEAN 5, SD 2. A GAIN IS NEGATIVE.",
+            "(10 − 5) / 2 = 2.5 SD above the mean.    (−3 − 5) / 2 = −4 SD below.",
         ),
-        b.desmos_line("(10-5)/2 &nbsp;&nbsp; (-3-5)/2", 510),
-    ], "Say: the average person loses 5 pounds. One step is 2 pounds. Ten pounds lost is 2.5 steps above that average, (10−5)/2 = 2.5. "
-       "A gain of 3 pounds is a negative loss, so the value is −3, not 3. (−3−5)/2 = −4, four steps below the average. "
-       "Watch for: students who use +3 and get (3−5)/2 = −1. Ask which side of 'no change' a gain sits on. The book calls the variable weight lost, so a gain is negative."))
+        b.desmos_line("(10-5)/2 &nbsp;&nbsp; (-3-5)/2", 530),
+    ], "The mean is an average loss of 5 pounds. The standard deviation is 2 pounds. "
+       "Ten pounds lost is above the mean: (10−5)/2 = 2.5. A positive z-score is above the mean. "
+       "A gain of 3 pounds is a negative loss, so the value is −3, not +3. (−3−5)/2 = −4, below the mean. A negative z-score is below the mean. "
+       "Watch for: treating a gain of 3 pounds as +3 and getting (3−5)/2 = −1. Ask which side of no change a gain sits on. The book calls the variable weight lost, so a gain is negative."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.2 · two different scales")
             + b.title("The same z can be a different x", 40),
-            64, 36, 1150,
+            64, 28, 1150,
         ),
-        bell_at(64, 155, 370, 400, "17 POUNDS", mean=5, sd=6, marks=[(5, "5"), (17, "17")]),
-        bell_at(455, 155, 370, 400, "4 POUNDS", mean=2, sd=1, marks=[(2, "2"), (4, "4")]),
-        bell_at(846, 155, 370, 400, "JEROME, 10 POINTS", mean=16, sd=4, marks=[(10, "10"), (16, "16")]),
+        bell_at(64, 148, 370, 390, "17 LB · MEAN 5, SD 6", mean=5, sd=6,
+                marks=[(5, "mean\n5"), (17, "17")], label_gap=36),
+        bell_at(455, 148, 370, 390, "4 LB · MEAN 2, SD 1", mean=2, sd=1,
+                marks=[(2, "mean\n2"), (4, "4")], label_gap=36),
+        bell_at(846, 148, 370, 390, "JEROME · MEAN 16, SD 4", mean=16, sd=4,
+                marks=[(10, "10"), (16, "mean\n16")], label_gap=36),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            '17 and 4 are different numbers. Both sit two steps above their own average, so both have z = 2. Jerome is 1.5 steps below 16, so z = −1.5.</p>',
-            64, 575, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            '17 pounds and 4 pounds are different values. Both are 2 standard deviations above their own mean, so both have z = 2. '
+            'The same z-score is the same standardized distance, even when the original values differ. '
+            'Jerome’s 10 is 1.5 standard deviations below the mean 16, so z = −1.5.</p>',
+            64, 558, 1150,
         ),
-    ], "Say: 17 and 4 are different numbers, and both people are equally far above their own average. z is what makes the comparison fair. "
-       "(17−5)/6 = 2 and (4−2)/1 = 2. "
-       "Jerome is Try It 6.2. The book already gives z = −1.5. Have someone finish the sentence: 1.5 steps to the left of 16. Do not make it a timed turn. "
+    ], "Three bells, three means. 17 pounds: mean 5, standard deviation 6, (17−5)/6 = 2. "
+       "4 pounds: mean 2, standard deviation 1, (4−2)/1 = 2. The original values differ. The z-score is the same, so each value is the same standardized distance: two standard deviations above its own mean. "
+       "Jerome’s mean is 16 and his score is 10. (10−16)/4 = −1.5, below the mean. The book already gives z = −1.5. "
+       "Watch for: deciding 17 and 4 cannot both be z = 2 because the numbers differ, or flipping Jerome’s sign to +1.5. "
        "The book’s shorthand is X ~ N(5, 6) and Y ~ N(2, 1). Read it if you write it down. Do not ask them to memorize the tilde."))
     out.append(b.section([
         b.activity_head(
             "Your turn · Try It 6.1 · 3 minutes",
             "One value, one z-score",
-            "The center is 12 and one step is 3. How many steps is the value 1 from 12, and which side?",
+            "The mean is 12 and the standard deviation is 3. How many standard deviations is the value 1 from the mean, and which side?",
         ),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:30px;">' + M(r"z = \frac{1 - 12}{3}") + '</p>'
-            '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">Find z. The picture shows the side. It does not show the number of steps.</p>',
-            64, 200, 500,
+            '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">Find z. The picture shows the side of the mean. It does not show how many standard deviations.</p>',
+            64, 210, 510,
         ),
-        bell_at(600, 190, 616, 360, "CENTER 12, STEP 3", mean=12, sd=3, z0=-4.2, z1=3.2,
-                marks=[(1, "1"), (12, "12")]),
+        bell_at(600, 200, 616, 360, "MEAN 12, SD 3", mean=12, sd=3, z0=-4.2, z1=3.2,
+                marks=[(1, "1"), (12, "mean\n12")], label_gap=36),
         b.desmos_line("(1-12)/3", 590),
-    ], "Try It 6.1. The book writes X ~ N(12, 3). Walk it: 1 − 12 = −11, then divide by the step 3. z = −11/3 = −3.67, to the left of 12. "
-       "A student who says 3.67 forgot the sign. A student who says −11 forgot to divide by 3. Give them three minutes, then show the next slide."))
+    ], "Try It 6.1. Mean 12, standard deviation 3, individual value 1. The dot for 1 is in the left tail, so z will be negative. The picture does not show the count. "
+       "After they work: 1 − 12 = −11, then divide by σ, which is 3. z = −11/3 = −3.67. "
+       "Watch for: 3.67 with the wrong sign, or −11 from forgetting to divide by σ. Give them three minutes, then show the next slide."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Try It 6.1")
             + b.title("z = −3.67", 56),
-            64, 48, 1150,
+            64, 40, 1150,
         ),
-        bell_at(64, 175, 700, 420, "3.67 STEPS TO THE LEFT", mean=12, sd=3, z0=-4.2, z1=3.2,
-                shade=(None, 1), marks=[(1, "1"), (12, "12")]),
+        bell_at(64, 168, 700, 430, "3.67 SD BELOW THE MEAN", mean=12, sd=3, z0=-4.2, z1=3.2,
+                shade=(None, 1), marks=[(1, "1"), (12, "mean\n12")], label_gap=36),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:26px;">' + M(r"\frac{1-12}{3} = -\frac{11}{3} = -3.67") + '</p>'
-            '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">1 − 12 = −11. Divide by the step, 3. The sign says left.</p>',
-            800, 230, 416,
+            '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">1 − 12 = −11.<br>Divide by the standard deviation, 3.<br>A negative z-score is below the mean.</p>',
+            790, 220, 430,
         ),
-    ], "Say the arithmetic once, slowly: 1 minus 12 is negative 11. Negative 11 divided by 3 is negative 3.67. Left of 12. Then sit down and go to the heights."))
+    ], "The peak is the mean, 12. The value 1 is far down the left tail. Say the arithmetic once: 1 minus 12 is −11. −11 divided by the standard deviation 3 is −11/3, which is −3.67. "
+       "A negative z-score is below the mean. Watch for: dropping the minus, or stopping at −11 because they forgot to divide by σ. Then go to the heights."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.3 · young men in Chile, 2009–2010")
-            + b.title("Mean height 170 cm, step 6.28", 40),
-            64, 28, 1150,
+            + b.title("Mean height 170 cm, standard deviation 6.28", 36),
+            64, 22, 1150,
         ),
-        bell_at(64, 150, 1152, 400, "BOTH HEIGHTS ARE NEAR THE CENTER", mean=170, sd=6.28,
-                marks=[(168, "168"), (170, "170"), (177.98, "177.98")]),
+        bell_at(64, 140, 1152, 400, "MEAN 170, SD 6.28", mean=170, sd=6.28,
+                marks=[(168, "168"), (170, "mean\n170"), (177.98, "177.98")], label_gap=36),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            '(168 − 170) / 6.28 = −0.32, a little below average. &nbsp;&nbsp; 170 + 1.27(6.28) = 177.98 cm.</p>',
-            64, 570, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            '(168 − 170) / 6.28 = −0.32, below the mean. &nbsp;&nbsp; 170 + 1.27(6.28) = 177.98 cm, above the mean.</p>',
+            64, 558, 1150,
         ),
-        b.desmos_line("(168-170)/6.28 &nbsp;&nbsp; 170+1.27*6.28", 620),
-    ], "Say: same two moves, and now the step is not a whole number. From a height, count the steps. From the steps, recover the height. "
-       "(168−170)/6.28 = −0.318…, and the book rounds to −0.32. 170 + 1.27(6.28) = 177.98 cm. "
-       "If someone asks about Example 6.4: a 1984 height and a 2009 height can both be z = −1.5, so they are equally far below their own year’s average. "
+        b.desmos_line("(168-170)/6.28 &nbsp;&nbsp; 170+1.27*6.28", 612),
+    ], "The peak is the mean height, 170 cm. The standard deviation is 6.28 cm. 168 is just left of the mean: (168−170)/6.28 = −0.318…, and the book rounds to −0.32. A negative z-score is below the mean. "
+       "The other direction starts from z and finds the value: 170 + 1.27(6.28) = 177.98 cm, above the mean. "
+       "Watch for: subtracting in the wrong order and reporting +0.32, or adding 1.27 to 170 without multiplying by σ. "
+       "If someone asks about Example 6.4: a 1984 height and a 2009 height can both be z = −1.5, the same standardized distance below their own year’s mean. "
        "Try It 6.4, only if asked: SAT 325 is z = −1.5 exactly, (325−496)/114. The score 366.21 is z = −1.14, not the same."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.5 · the 68-95-99.7 rule")
-            + b.title("Mean 50, standard deviation 6", 44),
-            64, 28, 1150,
+            + b.title("Mean 50, standard deviation 6", 40),
+            64, 20, 1150,
         ),
-        bell_at(64, 145, 370, 400, "68 OUT OF 100", mean=50, sd=6, shade=(44, 56), shade_label="one step",
-                marks=[(44, "44"), (50, "50"), (56, "56")]),
-        bell_at(455, 145, 370, 400, "95 OUT OF 100", mean=50, sd=6, shade=(38, 62), shade_label="two steps",
-                marks=[(38, "38"), (50, "50"), (62, "62")]),
-        bell_at(846, 145, 370, 400, "99.7 OUT OF 100", mean=50, sd=6, shade=(32, 68), shade_label="three steps",
-                marks=[(32, "32"), (50, "50"), (68, "68")]),
+        bell_at(64, 128, 370, 378, "ABOUT 68%", mean=50, sd=6, shade=(44, 56), shade_label="1 SD",
+                marks=[(44, "44"), (50, "50"), (56, "56")], label_gap=36),
+        bell_at(455, 128, 370, 378, "ABOUT 95%", mean=50, sd=6, shade=(38, 62), shade_label="2 SD",
+                marks=[(38, "38"), (50, "50"), (62, "62")], label_gap=36),
+        bell_at(846, 128, 370, 378, "ABOUT 99.7%", mean=50, sd=6, shade=(32, 68), shade_label="3 SD",
+                marks=[(32, "32"), (50, "50"), (68, "68")], label_gap=36),
         b.text_block(
-            '<p style="margin:0;color:#5d6670;font-size:20px;">The shaded middle is the share of people, not a test score. 50 − 6 = 44 and 50 + 6 = 56.</p>',
-            64, 565, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.3;">'
+            'For an approximately normal distribution, about 68% of the values fall within 1 standard deviation of the mean, about 95% within 2, and about 99.7% within 3.</p>'
+            '<p style="margin:6px 0 0;color:#1c242c;font-size:20px;line-height:1.3;">'
+            'Mean 50, standard deviation 6: 68% is 44 to 56, 95% is 38 to 62, and 99.7% is 32 to 68.</p>'
+            '<p style="margin:4px 0 0;color:#5d6670;font-size:18px;line-height:1.3;">'
+            'The shaded middle is a share of the values, not a test score.</p>',
+            64, 520, 1150,
         ),
-    ], "Say: this percent is a share of the people, not a test score. About 68 out of 100 values sit between 44 and 56. "
-       "Hold your hands near the middle for 68, wider for 95, and almost the whole curve for 99.7. "
-       "50 − 6 = 44 and 50 + 6 = 56. Two steps is 12, so 38 to 62. Three steps is 18, so 32 to 68. "
-       "Example 6.6 is the same rule on the 1984 Chile heights, mean 172.36 and step 6.34: 166.02 to 178.7, then 159.68 to 185.04, then 153.34 to 191.38. Leave it unless you have time."))
+    ], "This rule is for an approximately normal distribution. The shaded middle is a share of the values, not a test score. "
+       "About 68% fall within 1 standard deviation of the mean, about 95% within 2, about 99.7% within 3. "
+       "Mean 50, standard deviation 6. 50 − 6 = 44 and 50 + 6 = 56, so 68% is 44 to 56. Two standard deviations is 12, so 95% is 38 to 62. Three is 18, so 99.7% is 32 to 68. "
+       "Hold your hands near the middle, then wider, then almost the whole curve. "
+       "Watch for: walking only one direction, so 50 to 56 instead of 44 to 56, or reading 68 as a score. "
+       "Example 6.6 is the same rule on the 1984 Chile heights, mean 172.36 and standard deviation 6.34: 166.02 to 178.7, then 159.68 to 185.04, then 153.34 to 191.38. Leave it unless you have time."))
     out.append(b.section([
         b.activity_head(
             "Your turn · Try It 6.5 · 2 minutes",
-            "Where do 68% of the values sit?",
-            "Center 25, one step is 5. About 68 out of 100 values sit between which two numbers?",
+            "Where do about 68% of the values fall?",
+            "Mean 25, standard deviation 5. Between which two values do about 68% of the observations fall?",
         ),
-        bell_at(64, 200, 620, 400, "THE MIDDLE SHARE", mean=25, sd=5, shade=(20, 30),
-                shade_label="68 out of 100", marks=[(25, "25")]),
+        bell_at(64, 200, 620, 400, "ABOUT 68%", mean=25, sd=5, shade=(20, 30),
+                shade_label="about 68%", marks=[(25, "mean\n25")], label_gap=36),
         b.text_block(b.card_shell(
-            '<p style="margin:0;color:#1c242c;font-size:24px;line-height:1.4;">One step below 25, and one step above 25.</p>'
-            '<p class="fragment" style="margin:16px 0 0;color:#2a6f7a;font-size:28px;font-weight:650;">20 and 30</p>'
-            '<p class="fragment" style="margin:8px 0 0;color:#5d6670;font-size:20px;">25 − 5 = 20 and 25 + 5 = 30.</p>',
-            180,
-        ), 720, 250, 490, 180),
-    ], "Try It 6.5. They should not start a z formula. One step below 25 is 20. One step above is 30. "
-       "If someone says 20 and 25, they only walked one direction. "
-       "Try It 6.6, only if the room is ahead: center 52, step 11. 68% is 41 to 63, 95% is 30 to 74, 99.7% is 19 to 85."))
+            '<p style="margin:0;color:#5d6670;font-size:20px;line-height:1.35;">Mean 25. Standard deviation 5.</p>'
+            '<p class="fragment" data-fragment-index="0" style="margin:14px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">25 − 5 = 20 and 25 + 5 = 30.</p>'
+            '<p class="fragment" data-fragment-index="0" style="margin:8px 0 0;color:#2a6f7a;font-size:28px;font-weight:650;">20 to 30</p>',
+            188,
+        ), 720, 250, 490, 188),
+    ], "Try It 6.5. Mean 25, standard deviation 5. About 68% of the observations fall within 1 standard deviation of the mean, in both directions. "
+       "25 − 5 = 20 and 25 + 5 = 30, so the answer is 20 to 30. They should not start a z formula, and this is not an area calculation. "
+       "Watch for: walking only one direction and answering 20 to 25, or 25 to 30. "
+       "Try It 6.6, only if the room is ahead: mean 52, standard deviation 11. 68% is 41 to 63, 95% is 30 to 74, 99.7% is 19 to 85."))
     out.append(b.quick("Read the sign", [
-        ("A value above the mean has z",
+        ("A value above the mean has a z-score that is",
          [("A", "Positive"), ("B", "Negative"), ("C", "Zero")], "A",
-         "Right of the mean."),
-        ("Mean 5, step 6. The value 17 has",
+         "Positive means above the mean."),
+        ("Mean 5, standard deviation 6. Value 17 has",
          [("A", "z = 2"), ("B", "z = 12"), ("C", "z = 0.67")], "A",
          "(17 − 5) / 6 = 2."),
-        ("About 95% of the values lie within",
-         [("A", "1 sd"), ("B", "2 sd"), ("C", "3 sd")], "B",
-         "68, 95, 99.7."),
-    ], "Answers: 1A, 2A, 3B. If several people pick z = 12, they subtracted and forgot to divide by the step. Do (17−5)/6 on the board before you leave. "
-       "Homework is items 60 through 66. Item 67 starts the area work."))
-    out.append(b.closing(
-        "Before section 6.2",
-        "You can place a value on the curve",
-        [
-            "z is how many steps a value sits from the mean. The sign says which side.",
-            "About 68, 95, and 99.7 out of 100 values sit within 1, 2, and 3 steps.",
-            "Next, that share of the bell is a probability.",
-        ],
-        ("6.2 Area", "Same class. The probability is the shaded region."),
-        "Homework: OpenStax 6.1, items 60 through 66.",
-        "Open 6.2 in the same hour, as soon as the 68-95-99.7 picture has been said once. Do not add another example here.",
-    ))
+        ("About 95% of observations fall within",
+         [("A", "1 SD"), ("B", "2 SD"), ("C", "3 SD")], "B",
+         "Within 2 standard deviations."),
+    ], "Answers: 1A, 2A, 3B. A value above the mean has a positive z-score. Mean 5, standard deviation 6, value 17: (17−5)/6 = 2. "
+       "About 95% of observations fall within 2 standard deviations of the mean. "
+       "Watch for: z = 12, which forgets to divide by σ, and z = 0.67, which divides in the wrong order. "
+       "Do (17−5)/6 on the board before you leave. Homework is items 60 through 66. Item 67 starts the area work in 6.2."))
+    out.append(b.section([
+        b.backdrop(),
+        b.text_block(
+            b.kicker("Before section 6.2")
+            + b.title("You can place a value on the curve", 40),
+            72, 36, 1130,
+        ),
+        b.text_block(
+            '<p style="margin:0 0 10px;color:#1c242c;font-size:23px;line-height:1.28;">'
+            '1 &nbsp; A normal distribution is described by its mean and standard deviation.</p>'
+            '<p style="margin:0 0 10px;color:#1c242c;font-size:23px;line-height:1.28;">'
+            '2 &nbsp; A z-score tells how many standard deviations a value is above or below the mean.</p>'
+            '<p style="margin:0 0 10px;color:#1c242c;font-size:23px;line-height:1.28;">'
+            '3 &nbsp; The 68–95–99.7 rule describes how values are distributed around the mean.</p>'
+            '<p style="margin:14px 0 0;color:#1c242c;font-size:22px;line-height:1.32;">'
+            'In Section 6.1, we learned where a value is on the normal curve. '
+            'In Section 6.2, we will use the area under the curve to calculate probabilities.</p>',
+            72, 168, 1136,
+        ),
+        b.text_block(b.card_shell(
+            '<p style="margin:0;color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">NEXT</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:28px;font-weight:650;">6.2 Area</p>'
+            '<p style="margin:6px 0 0;color:#5d6670;font-size:20px;">Same class. The probability is the shaded region.</p>',
+            118,
+        ), 72, 470, 690, 118),
+        b.link_card(
+            "https://www.desmos.com/notebook/pzbf94y26h",
+            792, 470, 416, 140, "NOTEBOOK",
+            "The same examples, as a short lesson.", qr=84,
+        ),
+        b.text_block(
+            '<p style="margin:0;color:#5d6670;font-size:18px;">Homework: OpenStax 6.1, items 60 through 66.</p>',
+            72, 628, 690,
+        ),
+    ], "Three things they should leave with. A normal distribution is described by its mean and standard deviation. "
+       "A z-score tells how many standard deviations a value is above or below the mean. "
+       "The 68–95–99.7 rule describes how values sit around the mean, for an approximately normal distribution. "
+       "Then say: in Section 6.1 we learned where a value is on the curve. In Section 6.2 the area under the curve is used to calculate probabilities. "
+       "The notebook card is the same examples as a short lesson. There is no class calculator for 6.1. "
+       "Do not start an area problem here. Open 6.2 in the same hour. Homework is OpenStax 6.1, items 60 through 66."))
     return out
 
 

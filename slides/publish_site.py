@@ -83,6 +83,9 @@ DESMOS = [
     ("3", "12.5", "12.5-prediction", "Prediction",
      "Drag a third-exam score along the book's line. 65 to 75 stays inside the data. 90 does not.",
      "https://www.desmos.com/calculator/86veidxfbr"),
+    ("4", "6.1", "6.1-standard-normal", "Notebook",
+     "The same examples as a short lesson: mean, standard deviation, z-scores, and the 68-95-99.7 rule.",
+     "https://www.desmos.com/notebook/pzbf94y26h"),
     ("4", "6.2", "6.2-normal-area", "Calculator",
      "Class graph. Final exams, golf, computer hours, and phone ages.",
      "https://www.desmos.com/calculator/xa9guvmgpd"),
@@ -117,6 +120,10 @@ def landing():
     for unit, folder, number, name, blurb in DECKS:
         tools = ""
         tool_links = {
+            "6.1-standard-normal": (
+                None,
+                "https://www.desmos.com/notebook/pzbf94y26h",
+            ),
             "6.2-normal-area": (
                 "https://www.desmos.com/calculator/xa9guvmgpd",
                 "https://www.desmos.com/notebook/s3ainmd7q6",
@@ -128,12 +135,16 @@ def landing():
         }
         if folder in tool_links:
             calculator, notebook = tool_links[folder]
-            tools = (
-                '<p class="tools">'
-                f'<a href="{calculator}" target="_blank" rel="noopener">Desmos calculator</a>'
-                f'<a href="{notebook}" target="_blank" rel="noopener">Desmos notebook</a>'
-                '</p>'
-            )
+            links = []
+            if calculator:
+                links.append(
+                    f'<a href="{calculator}" target="_blank" rel="noopener">Desmos calculator</a>'
+                )
+            if notebook:
+                links.append(
+                    f'<a href="{notebook}" target="_blank" rel="noopener">Desmos notebook</a>'
+                )
+            tools = '<p class="tools">' + "".join(links) + "</p>"
         cards_by_unit.setdefault(unit, []).append(
             f'<div class="card">'
             f'<a class="cardlink" href="{folder}/">'
@@ -355,7 +366,7 @@ def landing():
     <h3>The book</h3>
     <p>These decks follow <a href="https://openstax.org/details/books/introductory-statistics-2e">Introductory Statistics 2e</a>. Unit S1 follows <a href="https://openintrostat.github.io/ims/">Introduction to Modern Statistics</a>.</p>
     <h3>Desmos</h3>
-    <p>Every section on the <a href="desmos/">Desmos page</a> has a class calculator. A notebook, the short lesson, is ready for sections 6.2 and 7.1.</p>
+    <p>A notebook, the short lesson, is ready for sections 6.1, 6.2, and 7.1. Section 6.1 has a notebook. The other sections on the <a href="desmos/">Desmos page</a> have a class calculator.</p>
     <h3>StatKey</h3>
     <p><a href="https://lock5stat.com/StatKey/">StatKey</a></p>
   </footer>
@@ -511,9 +522,9 @@ def desmos_page():
 <main>
   <a class="back" href="../">Lecture decks</a>
   <h1>Desmos</h1>
-  <p class="lead">A calculator is the class graph, with the book's numbers ready to use. A notebook is a short lesson. Notebooks are ready for 6.2 and 7.1. The other sections have a calculator only.</p>
+  <p class="lead">A calculator is the class graph, with the book's numbers ready to use. A notebook is a short lesson. Notebooks are ready for 6.1, 6.2, and 7.1. Section 6.1 has a notebook only.</p>
   {"".join(groups)}
-  <p class="note">Sections 6.2 and 7.1 each have both a calculator and a notebook. A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
+  <p class="note">Section 6.1 has a notebook. Sections 6.2 and 7.1 each have both a calculator and a notebook. A blank calculator, with none of these lists, is at <a href="https://www.desmos.com/calculator" target="_blank" rel="noopener">desmos.com/calculator</a>.</p>
 </main>
 </body>
 </html>
