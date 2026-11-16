@@ -68,10 +68,13 @@ def _panel(width, height):
 
 
 def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
-            marks=(), shade_label="", z0=-3.2, z1=3.2, pins=True, label_size=None):
+            marks=(), shade_label="", z0=-3.2, z1=3.2, pins=True, label_size=None,
+            extras=()):
     """A bell in the book's units. shade is (lo, hi); None means the edge of the window.
-    marks are (value, label) in the same units as the mean."""
-    pad_l, pad_r, pad_t, pad_b = 32, 20, 40, 36
+    marks are (value, label) in the same units as the mean. A label may contain a newline.
+    extras are (z, text) labels inside the plot."""
+    stacked = any("\n" in str(label) for _, label in marks)
+    pad_l, pad_r, pad_t, pad_b = 32, 20, 40, (70 if stacked else 36)
     plot_w = width - pad_l - pad_r
     plot_h = height - pad_t - pad_b
     base = pad_t + plot_h
@@ -126,6 +129,14 @@ def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
         f'<polyline points="{" ".join(f"{X(z):.1f},{Y(z):.1f}" for z in zs)}" '
         f'fill="none" stroke="#2a6f7a" stroke-width="2.6"></polyline>'
     )
+    for z, text in extras:
+        if z0 < z < z1:
+            room = base - Y(z)
+            y = (Y(z) + base) / 2 if room > 90 else base - 24
+            parts.append(
+                f'<text x="{X(z):.1f}" y="{y:.1f}" text-anchor="middle" font-size="{label_size}" '
+                f'fill="#1c242c" font-family="{FONT}" font-weight="700">{_esc(text)}</text>'
+            )
     placed = []
     for value, label in marks:
         z = z_of(value)
@@ -145,10 +156,14 @@ def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
                 f'stroke="#2a6f7a" stroke-width="1.6"></line>'
                 f'<circle cx="{x:.1f}" cy="{y:.1f}" r="5" fill="#2a6f7a"></circle>'
             )
-        parts.append(
-            f'<text x="{x:.1f}" y="{height - 12}" text-anchor="{anchor}" font-size="{label_size}" '
-            f'fill="#1c242c" font-family="{FONT}" font-weight="650">{_esc(label)}</text>'
-        )
+        lines = str(label).split("\n")
+        line_h = label_size + 4
+        for j, line in enumerate(lines):
+            yy = height - 12 - (len(lines) - 1 - j) * line_h
+            parts.append(
+                f'<text x="{x:.1f}" y="{yy:.1f}" text-anchor="{anchor}" font-size="{label_size}" '
+                f'fill="#1c242c" font-family="{FONT}" font-weight="650">{_esc(line)}</text>'
+            )
     return b.drawing(b.svg_wrap("".join(parts), width, height), left, top, width, height)
 
 
@@ -480,7 +495,8 @@ def slides_62():
             + b.title("The two areas add to 100%", 40),
             64, 24, 1150,
         ),
-        bell_at(64, 145, 1152, 370, "THE SHADE, AND THE REST OF THE CURVE", shade=(None, -2), shade_label="2.28%"),
+        bell_at(64, 145, 1152, 370, "THE SHADE, AND THE REST OF THE CURVE", shade=(None, -2),
+                shade_label="2.28%", extras=[(0.7, "97.72%")], label_size=20),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
             + m(r"P(X > a) = 1 - P(X \le a)") + '</p>'
@@ -518,18 +534,19 @@ def slides_62():
             + b.title("Start with a score, or start with an area", 36),
             64, 20, 1150,
         ),
-        bell_at(64, 130, 560, 360, "CDF · YOU KNOW THE SCORE", shade=(None, 0.5),
+        bell_at(64, 118, 560, 350, "CDF · SCORE → AREA", shade=(None, 0.5),
                 shade_label="the area", marks=[(0.5, "score")]),
-        bell_at(656, 130, 560, 360, "INVERSECDF · YOU KNOW THE AREA", shade=(None, 1.28),
+        bell_at(656, 118, 560, 350, "INVERSECDF · AREA → SCORE", shade=(None, 1.28),
                 shade_label="90%", marks=[(1.28, "score")]),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">cdf: given a score, find the area to its left. '
-            'inversecdf: given an area, such as 90%, find the score.</p>',
-            64, 530, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            'cdf is score → area, usually the area to the left. The same command also gives a right tail, or the area between two values. '
+            'inversecdf is area → score.</p>',
+            64, 490, 1150,
         ),
-    ], "Left graph: you are given the score. The shade is the unknown area. That is cdf. In Desmos, type normaldist with the mean and standard deviation, then choose the region. "
-       "Right graph: you are given 90% and the score is the unknown edge. That is inversecdf. These two pictures use no book data. They are only the two questions. "
-       "Misconception: using inversecdf when the problem already gives the score, or using the area box when the problem asks for a cutoff."))
+    ], "Left graph: score → area. You know the score. The shade is the unknown probability. That is cdf, usually the left area. The same Desmos box also does a right tail, or the area between two values. "
+       "Right graph: area → score. You know 90%. The score is the unknown edge. That is inversecdf. These pictures use no book data. "
+       "Misconception: using inversecdf when the problem already gives the score."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
@@ -543,12 +560,12 @@ def slides_62():
                 shade=(None, 65.6), shade_label="70%", marks=[(63, "63"), (65.6, "65.6")]),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
-            'The 90th percentile means 90% of the scores are at or below 69.4. The 70th percentile is 65.6. '
-            'These are scores, not the probability of a score over 65.</p>',
+            'What score has 90% of students at or below it? That score is 69.4, the 90th percentile. '
+            'The 70th percentile is 65.6. These are scores, not probabilities.</p>',
             64, 505, 1150,
         ),
         desmos_how("normaldist(63, 5).inversecdf(0.90)", "gives the score 69.4", 575),
-    ], "Point at the shade, then at the edge. The shade is the 90% you were given. The edge, 69.4, is the score you were asked for. That is the opposite of the previous probability. "
+    ], "Ask: what score has 90% of students at or below it? Point at the shade, then at the edge. The shade is the 90% you were given. The edge, 69.4, is the score. That is the opposite of finding a probability. "
        "inversecdf(0.90) returns 69.4. The 70th percentile is inversecdf(0.70) = 65.6. One sentence in the book says 65.5. Use 65.6. "
        "If someone asks about a score over 85: that is a probability, about 1, because 85 is about four standard deviations above 63. It is not a percentile. "
        "Misconception: calling 69.4 a probability. Ask whether 69.4 is between 0 and 1. It is a score."))
@@ -556,7 +573,7 @@ def slides_62():
         b.activity_head(
             "Your turn · Try It 6.8 · 3 minutes",
             "The probability of a score under 65",
-            "Mean 68, standard deviation 3. OpenStax prints this question.",
+            "Mean 68, standard deviation 3. What share of golfers score under 65?",
         ),
         bell_at(64, 185, 700, 370, "SHADE THE LEFT OF 65", mean=68, sd=3,
                 shade=(None, 65), shade_label="find this area", marks=[(65, "65"), (68, "68")]),
@@ -565,7 +582,7 @@ def slides_62():
             790, 220, 420,
         ),
         desmos_how("normaldist(68, 3)", "then Left, to 65", 590),
-    ], "Try It 6.8. OpenStax prints the question. It does not print this decimal. The worked answer is the next slide. Three minutes. "
+    ], "Try It 6.8. Three minutes. The worked answer is the next slide. "
        "They type normaldist(68, 3), then Left to 65. A strong student sees z = (65−68)/3 = −1 first: one standard deviation below the mean, so the left tail is about 16%. "
        "The precise probability is 0.1587. If they report about 0.84, they found the area above 65. "
        "The score 65 is given, so this is a probability. inversecdf is the other question: the area is given and the score is unknown."))
@@ -580,12 +597,12 @@ def slides_62():
                 shade=(None, 65), shade_label="about 16%", marks=[(65, "65"), (68, "68")]),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:26px;">' + M(r"z = \frac{65-68}{3} = -1") + '</p>'
-            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">The worked answer is 0.1587, which is 15.87%.</p>'
-            '<p style="margin:10px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">The book prints the question. The middle 68% leaves about 16% on each side.</p>',
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">The probability is 0.1587, which is 15.87%.</p>'
+            '<p style="margin:10px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">Under this normal model, about 16% of golfers score below 65.</p>',
             830, 190, 390,
         ),
     ], "Point at 65, one standard deviation below 68. The shade is the left tail. The middle 68% leaves about 32% split into two tails, so each is about 16%. Desmos makes it 0.1587, or 15.87%. "
-       "Tell them the book prints the question and this slide is the worked answer. Ask them to move the decimal two places. "
+       "Say: under this normal model, about 16% of golfers score below 65. The precise probability is 0.1587. Ask them to move the decimal two places. "
        "The shade is the probability. A percentile question would have given about 16% and asked for the score."))
     out.append(b.section([
         b.backdrop(),
@@ -619,9 +636,9 @@ def slides_62():
             + b.title("Mean age 36.9, standard deviation 13.9", 34),
             64, 18, 1150,
         ),
-        bell_at(64, 120, 1152, 350, "Q1 AND Q3, THE MIDDLE HALF", mean=36.9, sd=13.9,
-                shade=(27.52, 46.28), shade_label="half",
-                marks=[(27.52, "Q1 27.52"), (36.9, "36.9"), (46.28, "Q3 46.28")]),
+        bell_at(64, 112, 1152, 360, "Q1 AND Q3, THE MIDDLE HALF", mean=36.9, sd=13.9,
+                shade=(27.52, 46.28), shade_label="half", label_size=18,
+                marks=[(27.52, "Q1\n27.52"), (36.9, "36.9"), (46.28, "Q3\n46.28")]),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
             'The shaded half runs from Q1 = 27.52 to Q3 = 46.28. The IQR is 18.8 years. '
