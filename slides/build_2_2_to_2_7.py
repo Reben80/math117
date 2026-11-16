@@ -228,6 +228,23 @@ def graph_card(graph, left, top, width=300, height=170):
     ), left, top, width, height)
 
 
+def link_card(url, left, top, width, height, label, blurb, qr=118):
+    short = url.replace("https://www.", "")
+    return text_block(
+        '<div style="background:#ffffff;border:1px solid #e4e1da;border-radius:18px;'
+        'padding:14px 16px;height:' + str(height) + 'px;box-sizing:border-box;">'
+        '<div style="display:flex;gap:12px;align-items:center;height:100%;">'
+        f'<a href="{url}" target="_blank" style="flex:none;line-height:0;">{qr_svg(url, qr)}</a>'
+        '<div style="min-width:0;">'
+        f'<p style="margin:0;color:#2a6f7a;font-size:13px;font-weight:700;letter-spacing:0.12em;">{label}</p>'
+        f'<p style="margin:5px 0 0;color:#1c242c;font-size:15px;line-height:1.25;">{blurb}</p>'
+        f'<p style="margin:5px 0 0;font-size:12px;line-height:1.3;word-break:break-all;">'
+        f'<a href="{url}" target="_blank" style="color:#5d6670;">{short}</a></p>'
+        '</div></div></div>',
+        left, top, width, height,
+    )
+
+
 def revealed_answers(pairs):
     parts = []
     for i, (question, answer) in enumerate(pairs):
@@ -470,11 +487,25 @@ def opening(h1, subtitle, section_label, visual, notes):
     ], notes)
 
 
-def closing(kicker_text, heading, lines, nxt, practice, notes, graph=None):
+def closing(kicker_text, heading, lines, nxt, practice, notes, graph=None, notebook=None):
     body = "".join(
         f'<p style="margin:0 0 14px;color:#1c242c;font-size:26px;line-height:1.35;">{line}</p>'
         for line in lines
     )
+    if graph and notebook:
+        side = [
+            link_card(GRAPHS[graph], 792, 418, 416, 140, "CLASS GRAPH",
+                      "Calculator. Every list from today.", qr=84),
+            link_card(notebook, 792, 568, 416, 140, "NOTEBOOK",
+                      "The same examples, as a short lesson.", qr=84),
+        ]
+        next_width, practice_width = 690, 690
+    elif graph:
+        side = [graph_card(graph, 808, 430, 344, 190)]
+        next_width, practice_width = 712, 712
+    else:
+        side = []
+        next_width, practice_width = 1080, 900
     return section([
         backdrop(),
         text_block(kicker(kicker_text) + title(heading, 46), 72, 56, 1100),
@@ -484,12 +515,12 @@ def closing(kicker_text, heading, lines, nxt, practice, notes, graph=None):
             f'<p style="margin:10px 0 0;color:#1c242c;font-size:28px;font-weight:650;">{nxt[0]}</p>'
             f'<p style="margin:8px 0 0;color:#5d6670;font-size:20px;">{nxt[1]}</p>',
             130,
-        ), 72, 430, 1080 if graph is None else 712, 130),
+        ), 72, 430, next_width, 130),
         text_block(
             f'<p style="margin:0;color:#5d6670;font-size:18px;">{practice}</p>',
-            72, 590, 900 if graph is None else 712,
+            72, 590, practice_width,
         ),
-        *([graph_card(graph, 808, 430, 344, 190)] if graph else []),
+        *side,
     ], notes)
 
 

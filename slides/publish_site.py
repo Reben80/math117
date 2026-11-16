@@ -83,9 +83,12 @@ DESMOS = [
     ("3", "12.5", "12.5-prediction", "Prediction",
      "Drag a third-exam score along the book's line. 65 to 75 stays inside the data. 90 does not.",
      "https://www.desmos.com/calculator/86veidxfbr"),
-    ("4", "6.2", "6.2-normal-area", "Area under the curve",
-     "Final exams, golf, computer hours, and phone ages. cdf is an area. inversecdf is a score.",
+    ("4", "6.2", "6.2-normal-area", "Calculator",
+     "Class graph. Final exams, golf, computer hours, and phone ages.",
      "https://www.desmos.com/calculator/xa9guvmgpd"),
+    ("4", "6.2", "6.2-normal-area", "Notebook",
+     "The same examples as a short lesson: area, complement, cdf, and inversecdf.",
+     "https://www.desmos.com/notebook/s3ainmd7q6"),
     ("4", "7.1", "7.1-sample-means", "The average of a sample",
      "Sample means for an unknown distribution, soccer, and iPad ages. The step is the standard error.",
      "https://www.desmos.com/calculator/r2hamz4ymv"),
@@ -109,12 +112,23 @@ def rewrite(html):
 def landing():
     cards_by_unit = {}
     for unit, folder, number, name, blurb in DECKS:
+        tools = ""
+        if folder == "6.2-normal-area":
+            tools = (
+                '<p class="tools">'
+                '<a href="https://www.desmos.com/calculator/xa9guvmgpd" target="_blank" rel="noopener">Calculator</a>'
+                '<a href="https://www.desmos.com/notebook/s3ainmd7q6" target="_blank" rel="noopener">Notebook</a>'
+                '</p>'
+            )
         cards_by_unit.setdefault(unit, []).append(
-            f'<a class="card" href="{folder}/">'
+            f'<div class="card">'
+            f'<a class="cardlink" href="{folder}/">'
             f'<p class="num">Section {number}</p>'
             f'<h2>{name}</h2>'
-            f'<p>{blurb}</p>'
+            f'<p class="blurb">{blurb}</p>'
             f'</a>'
+            f'{tools}'
+            f'</div>'
         )
     weeks = []
     for dates, title, source, due, unit in WEEKS:
@@ -263,11 +277,25 @@ def landing():
     font-size: 26px;
     letter-spacing: -0.03em;
   }}
-  .card p:last-child {{
+  .cardlink {{
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }}
+  .blurb {{
     margin: 8px 0 0;
     color: #5d6670;
     font-size: 16px;
     line-height: 1.4;
+  }}
+  .tools {{
+    margin: 14px 0 0;
+    font-size: 14px;
+    font-weight: 700;
+  }}
+  .tools a {{
+    color: #2a6f7a;
+    margin-right: 16px;
   }}
   footer {{
     margin-top: 64px;

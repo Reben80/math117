@@ -681,9 +681,11 @@ def slides_62():
         ("7.1 Sample means", "The mean of a sample, not one person."),
         "Homework: OpenStax 6.2, items 67 through 80. Unit 4 is due November 16.",
         "cdf: type normaldist, then choose Left, Right, or Inner. inversecdf returns the score. "
+        "The calculator card is the class graph. The notebook card is the same examples as a short lesson. "
         "Items 81 to 88 are sections 6.3 and 6.4, which this unit skips. "
         "Unit 4 homework, the unit test, and the discussion are due Monday, November 16.",
         graph="6.2",
+        notebook="https://www.desmos.com/notebook/s3ainmd7q6",
     ))
     return out
 
