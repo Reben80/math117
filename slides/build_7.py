@@ -67,9 +67,9 @@ def slides():
             '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">The step inside Desmos is 15/√25, which is 3. One person would use 15.</p>',
             850, 180, 370,
         ),
-        b.desmos_line("normaldist(90, 15/sqrt(25)).cdf(85, 92)", 580),
+        b.desmos_line("normaldist(90, 15/sqrt(25))", 580),
     ], "Say: the population can be any shape. The averages still make a bell, centered at 90, with step 3. "
-       "Type the Desmos line. cdf from 85 to 92 is the shaded band. Desmos shows more decimals. The book rounds to 0.6997, about 70%. "
+       "Type normaldist(90, 15/sqrt(25)). Desmos opens the area box. Choose Inner, and set 85 and 92. Desmos shows more decimals. The book rounds to 0.6997, about 70%. "
        "Watch for: normaldist(90, 15). That is one person, the chapter 6 bell. The sample size has to get into the step. "
        "Part b of the example is the 96 from the previous slide. Two standard errors above 90."))
     out.append(b.section([
@@ -85,8 +85,8 @@ def slides():
             '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.4;">The step is 8 / √30, not 8. Write the decimal Desmos gives, then the percent.</p>',
             790, 230, 420,
         ),
-        b.desmos_line("normaldist(45, 8/sqrt(30)).cdf(42, 50)", 600),
-    ], "Try It 7.1. The book does not print this answer. Give them the Desmos line and three minutes. "
+        b.desmos_line("normaldist(45, 8/sqrt(30))", 600),
+    ], "Try It 7.1. The book does not print this answer. They type normaldist(45, 8/sqrt(30)), then Inner from 42 to 50. Three minutes. "
        "The step is 8/√30 ≈ 1.46, so 42 and 50 are not close calls. A strong student sees that both ends are more than two steps out and says about 98% before typing. "
        "The precise share is 0.9797. If they report a number near 0.5, they used step 8, one person, instead of the average."))
     out.append(b.section([
@@ -123,7 +123,7 @@ def slides():
             '<p style="margin:14px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">Mean 2 hours. The average’s step is 0.5 / √50 ≈ 0.071.</p>',
             850, 165, 370,
         ),
-        b.desmos_line("normaldist(2, 0.5/sqrt(50)).cdf(1.8, 2.3)", 580),
+        b.desmos_line("normaldist(2, 0.5/sqrt(50))", 580),
     ], "Say: a single match averages 2 hours and wanders by half an hour. Between 1.8 and 2.3 hours is ordinary for one match, about 38%. That 38% is the chapter 6 calculation with step 0.5. The book does not print it. "
        "The average of 50 matches has step 0.5/√50 ≈ 0.071. The same hours now cover almost the whole bell. The book’s answer is 0.9977. "
        "The population was already a bell. The new fact is how small the step became. "
@@ -170,7 +170,7 @@ def slides():
         "The average has a smaller step",
         [
             "The center stays the population mean. The step becomes σ / √n.",
-            "cdf and inversecdf are the same Desmos moves. The new step goes inside normaldist.",
+            "Type normaldist with the smaller step. Desmos opens the area box. A cutoff uses inversecdf.",
             "Tuesday is one sample, and how sure we are about the mean.",
         ],
         ("8.1 Confidence", "Tuesday. A range for the unknown mean."),
