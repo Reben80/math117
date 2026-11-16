@@ -31,7 +31,7 @@ DECKS = [
     ("3", "12.5-prediction", "12.5", "Prediction", "Use the line inside the data. Stop outside it."),
     ("4", "6.1-standard-normal", "6.1", "The standard normal", "A z-score counts standard deviations from the mean."),
     ("4", "6.2-normal-area", "6.2", "Area under the curve", "The probability is the area. A percentile goes back to x."),
-    ("4", "7.1-sample-means", "7.1", "The average of a sample", "The average has the same center and a smaller step."),
+    ("4", "7.1-sample-means", "7.1", "The average of a sample", "Sample means have the same center and a smaller standard error."),
 ]
 
 # Dates and sections follow the Fall 2026 second-half calendar.

@@ -68,14 +68,15 @@ def _panel(width, height):
 
 
 def bell_at(left, top, width, height, heading="", mean=0.0, sd=1.0, shade=None,
-            marks=(), shade_label="", z0=-3.2, z1=3.2, pins=True):
+            marks=(), shade_label="", z0=-3.2, z1=3.2, pins=True, label_size=None):
     """A bell in the book's units. shade is (lo, hi); None means the edge of the window.
     marks are (value, label) in the same units as the mean."""
     pad_l, pad_r, pad_t, pad_b = 32, 20, 40, 36
     plot_w = width - pad_l - pad_r
     plot_h = height - pad_t - pad_b
     base = pad_t + plot_h
-    label_size = 16 if width >= 520 else 14
+    if label_size is None:
+        label_size = 16 if width >= 520 else 14
 
     def X(z):
         return pad_l + (z - z0) / (z1 - z0) * plot_w
