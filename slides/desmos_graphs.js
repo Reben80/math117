@@ -293,53 +293,52 @@ window.M117 = (function () {
       return { left: -4, right: 20, bottom: -5, top: 5 };
     },
     "6.2": function (g) {
-      g.text("MATH 117 · 6.2 Area under the normal curve. cdf is the area to the left, or between two values. inversecdf is the percentile. The book rounds these.");
+      g.text("MATH 117 · 6.2 Area under the normal curve. A probability is an area: cdf, or the Left, Right, or Inner box. A percentile is a score: inversecdf. The book rounds these.");
       g.open("Example 6.8 · final exams, N(63, 5)");
       g.ex("N=\\operatorname{normaldist}\\left(63,5\\right)");
       g.ex("1-N.\\operatorname{cdf}\\left(65\\right)");
-      g.ex("N.\\operatorname{cdf}\\left(85\\right)");
       g.ex("N.\\operatorname{inversecdf}\\left(0.90\\right)");
       g.ex("N.\\operatorname{inversecdf}\\left(0.70\\right)");
-      g.text("More than 65 is 0.3446. Less than 85 rounds to 1. The 90th percentile is 69.4. The 70th is 65.6.");
+      g.text("P(X > 65) = 0.3446. The 90th percentile is 69.4: 90% of scores are at or below it. The 70th percentile is 65.6.");
       g.close();
       g.open("Try It 6.8 · golf, N(68, 3)", true);
-      g.ex("\\operatorname{normaldist}\\left(68,3\\right).\\operatorname{cdf}\\left(65\\right)");
-      g.text("65 is one standard deviation below 68. The area to the left is 0.1587. The book does not print this Try It.");
+      g.ex("\\operatorname{normaldist}\\left(68,3\\right).\\operatorname{cdf}\\left(65\\right)", { hidden: true });
+      g.text("65 is one standard deviation below 68. Under this normal model, about 16% of golfers score below 65. The precise probability is 0.1587.");
       g.close();
       g.open("Example 6.9 · computer hours, N(2, 0.5)", true);
-      g.ex("\\operatorname{normaldist}\\left(2,0.5\\right).\\operatorname{cdf}\\left(1.8,2.75\\right)");
-      g.ex("\\operatorname{normaldist}\\left(2,0.5\\right).\\operatorname{inversecdf}\\left(0.25\\right)");
-      g.text("Between 1.8 and 2.75 hours is 0.5886. The 25th percentile is 1.66 hours.");
+      g.ex("\\operatorname{normaldist}\\left(2,0.5\\right).\\operatorname{cdf}\\left(1.8,2.75\\right)", { hidden: true });
+      g.ex("\\operatorname{normaldist}\\left(2,0.5\\right).\\operatorname{inversecdf}\\left(0.25\\right)", { hidden: true });
+      g.text("Between 1.8 and 2.75 hours is 0.5886. The first quartile is a different task: 1.66 hours.");
       g.close();
       g.open("Example 6.11 · smartphone ages, N(36.9, 13.9)", true);
-      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.25\\right)");
-      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.75\\right)");
-      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.60\\right)");
-      g.text("Q1 = 27.5246, Q3 = 46.2754, IQR = 18.8. Forty percent are at least 40.4 years.");
+      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.25\\right)", { hidden: true });
+      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.75\\right)", { hidden: true });
+      g.ex("\\operatorname{normaldist}\\left(36.9,13.9\\right).\\operatorname{inversecdf}\\left(0.60\\right)", { hidden: true });
+      g.text("Q1 = 27.52 and Q3 = 46.28, the book's 27.5246 and 46.2754. Forty percent are 40.4 or older, so use inversecdf(0.60).");
       g.close();
-      return { left: -1, right: 8, bottom: -1, top: 4 };
+      return { left: 45, right: 85, bottom: -0.01, top: 0.1 };
     },
     "7.1": function (g) {
-      g.text("MATH 117 · 7.1 The average of a sample. The step inside normaldist is σ divided by the square root of n. The book rounds these.");
-      g.open("Example 7.1 · unknown distribution, mean 90, sd 15, n = 25");
+      g.text("MATH 117 · 7.1 The average of a sample. The second number inside normaldist is the standard error, σ divided by √n. The book rounds these.");
+      g.open("Example 7.1 · mean 90, sd 15, n = 25");
       g.ex("\\operatorname{normaldist}\\left(90,15/\\sqrt{25}\\right).\\operatorname{cdf}\\left(85,92\\right)");
       g.ex("90+2\\cdot 3");
       g.text("Between 85 and 92 is 0.6997. Two standard errors above 90 is 96.");
       g.close();
       g.open("Try It 7.1 · mean 45, sd 8, n = 30", true);
-      g.ex("\\operatorname{normaldist}\\left(45,8/\\sqrt{30}\\right).\\operatorname{cdf}\\left(42,50\\right)");
-      g.text("The book does not print this. The area is 0.9797.");
+      g.ex("\\operatorname{normaldist}\\left(45,8/\\sqrt{30}\\right).\\operatorname{cdf}\\left(42,50\\right)", { hidden: true });
+      g.text("OpenStax prints the question. The worked answer is 0.9797, about 98% of the sample means.");
       g.close();
       g.open("Example 7.2 · soccer, mean 2, sd 0.5, n = 50", true);
-      g.ex("\\operatorname{normaldist}\\left(2,0.5/\\sqrt{50}\\right).\\operatorname{cdf}\\left(1.8,2.3\\right)");
-      g.text("The average is 0.9977. One match, with step 0.5, is about 38%, which the book does not print.");
+      g.ex("\\operatorname{normaldist}\\left(2,0.5/\\sqrt{50}\\right).\\operatorname{cdf}\\left(1.8,2.3\\right)", { hidden: true });
+      g.text("The sample mean is between 1.8 and 2.3 with probability 0.9977. One match, with standard deviation 0.5, is about 38%.");
       g.close();
       g.open("Example 7.3 · iPad ages, mean 34, sd 15, n = 100", true);
-      g.ex("\\operatorname{normaldist}\\left(34,15/\\sqrt{100}\\right).\\operatorname{cdf}\\left(30\\right)");
-      g.ex("\\operatorname{normaldist}\\left(34,1.5\\right).\\operatorname{inversecdf}\\left(0.95\\right)");
-      g.text("Over 30 is 0.9962. The 95th percentile of the average is 36.5.");
+      g.ex("\\operatorname{normaldist}\\left(34,15/\\sqrt{100}\\right).\\operatorname{inversecdf}\\left(0.95\\right)", { hidden: true });
+      g.ex("1-\\operatorname{normaldist}\\left(34,15/\\sqrt{100}\\right).\\operatorname{cdf}\\left(30\\right)", { hidden: true });
+      g.text("The 95th percentile of the sample mean is 36.5. The probability the sample mean is over 30 is 0.9962.");
       g.close();
-      return { left: -1, right: 8, bottom: -1, top: 4 };
+      return { left: 78, right: 102, bottom: -0.02, top: 0.16 };
     },
   };
 

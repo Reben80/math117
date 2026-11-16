@@ -8,6 +8,9 @@ import math
 
 import build_2_2_to_2_7 as b
 
+# Saved in the instructor's Desmos account. Built from desmos_graphs.js.
+b.GRAPHS["6.2"] = "https://www.desmos.com/calculator/xa9guvmgpd"
+
 
 def m(latex):
     """A symbol inside a sentence. Display math would split the line."""
@@ -464,12 +467,15 @@ def slides_61():
     return out
 
 
-def desmos_how(command, how, top):
+def desmos_how(command, how, top, graph="6.2"):
     """Monospace is what students type. The rest is the Desmos box."""
+    label = '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS ↗</span>'
+    if graph in b.GRAPHS:
+        label = '<a href="' + b.GRAPHS[graph] + '" target="_blank" style="text-decoration:none;">' + label + '</a>'
     return b.text_block(
         '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
-        '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS</span>'
-        '&nbsp;&nbsp;<span style="font-family:Menlo, Consolas, monospace;">' + command + '</span>'
+        + label
+        + '&nbsp;&nbsp;<span style="font-family:Menlo, Consolas, monospace;">' + command + '</span>'
         '&nbsp;&nbsp;<span style="color:#5d6670;">' + how + '</span></p>',
         64, top, 1160,
     )
@@ -677,6 +683,7 @@ def slides_62():
         "cdf: type normaldist, then choose Left, Right, or Inner. inversecdf returns the score. "
         "Items 81 to 88 are sections 6.3 and 6.4, which this unit skips. "
         "Unit 4 homework, the unit test, and the discussion are due Monday, November 16.",
+        graph="6.2",
     ))
     return out
 

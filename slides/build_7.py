@@ -10,13 +10,19 @@ import math
 import build_2_2_to_2_7 as b
 import build_6 as s
 
+# Saved in the instructor's Desmos account. Built from desmos_graphs.js.
+b.GRAPHS["7.1"] = "https://www.desmos.com/calculator/r2hamz4ymv"
 
-def calc_line(command, how, top):
+
+def calc_line(command, how, top, graph="7.1"):
     """The monospace part is what students type. The rest is the Desmos box."""
+    label = '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS ↗</span>'
+    if graph in b.GRAPHS:
+        label = '<a href="' + b.GRAPHS[graph] + '" target="_blank" style="text-decoration:none;">' + label + '</a>'
     return b.text_block(
         '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
-        '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS</span>'
-        '&nbsp;&nbsp;<span style="font-family:Menlo, Consolas, monospace;">' + command + '</span>'
+        + label
+        + '&nbsp;&nbsp;<span style="font-family:Menlo, Consolas, monospace;">' + command + '</span>'
         '&nbsp;&nbsp;<span style="color:#5d6670;">' + how + '</span></p>',
         64, top, 1160,
     )
@@ -244,6 +250,7 @@ def slides():
         "Items 72 and up are sums, section 7.2, and the later sections 7.3 and 7.4. This unit stops at 7.1. "
         "Exam 2 is Monday, November 23. It covers Units 4 and 5: sections 6.1, 6.2, 7.1, 8.1, 8.2, and 8.3. The bootstrap unit is not on it. "
         "The third fact is the Central Limit Theorem. Do not add conditions they have not seen.",
+        graph="7.1",
     ))
     return out
 

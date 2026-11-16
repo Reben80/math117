@@ -83,11 +83,18 @@ DESMOS = [
     ("3", "12.5", "12.5-prediction", "Prediction",
      "Drag a third-exam score along the book's line. 65 to 75 stays inside the data. 90 does not.",
      "https://www.desmos.com/calculator/86veidxfbr"),
+    ("4", "6.2", "6.2-normal-area", "Area under the curve",
+     "Final exams, golf, computer hours, and phone ages. cdf is an area. inversecdf is a score.",
+     "https://www.desmos.com/calculator/xa9guvmgpd"),
+    ("4", "7.1", "7.1-sample-means", "The average of a sample",
+     "Sample means for an unknown distribution, soccer, and iPad ages. The step is the standard error.",
+     "https://www.desmos.com/calculator/r2hamz4ymv"),
 ]
 
 DESMOS_UNITS = {
     "2": ("Unit 2 · Descriptive statistics", "November 2–6"),
     "3": ("Unit 3 · Linear regression and correlation", "November 7–9"),
+    "4": ("Unit 4 · The normal distribution", "November 12–16"),
 }
 
 
@@ -316,7 +323,7 @@ def landing():
 
 def desmos_page():
     # Unit 2 is six graphs, a 3 by 2 block. Unit 3 is four, a 2 by 2 block.
-    columns = {"2": 3, "3": 2}
+    columns = {"2": 3, "3": 2, "4": 2}
     groups = []
     for unit, (title, dates) in DESMOS_UNITS.items():
         cells = []
