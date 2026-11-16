@@ -449,180 +449,212 @@ def slides_61():
     return out
 
 
+def desmos_how(command, how, top):
+    """Monospace is what students type. The rest is the Desmos box."""
+    return b.text_block(
+        '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+        '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS</span>'
+        '&nbsp;&nbsp;<span style="font-family:Menlo, Consolas, monospace;">' + command + '</span>'
+        '&nbsp;&nbsp;<span style="color:#5d6670;">' + how + '</span></p>',
+        64, top, 1160,
+    )
+
+
 def slides_62():
     out = []
     out.append(opening(
-        "Chance is a share",
-        "The shaded part is a share of everyone.<br>1 means 100%. Half the bell is 0.50.",
+        "Probability is an area",
+        "The shaded area under the curve is the probability.<br>The whole curve has area 1, which is 100%.",
         "SECTION 6.2",
-        bell(460, 480, "A SHARE OF THE BELL", shade=(-3.2, 0.4), shade_label="the chance"),
-        "Say: this is the first time the word probability means something in this course. It is the shaded share of the bell. The whole bell is 1, which is 100%. Half is 0.50, which is 50%. A probability is never bigger than 1. "
-        "Move your hand over the shaded side and call that the chance a value lands there. "
-        "A percentile is the Unit 2 word: a cutoff with a given share of the people on one side. "
-        "Desmos, not the book’s TI buttons. cdf asks for an area. inversecdf asks for the cutoff. "
+        bell(460, 480, "A SHARE OF THE BELL", shade=(-3.2, 0.4), shade_label="the area"),
+        "Say: a probability is an area under the curve. Run your hand over the shade and call that the probability a value lands there. The whole curve has area 1, which is 100%. Half the bell is 0.50, or 50%. A probability is never bigger than 1. "
+        "Standard deviation is the spread, the step from chapter 6.1. Use the word standard deviation first. "
+        "cdf starts with a score and returns an area. inversecdf starts with an area and returns a score. "
         "Less-than and less-than-or-equal are the same area on a smooth curve. Say that only if someone asks. "
-        "About 30 minutes. If you are short, stop after the golf scores. The phone ages can wait. Exam Thursday and Friday is still Units 1, 2, and 3.",
+        "About 30 minutes. If you are short, stop after the golf scores. The phone ages can wait.",
     ))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.7 · read a decimal as a percent")
-            + b.title("The two shares add to 100%", 40),
-            64, 36, 1150,
+            + b.title("The two areas add to 100%", 40),
+            64, 24, 1150,
         ),
-        bell_at(64, 150, 1152, 400, "A SMALL PIECE AND THE REST", shade=(None, -2), shade_label="2.28%"),
+        bell_at(64, 145, 1152, 370, "THE SHADE, AND THE REST OF THE CURVE", shade=(None, -2), shade_label="2.28%"),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            '0.0228 is 2.28%. The rest is 1 − 0.0228 = 0.9772, which is 97.72%. They add to 100%. '
-            'Try It 6.7 is the same picture: 0.012 is 1.2%, so the right share is 0.988, or 98.8%.</p>',
-            64, 570, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">'
+            + m(r"P(X > a) = 1 - P(X \le a)") + '</p>'
+            '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">'
+            'The shade is 0.0228, or 2.28%. The rest is 1 − 0.0228 = 0.9772, or 97.72%.</p>',
+            64, 535, 1150,
         ),
-    ], "Say: a probability in this chapter is a decimal from 0 to 1. To hear it as a percent, move the decimal two places. 0.0228 is 2.28%, a small chance. 0.9772 is 97.72%, almost certain. The line in the picture is z = −2, because that is the table area. The book does not name an x for this one. "
-       "Have them add 0.0228 + 0.9772 and see 1. That is the whole bell. "
-       "Try It 6.7 is the same move: 0.012 is 1.2% on the left, so the right side is 0.988, or 98.8%. "
-       "The book writes P(X < x) for the left share. Read it as 'the chance a value is under x.' Do not stop on the symbol."))
+    ], "Point at the shade: that small left piece is 0.0228, which is 2.28%. The unshaded rest of the curve is the complement, 1 − 0.0228 = 0.9772. Have them add the two decimals and get 1, the whole area. "
+       "The line is z = −2. The book does not name an x for this picture. Write P(X > a) = 1 − P(X ≤ a) once. On a smooth curve, less-than and less-than-or-equal have the same area. "
+       "Try It 6.7, only if asked: 0.012 is 1.2% on the left, so the right area is 0.988, or 98.8%."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
-            b.kicker("Example 6.8 · final exams, mean 63, step 5")
-            + b.title("The chance of a score over 65", 40),
-            64, 24, 1150,
+            b.kicker("Example 6.8 · final exams, mean 63, sd 5")
+            + b.title("The probability of a score over 65", 36),
+            64, 20, 1150,
         ),
-        bell_at(64, 140, 1152, 390, "THE SHADED SIDE IS THE QUESTION", mean=63, sd=5,
-                shade=(65, None), shade_label="about 34%", marks=[(63, "63"), (65, "65")]),
+        bell_at(64, 125, 1152, 370, "THE SHADED AREA IS P(X > 65)", mean=63, sd=5,
+                shade=(65, None), shade_label="0.3446", marks=[(63, "63"), (65, "65")]),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            '(65 − 63) / 5 = 0.4. The left share is 0.6554, and 1 − 0.6554 = 0.3446, about one student in three. '
-            'cdf is the left share, so subtract it from 1.</p>',
-            64, 545, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            + m(r"P(X > 65) = 1 - P(X \le 65) = 1 - 0.6554 = 0.3446") + '. '
+            'About 34%. This is a probability. 69.4 and 65.6, later, are scores.</p>',
+            64, 515, 1150,
         ),
-        b.desmos_line("1 - normaldist(63,5).cdf(65)", 620),
-    ], "Say: translate before you admire the decimal. 0.3446 is about 34.5%, about one student in three. A score over 65 is ordinary, because 65 is less than one step above the average of 63. "
-       "(65−63)/5 = 0.4. The book’s table area to the left of that is 0.6554, and 1 − 0.6554 = 0.3446. "
-       "Type the Desmos line yourself. Tell them cdf means the left share, so the 1 minus is the question they were asked. "
-       "They do not need the z-score to get the area. The z-score only explains why the chance is not small. "
-       "Watch for: students who report 0.6554. That is the share who scored 65 or under."))
+        desmos_how("normaldist(63, 5)", "then Right from 65", 580),
+    ], "The shade is the right tail, the probability of a score over 65. 65 is only 0.4 standard deviations above 63, so the area is not small. "
+       "The area to the left is 0.6554. Subtract from 1: 0.3446, about 34 out of 100. In Desmos, type only normaldist(63, 5), then choose Right from 65. Choosing Left and forgetting to subtract gives 0.6554, the wrong side. "
+       "69.4 and 65.6 are not this answer. Those are percentiles, scores, on the later slide."))
+    out.append(b.section([
+        b.backdrop(),
+        b.text_block(
+            b.kicker("Two different questions")
+            + b.title("Start with a score, or start with an area", 36),
+            64, 20, 1150,
+        ),
+        bell_at(64, 130, 560, 360, "CDF · YOU KNOW THE SCORE", shade=(None, 0.5),
+                shade_label="the area", marks=[(0.5, "score")]),
+        bell_at(656, 130, 560, 360, "INVERSECDF · YOU KNOW THE AREA", shade=(None, 1.28),
+                shade_label="90%", marks=[(1.28, "score")]),
+        b.text_block(
+            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">cdf: given a score, find the area to its left. '
+            'inversecdf: given an area, such as 90%, find the score.</p>',
+            64, 530, 1150,
+        ),
+    ], "Left graph: you are given the score. The shade is the unknown area. That is cdf. In Desmos, type normaldist with the mean and standard deviation, then choose the region. "
+       "Right graph: you are given 90% and the score is the unknown edge. That is inversecdf. These two pictures use no book data. They are only the two questions. "
+       "Misconception: using inversecdf when the problem already gives the score, or using the area box when the problem asks for a cutoff."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.8 · the same exams")
-            + b.title("A sure thing, and two cutoffs", 40),
-            64, 28, 1150,
+            + b.title("Finding a score from a percentile", 36),
+            64, 20, 1150,
         ),
-        bell_at(64, 145, 560, 380, "90% AT OR BELOW 69.4", mean=63, sd=5,
+        bell_at(64, 125, 560, 360, "90% AT OR BELOW 69.4", mean=63, sd=5,
                 shade=(None, 69.4), shade_label="90%", marks=[(63, "63"), (69.4, "69.4")]),
-        bell_at(656, 145, 560, 380, "70% AT OR BELOW 65.6", mean=63, sd=5,
+        bell_at(656, 125, 560, 360, "70% AT OR BELOW 65.6", mean=63, sd=5,
                 shade=(None, 65.6), shade_label="70%", marks=[(63, "63"), (65.6, "65.6")]),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            'A percentile is a cutoff, not a chance. 85 is about four steps above 63, so the share under 85 is about 100%. The book rounds it to 1.</p>',
-            64, 545, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            'The 90th percentile means 90% of the scores are at or below 69.4. The 70th percentile is 65.6. '
+            'These are scores, not the probability of a score over 65.</p>',
+            64, 505, 1150,
         ),
-        b.desmos_line("normaldist(63,5).inversecdf(0.90)", 610),
-    ], "Say: under 85 is not a serious question. Four steps above the average catches essentially everyone, so the chance is about 100%, and the book rounds the area to 1. "
-       "A percentile is not a chance. It is a cutoff. The 90th percentile, 69.4, means 90 out of 100 scores are that or lower. Same word as Unit 2. "
-       "Desmos: normaldist(63,5).inversecdf(0.90). You hand it the share 0.90 and it hands back the score. The book’s TI command is invNorm(0.90, 63, 5). Do not teach the buttons. "
-       "The 70th percentile is 65.6. One sentence in the book says 65.5. The calculator line says 65.6. Use 65.6. "
-       "Watch for: students who think 69.4 is a probability. Ask: is 69.4 between 0 and 1? No. It is a score."))
+        desmos_how("normaldist(63, 5).inversecdf(0.90)", "gives the score 69.4", 575),
+    ], "Point at the shade, then at the edge. The shade is the 90% you were given. The edge, 69.4, is the score you were asked for. That is the opposite of the previous probability. "
+       "inversecdf(0.90) returns 69.4. The 70th percentile is inversecdf(0.70) = 65.6. One sentence in the book says 65.5. Use 65.6. "
+       "If someone asks about a score over 85: that is a probability, about 1, because 85 is about four standard deviations above 63. It is not a percentile. "
+       "Misconception: calling 69.4 a probability. Ask whether 69.4 is between 0 and 1. It is a score."))
     out.append(b.section([
         b.activity_head(
             "Your turn · Try It 6.8 · 3 minutes",
-            "The chance of a score under 65",
-            "The average golf score is 68. One step is 3. What share of golfers score under 65?",
+            "The probability of a score under 65",
+            "Mean 68, standard deviation 3. OpenStax prints this question.",
         ),
-        bell_at(64, 190, 700, 390, "SHADE THE LEFT OF 65", mean=68, sd=3,
-                shade=(None, 65), shade_label="find this share", marks=[(65, "65"), (68, "68")]),
+        bell_at(64, 185, 700, 370, "SHADE THE LEFT OF 65", mean=68, sd=3,
+                shade=(None, 65), shade_label="find this area", marks=[(65, "65"), (68, "68")]),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.4;">65 is one step below 68. Write the share to the left of 65 as a decimal.</p>',
-            790, 230, 420,
+            '<p style="margin:0;color:#1c242c;font-size:22px;line-height:1.35;">65 is one standard deviation below 68. The shade is the probability to the left of 65.</p>',
+            790, 220, 420,
         ),
-        b.desmos_line("normaldist(68,3).cdf(65)", 600),
-    ], "Try It 6.8. The book does not print this answer. Give them the Desmos line and three minutes. "
-       "A strong student sees z = (65−68)/3 = −1 before they type anything: one step below the mean, so the left tail outside the middle 68% is about 16%. "
-       "The precise share is 0.1587. If they report 0.84, they found the share who scored over 65."))
+        desmos_how("normaldist(68, 3)", "then Left, to 65", 590),
+    ], "Try It 6.8. OpenStax prints the question. It does not print this decimal. The worked answer is the next slide. Three minutes. "
+       "They type normaldist(68, 3), then Left to 65. A strong student sees z = (65−68)/3 = −1 first: one standard deviation below the mean, so the left tail is about 16%. "
+       "The precise probability is 0.1587. If they report about 0.84, they found the area above 65."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Try It 6.8")
             + b.title("About 16%", 56),
-            64, 40, 1150,
+            64, 36, 700,
         ),
-        bell_at(64, 155, 760, 420, "ONE STEP BELOW THE MEAN", mean=68, sd=3,
+        bell_at(64, 155, 740, 400, "ONE STANDARD DEVIATION BELOW", mean=68, sd=3,
                 shade=(None, 65), shade_label="about 16%", marks=[(65, "65"), (68, "68")]),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:26px;">' + M(r"z = \frac{65-68}{3} = -1") + '</p>'
-            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;line-height:1.4;">The precise share is 0.1587, which is 15.87%.</p>'
-            '<p style="margin:10px 0 0;color:#5d6670;font-size:20px;line-height:1.4;">The middle 68% leaves about 16% on each side. The book does not print this Try It.</p>',
-            850, 200, 370,
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">The worked answer is 0.1587, which is 15.87%.</p>'
+            '<p style="margin:10px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">The book prints the question. The middle 68% leaves about 16% on each side.</p>',
+            830, 190, 390,
         ),
-    ], "Say: one step below the average is the edge of the middle 68, so each tail is about half of the remaining 32, about 16%. Desmos makes it precise: 0.1587. "
-       "Then ask what 0.1587 is as a percent. 15.87%. That translation is the skill."))
+    ], "Point at 65, one standard deviation below 68. The shade is the left tail. The middle 68% leaves about 32% split into two tails, so each is about 16%. Desmos makes it 0.1587, or 15.87%. "
+       "Tell them the book prints the question and this slide is the worked answer. Ask them to move the decimal two places."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.9 · hours a home computer is used")
-            + b.title("Average 2 hours, step half an hour", 36),
-            64, 28, 1150,
+            + b.title("Mean 2 hours, standard deviation 0.5", 34),
+            64, 18, 1150,
         ),
-        bell_at(64, 145, 1152, 390, "THE SHARE BETWEEN THE TWO HOURS", mean=2, sd=0.5,
-                shade=(1.8, 2.75), shade_label="about 59%",
+        bell_at(64, 120, 560, 340, "PROBABILITY BETWEEN 1.8 AND 2.75", mean=2, sd=0.5,
+                shade=(1.8, 2.75), shade_label="0.5886",
                 marks=[(1.8, "1.8"), (2, "2"), (2.75, "2.75")]),
+        bell_at(656, 120, 560, 340, "A DIFFERENT TASK: THE 1ST QUARTILE", mean=2, sd=0.5,
+                shade=(None, 1.66), shade_label="25%",
+                marks=[(1.66, "1.66"), (2, "2")]),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            'The book’s area is 0.5886. The bottom quartile, the Unit 2 cutoff, is 1.66 hours. A quarter of households are under it.</p>',
-            64, 550, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            'First the probability: the book’s area between 1.8 and 2.75 is 0.5886, about 59%. '
+            'Then a cutoff: the first quartile is 1.66 hours, with 25% of households at or below it.</p>',
+            64, 480, 1150,
         ),
-        b.desmos_line("normaldist(2,0.5).cdf(1.8,2.75)", 615),
-    ], "Say: 0.5886 is about 59 out of 100 households. The two numbers in cdf are the ends of the interval, not a mean and a step. Mean 2 and step 0.5 are inside normaldist. "
-       "1.66 hours is a cutoff, the 25th percentile. A quarter of the households are under it. If you show the command: normaldist(2,0.5).inversecdf(0.25). "
-       "Try It 6.9 is golf again, the share between 66 and 70. That area is 0.4950, about half. Skip it if the first golf turn was enough. "
-       "Watch for: typing cdf(2, 0.5) as if those were the hours. Those are the center and the step."))
+        desmos_how("normaldist(2, 0.5)", "then Inner, 1.8 to 2.75", 560),
+        desmos_how("normaldist(2, 0.5).inversecdf(0.25)", "gives the quartile 1.66", 600),
+    ], "Do the interval first. The shade between 1.8 and 2.75 is a probability, 0.5886, about 59 out of 100 households. Type normaldist(2, 0.5), then Inner from 1.8 to 2.75. The two hours go in the area box. The mean and standard deviation go inside normaldist. "
+       "Only after that, the quartile. inversecdf(0.25) is a cutoff, 1.66 hours. A quarter of the households are at or below it. "
+       "Try It 6.9, only if asked: golf again, between 66 and 70, area 0.4950. "
+       "Misconception: typing the hours 2 and 0.5 as the interval."))
     out.append(b.section([
         b.backdrop(),
         b.text_block(
             b.kicker("Example 6.11 · smartphone users, ages 13 to 55+")
-            + b.title("Average age 36.9, step 13.9", 40),
-            64, 24, 1150,
+            + b.title("Mean age 36.9, standard deviation 13.9", 34),
+            64, 18, 1150,
         ),
-        bell_at(64, 140, 1152, 360, "THE MIDDLE HALF OF THE AGES", mean=36.9, sd=13.9,
-                shade=(27.5246, 46.2754), shade_label="half",
-                marks=[(27.5246, "Q1"), (36.9, "36.9"), (46.2754, "Q3")]),
+        bell_at(64, 120, 1152, 350, "Q1 AND Q3, THE MIDDLE HALF", mean=36.9, sd=13.9,
+                shade=(27.52, 46.28), shade_label="half",
+                marks=[(27.52, "Q1 27.52"), (36.9, "36.9"), (46.28, "Q3 46.28")]),
         b.text_block(
-            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.4;">'
-            'Q1 is 27.5246 years. Q3 is 46.2754. The IQR is 18.8 years. Forty percent are 40.4 or older, so hand Desmos the left share 0.60.</p>',
-            64, 520, 1150,
+            '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
+            'The shaded half runs from Q1 = 27.52 to Q3 = 46.28. The IQR is 18.8 years. '
+            'Forty percent are 40.4 or older, so 60% are to the left. Use inversecdf(0.60).</p>',
+            64, 490, 1150,
         ),
-        b.desmos_line("normaldist(36.9,13.9).inversecdf(0.60)", 590),
-    ], "This slide can wait if the hour is gone. Say: these are the quartiles from Unit 2, found on a bell instead of a list. "
-       "The book prints Q1 = 27.5246 and Q3 = 46.2754. Subtract: 46.2754 − 27.5246 = 18.75, and the book rounds the IQR to 18.8 years. "
-       "Forty percent at least 40.4 means the right share is 0.40, so you hand Desmos the left share 0.60. inversecdf(0.60) = 40.4215, and the book rounds to 40.4. "
-       "The trap is handing Desmos 0.40 and getting the age that has 40% younger, which is the wrong side. "
-       "Example 6.10, only if asked: between 23 and 64.7 is 0.8186, at most 50.8 is 0.8413, the 80th percentile is 48.6 years. "
-       "Example 6.12, mandarin oranges, center 5.85 cm and step 0.24: the chance a diameter is over 6 cm is 0.2660, the middle 20% runs from 5.79 to 5.91 cm, and the 90th percentile is 6.16 cm."))
+        desmos_how("normaldist(36.9, 13.9).inversecdf(0.60)", "gives about 40.4", 560),
+    ], "This slide can wait if the hour is gone. The shade is the middle half, from the first quartile to the third. The book prints Q1 = 27.5246 and Q3 = 46.2754. The graph rounds those to 27.52 and 46.28. The difference is 18.75, and the book rounds the IQR to 18.8 years. "
+       "The 40.4 question is separate. Forty percent are at least 40.4, so the area to the left of that age is 60%. inversecdf(0.60) = 40.4215, and the book rounds to 40.4. "
+       "The trap is typing 0.40. That returns the age with 40% younger, the wrong side. "
+       "Example 6.10, only if asked: between 23 and 64.7 is 0.8186, at most 50.8 is 0.8413, the 80th percentile is 48.6. "
+       "Example 6.12, only if asked: mandarin oranges, mean 5.85 cm, standard deviation 0.24. Over 6 cm is 0.2660. The 90th percentile is 6.16 cm."))
     out.append(b.quick("Area or percentile", [
         ("Left area 0.012. The right area is",
          [("A", "0.012"), ("B", "0.988"), ("C", "1.012")], "B",
          "1 − 0.012."),
-        ("The chance a final is over 65",
-         [("A", "About 34%"), ("B", "About 66%"), ("C", "The score 69.4")], "A",
-         "0.3446 is about 34%. 66% scored under 65."),
+        ("The probability a final is over 65 is",
+         [("A", "About 34%"), ("B", "About 66%"), ("C", "About 90%")], "A",
+         "0.3446 is about 34%. 90% is a percentile."),
         ("The 90th percentile of those scores is",
          [("A", "63"), ("B", "65"), ("C", "69.4")], "C",
-         "90% score 69.4 or below."),
-    ], "Answers: 1B, 2A, 3C. For 2, say the sentence: about 34 out of 100 score over 65. The 66% is the other side. 69.4 is a cutoff, not a chance. "
+         "90% of scores are 69.4 or below."),
+    ], "Answers: 1B, 2A, 3C. For question 2, every choice is a probability. About 34% score over 65. About 66% is the other side. About 90% belongs to the percentile question, whose answer is the score 69.4. "
        "Homework is items 67 through 80."))
     out.append(b.closing(
-        "Before the exam",
-        "You can find an area, and a percentile",
+        "Before you leave",
+        "Area, cutoff, and spread",
         [
-            "A probability is a share of the bell. Move the decimal two places and it is a percent.",
-            "cdf asks Desmos for that share. inversecdf turns a share into the cutoff.",
-            "Exam 1 is Thursday and Friday. It does not include this unit.",
+            "A probability is an area. Use cdf.",
+            "A percentile is a cutoff. Use inversecdf.",
+            "The standard deviation measures the spread.",
         ],
-        ("7.1 Sample means", "After the exam. The mean of a sample, not one person."),
+        ("7.1 Sample means", "The mean of a sample, not one person."),
         "Homework: OpenStax 6.2, items 67 through 80. Unit 4 is due November 16.",
-        "Items 67 to 80 are the area homework. Items 81 to 88 use the raw waiting-time and stadium data in sections 6.3 and 6.4, which this unit skips. "
-        "Exam 1 is Thursday and Friday and still covers Units 1, 2, and 3 only. Section 7.1 is not on Exam 1. "
+        "cdf: type normaldist, then choose Left, Right, or Inner. inversecdf returns the score. "
+        "Items 81 to 88 are sections 6.3 and 6.4, which this unit skips. "
         "Unit 4 homework, the unit test, and the discussion are due Monday, November 16.",
     ))
     return out
