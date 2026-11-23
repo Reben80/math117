@@ -10,7 +10,7 @@ import build_2_2_to_2_7 as b
 import build_6 as s
 
 # Saved in the instructor's Desmos account. Built from desmos_graphs.js (M117.build("7.3")).
-b.GRAPHS["7.3"] = "https://www.desmos.com/calculator/PLACEHOLDER_7_3"
+b.GRAPHS["7.3"] = "https://www.desmos.com/calculator/b2mauih92w"
 
 
 def calc_line(command, how, top, graph="7.3"):
