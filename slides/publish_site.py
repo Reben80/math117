@@ -103,6 +103,9 @@ DESMOS = [
     ("4", "7.1", "7.1-sample-means", "Notebook",
      "The same examples as a short lesson: sampling distribution, standard error, and sample means.",
      "https://www.desmos.com/notebook/alc4ousjbu"),
+    ("4", "7.3", "7.3-sample-proportions", "Calculator",
+     "Class graph. p-hat SE, normaldist for proportions, and sample size for p.",
+     "https://www.desmos.com/calculator/PLACEHOLDER_7_3"),
     ("5", "8.1", "8.1-known-sigma", "Calculator",
      "Class graph. Exams, the error bound, and the pizza deliveries. Turn one folder on at a time.",
      "https://www.desmos.com/calculator/jrublef2f5"),
@@ -163,6 +166,10 @@ def landing():
                 "https://www.desmos.com/calculator/r2hamz4ymv",
                 "https://www.desmos.com/notebook/alc4ousjbu",
             ),
+            "7.3-sample-proportions": (
+                "https://www.desmos.com/calculator/PLACEHOLDER_7_3",
+                None,
+            ),
             "8.1-known-sigma": (
                 "https://www.desmos.com/calculator/jrublef2f5",
                 "https://www.desmos.com/notebook/k5kigk35he",
@@ -183,15 +190,16 @@ def landing():
         if folder in tool_links:
             calculator, notebook = tool_links[folder]
             links = []
-            if calculator:
+            if calculator and "PLACEHOLDER" not in calculator:
                 links.append(
                     f'<a href="{calculator}" target="_blank" rel="noopener">Desmos calculator</a>'
                 )
-            if notebook:
+            if notebook and "PLACEHOLDER" not in notebook:
                 links.append(
                     f'<a href="{notebook}" target="_blank" rel="noopener">Desmos notebook</a>'
                 )
-            tools = '<p class="tools">' + "".join(links) + "</p>"
+            if links:
+                tools = '<p class="tools">' + "".join(links) + "</p>"
         cards_by_unit.setdefault(unit, []).append(
             f'<div class="card">'
             f'<a class="cardlink" href="{folder}/">'
@@ -431,6 +439,8 @@ def desmos_page():
         cells = []
         for row_unit, section, folder, name, blurb, url in DESMOS:
             if row_unit != unit:
+                continue
+            if "PLACEHOLDER" in url:
                 continue
             cells.append(
                 f'<div class="cell">'

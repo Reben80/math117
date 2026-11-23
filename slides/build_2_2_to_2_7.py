@@ -12,7 +12,16 @@ from pathlib import Path
 import qrcode
 
 ROOT = Path(__file__).resolve().parent
+# Prefer the Mac mini Slides.com export; fall back to the published docs/lib for cloud builds.
 SAMPLE = Path("/Users/mac-mini/Downloads/slides_deck-8187f8-2")
+if not (SAMPLE / "lib").is_dir():
+    _docs_lib = ROOT.parent / "docs" / "lib"
+    if _docs_lib.is_dir():
+        SAMPLE = _docs_lib.parent  # docs/ — write_deck copies SAMPLE/lib
+    else:
+        _cloud = Path("/tmp/math117-sample")
+        if (_cloud / "lib").is_dir():
+            SAMPLE = _cloud
 
 # Saved in the instructor's Desmos account. Built from desmos_graphs.js.
 GRAPHS = {
@@ -2359,6 +2368,19 @@ SHELL = """<!DOCTYPE html>
 <meta charset="utf-8">
 <title>{title}</title>
 <link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+<link rel="preload" href="lib/fonts/katex/KaTeX_Main-Regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="lib/fonts/katex/KaTeX_Main-Italic.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="lib/fonts/katex/KaTeX_Math-Italic.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="lib/fonts/katex/KaTeX_Size1-Regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="lib/fonts/katex/KaTeX_Size2-Regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="lib/fonts/katex/KaTeX_Size3-Regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="lib/fonts/katex/KaTeX_Size4-Regular.woff" as="font" type="font/woff" crossorigin>
+<style>
+/* Hide KaTeX MathML; some browsers paint it and the HTML layer looks like broken superscripts/radicals. */
+.katex-mathml{{display:none!important}}
+.katex{{line-height:1.2}}
+.katex .hide-tail{{overflow:hidden}}
+</style>
 </head>
 <body class="reveal-viewport theme-font-montserrat theme-color-white-blue">
 <div class="reveal"><div class="slides">

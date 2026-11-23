@@ -2,5 +2,9 @@
 *.pdf
 *.zip
 .pylibs/
+__pycache__/
+slides/__pycache__/
 slides/*/lib/
+slides/node_modules/
+slides/package-lock.json
 references/

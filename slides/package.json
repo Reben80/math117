@@ -1,0 +1,16 @@
+{
+  "name": "math117-slides",
+  "version": "1.0.0",
+  "description": "Build-time KaTeX for MATH 117 Reveal decks",
+  "main": "desmos_graphs.js",
+  "scripts": {
+    "katex": "node katex_render.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "katex": "^0.16.11"
+  },
+  "private": true
+}

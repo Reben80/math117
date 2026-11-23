@@ -5,21 +5,49 @@ calendar. Every number is from the book. Section 7.1 is the next lecture.
 """
 
 import math
+import subprocess
+from pathlib import Path
 
 import build_2_2_to_2_7 as b
 
 # Saved in the instructor's Desmos account. Built from desmos_graphs.js.
 b.GRAPHS["6.2"] = "https://www.desmos.com/calculator/xa9guvmgpd"
 
+_KATEX_JS = Path(__file__).resolve().parent / "katex_render.cjs"
+_KATEX_CACHE = {}
+
+
+def _katex(latex, display=False):
+    """Pre-render with KaTeX (HTML only). Avoids runtime MathML/font races in the player."""
+    key = (latex, display)
+    hit = _KATEX_CACHE.get(key)
+    if hit is not None:
+        return hit
+    if not _KATEX_JS.is_file():
+        raise SystemExit(f"missing {_KATEX_JS}")
+    result = subprocess.run(
+        ["node", str(_KATEX_JS), "1" if display else "0"],
+        input=latex,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        raise SystemExit(
+            f"KaTeX failed for {latex!r}: {result.stderr.strip() or result.stdout.strip()}"
+        )
+    _KATEX_CACHE[key] = result.stdout
+    return result.stdout
+
 
 def m(latex):
-    """A symbol inside a sentence. Display math would split the line."""
-    return "\\(" + latex + "\\)"
+    """A symbol inside a sentence. Pre-rendered KaTeX HTML."""
+    return _katex(latex, display=False)
 
 
 def M(latex):
-    """An equation on its own line. The player renders $$ as display math."""
-    return "$$" + latex + "$$"
+    """An equation on its own line. Pre-rendered KaTeX display HTML."""
+    return _katex(latex, display=True)
 
 
 MATH_STYLE = (
