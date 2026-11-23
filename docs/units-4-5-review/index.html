@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MATH 117 · Units 4–5 Review</title>
+<link rel="stylesheet" href="../lib/fonts/montserrat/montserrat.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body, {
+    delimiters: [
+      {left: '$$', right: '$$', display: true},
+      {left: '\\[', right: '\\]', display: true},
+      {left: '$', right: '$', display: false},
+      {left: '\\(', right: '\\)', display: false}
+    ],
+    throwOnError: false
+  });"></script>
+<style>
+  :root {
+    --bg: #eef6f4;
+    --ink: #1c242c;
+    --muted: #5d6670;
+    --teal: #2a6f7a;
+    --teal-soft: #e7f3f4;
+    --line: #d5e0de;
+    --card: #fff;
+    --optional: #8a6d3b;
+    --omit: #8a4f4f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(1200px 500px at 10% -10%, #d7ebe7 0%, transparent 55%),
+      radial-gradient(900px 400px at 100% 0%, #e3eef0 0%, transparent 50%),
+      var(--bg);
+    color: var(--ink);
+    font-family: Montserrat, sans-serif;
+    line-height: 1.5;
+  }
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 22px 96px;
+  }
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .badge {
+    display: inline-block;
+    background: var(--teal);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding: 6px 12px;
+  }
+  .back {
+    color: var(--teal);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+  }
+  h1 {
+    margin: 18px 0 0;
+    font-size: clamp(34px, 6vw, 48px);
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+  }
+  .lead {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 17px;
+    max-width: 38rem;
+  }
+  .meta {
+    margin: 18px 0 0;
+    padding: 16px 18px;
+    background: var(--teal-soft);
+    border-radius: 14px;
+    color: var(--ink);
+    font-size: 15px;
+  }
+  .meta code {
+    font-size: 0.92em;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 22px 0 8px;
+  }
+  .toolbar button {
+    appearance: none;
+    border: 1px solid var(--line);
+    background: var(--card);
+    color: var(--teal);
+    font: inherit;
+    font-weight: 700;
+    font-size: 14px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .toolbar button:hover { border-color: var(--teal); }
+  .toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 18px 0 28px;
+  }
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    height: 2.4rem;
+    padding: 0 8px;
+    border-radius: 10px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .toc a.opt { color: var(--optional); }
+  .toc a.omit { color: var(--omit); opacity: 0.7; }
+  .toc a:hover { border-color: var(--teal); }
+  .q {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 22px 16px;
+    margin: 14px 0;
+  }
+  .q.optional { border-color: #e2d3b0; }
+  .q.omitted { opacity: 0.78; }
+  .q header {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+    margin-bottom: 10px;
+  }
+  .qnum {
+    margin: 0;
+    color: var(--teal);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .sect {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .tag.optional { background: #f4ead2; color: var(--optional); }
+  .tag.omit { background: #f3e2e2; color: var(--omit); }
+  .prompt {
+    font-size: 16px;
+  }
+  .prompt ol { padding-left: 1.2rem; }
+  .hint {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .hint code {
+    background: #f3f7f6;
+    padding: 1px 6px;
+    border-radius: 6px;
+  }
+  details.ans {
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+  }
+  details.ans summary {
+    list-style: none;
+    cursor: pointer;
+    color: var(--teal);
+    font-weight: 700;
+    font-size: 15px;
+    user-select: none;
+  }
+  details.ans summary::-webkit-details-marker { display: none; }
+  details.ans summary::before {
+    content: "▸ ";
+  }
+  details.ans[open] summary::before {
+    content: "▾ ";
+  }
+  .ans-body {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: var(--teal-soft);
+    border-radius: 12px;
+    animation: fade .18s ease;
+  }
+  .ans-body .sect-line {
+    margin: 12px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .opt { color: var(--optional); }
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: none; }
+  }
+  .katex-display { margin: 0.8em 0; overflow-x: auto; overflow-y: hidden; }
+  footer {
+    margin-top: 48px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: 14px;
+  }
+  footer a { color: var(--teal); }
+</style>
+</head>
+<body>
+<main>
+  <div class="top">
+    <span class="badge">MATH 117</span>
+    <a class="back" href="../">← Lecture decks</a>
+  </div>
+  <h1>Units 4–5 review</h1>
+  <p class="lead">
+    Extra-credit WAMAP review for Exam&nbsp;2. Try each question first, then open
+    <strong>Show answer</strong> to check your work.
+  </p>
+  <div class="meta">
+    Covers <strong>6.1, 6.2, 7.1, 7.3, 8.1, 8.2, 8.3</strong>. Use Desmos
+    (<code>normaldist</code>, <code>tdist</code>, <code>.inversecdf</code>) — not a TI menu.
+    Cutoffs: \(90\%\ z=1.645\), \(95\%\ z=1.96\), \(99\%\ z=2.576\).
+    <strong>Q19</strong> (TI) is omitted. <strong>Q8f, Q14, Q27</strong> are optional.
+  </div>
+  <div class="toolbar">
+    <button type="button" id="show-all">Show all answers</button>
+    <button type="button" id="hide-all">Hide all answers</button>
+  </div>
+  <nav class="toc" aria-label="Jump to question">
+    <a class="" href="#q1">1</a><a class="" href="#q2">2</a><a class="" href="#q3">3</a><a class="" href="#q4">4</a><a class="" href="#q5">5</a><a class="" href="#q6">6</a><a class="" href="#q7">7</a><a class="" href="#q8">8</a><a class="" href="#q9">9</a><a class="" href="#q10">10</a><a class="" href="#q11">11</a><a class="" href="#q12">12</a><a class="" href="#q13">13</a><a class="opt" href="#q14">14</a><a class="" href="#q15">15</a><a class="" href="#q16">16</a><a class="" href="#q17">17</a><a class="" href="#q18">18</a><a class="omit" href="#q19">19</a><a class="" href="#q20">20</a><a class="" href="#q21">21</a><a class="" href="#q22">22</a><a class="" href="#q23">23</a><a class="" href="#q24">24</a><a class="" href="#q25">25</a><a class="" href="#q26">26</a><a class="opt" href="#q27">27</a><a class="" href="#q28">28</a><a class="" href="#q29">29</a><a class="" href="#q30">30</a><a class="" href="#q31">31</a>
+  </nav>
+  
+<article class="q" id="q1">
+  <header>
+    <p class="qnum">Question 1 </p>
+    <p class="sect">Section 6.1</p>
+  </header>
+  <div class="prompt">True/False: since the area within 2 standard deviations of the mean is \(0.95\),
+the area more than 2 SD <em>above</em> the mean is \(0.05\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>False.</strong></p>
+<p><em>Why.</em> About \(95\%\) lies between \(\mu-2\sigma\) and \(\mu+2\sigma\).
+The remaining \(5\%\) splits into two tails, so the upper tail alone is about \(0.025\), not \(0.05\).</p>
+      <p class="sect-line"><em>Section.</em> 6.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q2">
+  <header>
+    <p class="qnum">Question 2 </p>
+    <p class="sect">Section 6.1 / 6.2</p>
+  </header>
+  <div class="prompt">Trial length \(X\) is normal with mean \(22\) days and SD \(5\) days.
+Round probabilities to 4 decimals; the percentile to a whole number.
+<ol type="a">
+<li>What is the distribution of \(X\)?</li>
+<li>\(P(X\ge 21)\)</li>
+<li>\(P(23\le X\le 27)\)</li>
+<li>\(67\%\) of trials finish within how many days?</li>
+</ol>
+<p class="hint">Desmos: <code>normaldist(22,5)</code> with Left / Right / Inner, or <code>.inversecdf</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p>Useful formulas:</p>
+\[
+z=\frac{x-\mu}{\sigma},\quad
+P(a&lt;X&lt;b)=\Phi\!\left(\frac{b-\mu}{\sigma}\right)-\Phi\!\left(\frac{a-\mu}{\sigma}\right),\quad
+x=\mu+z\sigma.
+\]
+<ol type="a">
+<li><strong>\(X\sim N(22,\ 5)\)</strong></li>
+<li>\(z=-0.2\), so \(P(X\ge 21)=\Phi(0.2)=\mathbf{0.5793}\)</li>
+<li>\(z_{23}=0.2\), \(z_{27}=1\), so \(P=\Phi(1)-\Phi(0.2)=\mathbf{0.2621}\)</li>
+<li>\(z_{0.67}\approx 0.4399\), \(x\approx 24.20\to\mathbf{24}\) days</li>
+</ol>
+      <p class="sect-line"><em>Section.</em> 6.1 / 6.2</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q3">
+  <header>
+    <p class="qnum">Question 3 </p>
+    <p class="sect">Section 7.1</p>
+  </header>
+  <div class="prompt">True/False: if the population has mean \(12\) and nonzero SD, then \(P(X&gt;14)\) for one value
+is always <em>less</em> than \(P(\bar X&gt;14)\) for \(n=44\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>False.</strong></p>
+<p>Sample means use \(\mathrm{SE}=\sigma/\sqrt{n}\), which is smaller than \(\sigma\),
+so \(\bar X\) is tighter around \(12\) and \(P(\bar X&gt;14)&lt;P(X&gt;14)\).</p>
+      <p class="sect-line"><em>Section.</em> 7.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q4">
+  <header>
+    <p class="qnum">Question 4 </p>
+    <p class="sect">Section 7.1</p>
+  </header>
+  <div class="prompt">True/False: the population mean equals the mean of all possible sample means of size \(43\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>True.</strong></p>
+\[\mu_{\bar x}=\mu.\]
+      <p class="sect-line"><em>Section.</em> 7.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q5">
+  <header>
+    <p class="qnum">Question 5 </p>
+    <p class="sect">Section 7.1</p>
+  </header>
+  <div class="prompt">True/False: for any sample of size \(120\), \(\mu\), \(\mu_{\bar x}\), and this sample’s \(\bar x\) are always equal.</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>False.</strong></p>
+<p>Always \(\mu_{\bar x}=\mu\). One realized \(\bar x\) need not equal \(\mu\).</p>
+      <p class="sect-line"><em>Section.</em> 7.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q6">
+  <header>
+    <p class="qnum">Question 6 </p>
+    <p class="sect">Section 7.1</p>
+  </header>
+  <div class="prompt">True/False: the symbol \(\mu_{\bar x}\) is the population mean of all possible sample means of size \(n\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>True.</strong></p>
+      <p class="sect-line"><em>Section.</em> 7.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q7">
+  <header>
+    <p class="qnum">Question 7 </p>
+    <p class="sect">Section 7.1</p>
+  </header>
+  <div class="prompt">True/False: the symbol \(\mu_{\bar x}\) is the mean of a sample of size \(n\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>False.</strong></p>
+<p>The sample mean is \(\bar x\). \(\mu_{\bar x}\) is the mean of the sampling distribution.</p>
+      <p class="sect-line"><em>Section.</em> 7.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q8">
+  <header>
+    <p class="qnum">Question 8 </p>
+    <p class="sect">Section 7.1 (f optional)</p>
+  </header>
+  <div class="prompt">Pollutants: \(\mu=8.9\) ppm, \(\sigma=1.4\) ppm, \(n=18\). Round to 4 decimals.
+<ol type="a">
+<li>Distribution of \(X\) (one city)?</li>
+<li>Distribution of \(\bar X\)?</li>
+<li>\(P(X&gt;8.2)\)</li>
+<li>\(P(\bar X&gt;8.2)\)</li>
+<li>For (d), is the normal-population assumption needed?</li>
+<li class="opt">Optional: \(Q_1\), \(Q_3\), and IQR for \(\bar X\)</li>
+</ol>
+<p class="hint">Desmos: <code>normaldist(8.9,1.4)</code> and <code>normaldist(8.9,1.4/sqrt(18))</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[\mathrm{SE}=1.4/\sqrt{18}\approx 0.3300.\]
+<ol type="a">
+<li><strong>\(X\sim N(8.9,\ 1.4)\)</strong></li>
+<li><strong>\(\bar X\sim N(8.9,\ 0.3300)\)</strong></li>
+<li>\(z=-0.5\), \(P=\mathbf{0.6915}\)</li>
+<li>\(z\approx -2.1212\), \(P=\mathbf{0.9831}\)</li>
+<li><strong>Yes</strong> — \(n=18&lt;30\)</li>
+<li class="opt"><em>Optional.</em> \(Q_1=\mathbf{8.6774}\), \(Q_3=\mathbf{9.1226}\), \(\mathrm{IQR}=\mathbf{0.4452}\)</li>
+</ol>
+      <p class="sect-line"><em>Section.</em> 7.1 (f optional)</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q9">
+  <header>
+    <p class="qnum">Question 9 </p>
+    <p class="sect">Section 7.3</p>
+  </header>
+  <div class="prompt">True proportion \(p=0.49\), \(n=215\). Find the mean and SE (3 decimals) of the sampling distribution of \(\hat p\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+\mu_{\hat p}=p=\mathbf{0.49},\qquad
+\mathrm{SE}=\sqrt{\frac{0.49\cdot 0.51}{215}}\approx\mathbf{0.034}.
+\]
+      <p class="sect-line"><em>Section.</em> 7.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q10">
+  <header>
+    <p class="qnum">Question 10 </p>
+    <p class="sect">Section 7.3</p>
+  </header>
+  <div class="prompt">\(p=0.25\), \(n=71\). Round to 4 decimals.
+<ol type="a">
+<li>Distribution of \(\hat p\)?</li>
+<li>\(P(\hat p&lt;0.26)\)</li>
+<li>\(P(0.18&lt;\hat p&lt;0.24)\)</li>
+</ol>
+<p class="hint">Desmos: <code>normaldist(0.25, sqrt(0.25*0.75/71))</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[\mathrm{SE}\approx 0.0514.\]
+<ol type="a">
+<li><strong>\(\hat p\sim N(0.25,\ 0.0514)\)</strong></li>
+<li>\(z\approx 0.1946\), \(P=\mathbf{0.5771}\)</li>
+<li>\(P=\mathbf{0.3363}\)</li>
+</ol>
+      <p class="sect-line"><em>Section.</em> 7.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q11">
+  <header>
+    <p class="qnum">Question 11 </p>
+    <p class="sect">Section 7.3</p>
+  </header>
+  <div class="prompt">BBB settles \(p=0.75\), \(n=216\). Find \(P(\hat p\ge 0.78)\) (“at least 3 percent more”).
+Round \(z\) to ≥4 decimals; answer to 4 decimals.
+<p class="hint">Desmos: <code>normaldist(0.75, sqrt(0.75*0.25/216))</code> Right of \(0.78\).</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+z=\frac{0.78-0.75}{\sqrt{0.75\cdot 0.25/216}}\approx 1.0182,\qquad
+P=1-\Phi(1.0182)=\mathbf{0.1543}.
+\]
+      <p class="sect-line"><em>Section.</em> 7.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q12">
+  <header>
+    <p class="qnum">Question 12 </p>
+    <p class="sect">Section 7.3</p>
+  </header>
+  <div class="prompt">\(p=0.54\), \(n=145\). Find \(P(\hat p&gt;0.36)\). Round \(z\) carefully; answer to 4 decimals.</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+z\approx -4.3489,\qquad P=\mathbf{1.0000}.
+\]
+      <p class="sect-line"><em>Section.</em> 7.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q13">
+  <header>
+    <p class="qnum">Question 13 </p>
+    <p class="sect">Section 6.1 / 7.1</p>
+  </header>
+  <div class="prompt">Head breadths \(N(6.9,\ 0.9)\). Middle \(68\%\) (2 decimals):
+<ol>
+<li>for individuals</li>
+<li>for averages with \(n=60\)</li>
+</ol></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+6.9\pm 0.9 \Rightarrow \mathbf{6.00}\text{ to }\mathbf{7.80},
+\qquad
+\mathrm{SE}=0.9/\sqrt{60}\approx 0.1162 \Rightarrow \mathbf{6.78}\text{ to }\mathbf{7.02}.
+\]
+      <p class="sect-line"><em>Section.</em> 6.1 / 7.1</p>
+    </div>
+  </details>
+</article>
+<article class="q optional" id="q14">
+  <header>
+    <p class="qnum">Question 14 <span class="tag optional">Optional</span></p>
+    <p class="sect">Section 8.1 / 8.3</p>
+  </header>
+  <div class="prompt">For each situation, is the parameter a <strong>mean</strong> or a <strong>proportion</strong>?
+<ol type="a">
+<li>Hours per week on the Internet</li>
+<li>Percentage of Internet time that is coursework</li>
+<li>Whether cited Wikipedia</li>
+<li>Percentage of weekly spending on alcohol</li>
+<li>Share expecting a job within a year</li>
+</ol></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><ol type="a">
+<li><strong>mean</strong></li>
+<li><strong>mean</strong></li>
+<li><strong>proportion</strong></li>
+<li><strong>mean</strong></li>
+<li><strong>proportion</strong></li>
+</ol>
+<p><em>Why.</em> Means for numeric responses; proportions for yes/no (or share) responses.</p>
+      <p class="sect-line"><em>Section.</em> 8.1 / 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q15">
+  <header>
+    <p class="qnum">Question 15 </p>
+    <p class="sect">Section 8.1</p>
+  </header>
+  <div class="prompt">True/False: if \(n\) increases and SD and confidence level stay the same, the margin of error increases.</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>False.</strong></p>
+\[\mathrm{EBM}=z\,\sigma/\sqrt{n}\] shrinks as \(n\) grows.
+      <p class="sect-line"><em>Section.</em> 8.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q16">
+  <header>
+    <p class="qnum">Question 16 </p>
+    <p class="sect">Section 8.1</p>
+  </header>
+  <div class="prompt">True/False: a \(95\%\) CI \((10,14)\) has error \(\pm 2\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>True.</strong></p>
+\[\mathrm{EBM}=(14-10)/2=2.\]
+      <p class="sect-line"><em>Section.</em> 8.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q17">
+  <header>
+    <p class="qnum">Question 17 </p>
+    <p class="sect">Section 8.1</p>
+  </header>
+  <div class="prompt">True/False: a \(95\%\) CI for mean age \((23,29)\) means there is a \(95\%\) chance a randomly selected student is between \(23\) and \(29\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>False.</strong></p>
+<p>The interval estimates \(\mu\), not one person’s age.</p>
+      <p class="sect-line"><em>Section.</em> 8.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q18">
+  <header>
+    <p class="qnum">Question 18 </p>
+    <p class="sect">Section 8.3</p>
+  </header>
+  <div class="prompt">Express \(37.2\%\pm 3.8\%\) as a trilinear inequality.</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Answer.</strong> <strong>\(33.4\% &lt; p &lt; 41.0\%\)</strong>.</p>
+      <p class="sect-line"><em>Section.</em> 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q omitted" id="q19">
+  <header>
+    <p class="qnum">Question 19 <span class="tag omit">Omitted</span></p>
+    <p class="sect">Section —</p>
+  </header>
+  <div class="prompt">Old TI-menu item (which procedure: 1-PropZInt / TInterval / …).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>Omitted.</strong> This class uses Desmos / LibreText, not a TI-84 menu.
+For a one-proportion CI, compute \(\hat p\pm z\sqrt{\hat p(1-\hat p)/n}\).</p>
+      <p class="sect-line"><em>Section.</em> —</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q20">
+  <header>
+    <p class="qnum">Question 20 </p>
+    <p class="sect">Section 8.1</p>
+  </header>
+  <div class="prompt">Critical value for \(95\%\) confidence (two-sided normal).
+<p class="hint">Desmos: <code>normaldist().inversecdf(0.975)</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[z=\Phi^{-1}(0.975)=\mathbf{1.96}.\]
+      <p class="sect-line"><em>Section.</em> 8.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q21">
+  <header>
+    <p class="qnum">Question 21 </p>
+    <p class="sect">Section 8.3</p>
+  </header>
+  <div class="prompt">Sample: \(324\) of \(500\) support the candidate.
+<ol type="a">
+<li>Define \(X\)</li>
+<li>Define \(\hat P\)</li>
+</ol></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><ol type="a">
+<li><strong>\(X\)</strong> = number from the <em>sample</em> who support</li>
+<li><strong>\(\hat P\)</strong> = proportion from the <em>sample</em> who support</li>
+</ol>
+      <p class="sect-line"><em>Section.</em> 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q22">
+  <header>
+    <p class="qnum">Question 22 </p>
+    <p class="sect">Section 8.3</p>
+  </header>
+  <div class="prompt">\(73\) of \(112\) completed English 101. Best point estimate for the proportion (4 decimals).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[\hat p=73/112=\mathbf{0.6518}.\]
+      <p class="sect-line"><em>Section.</em> 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q23">
+  <header>
+    <p class="qnum">Question 23 </p>
+    <p class="sect">Section 8.3</p>
+  </header>
+  <div class="prompt">Poll: \(n=260\), \(\hat p=0.17\), \(99\%\) confidence. Margin of error (3 decimals).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+\mathrm{EBP}=2.576\sqrt{\frac{0.17\cdot 0.83}{260}}\approx\mathbf{0.060}.
+\]
+      <p class="sect-line"><em>Section.</em> 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q24">
+  <header>
+    <p class="qnum">Question 24 </p>
+    <p class="sect">Section 8.3</p>
+  </header>
+  <div class="prompt">Green initiative: \(354\) of \(566\) favor; \(99\%\) CI (4 decimals).
+<ol type="a">
+<li>Interval</li>
+<li>Interpretation percents</li>
+</ol></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[\hat p=354/566\approx 0.6254,\quad \hat p\pm\mathrm{EBP}\Rightarrow\mathbf{0.5730}\text{ to }\mathbf{0.6778}.\]
+<p>(b) About <strong>99%</strong> of such intervals contain \(p\); about <strong>1%</strong> do not.</p>
+      <p class="sect-line"><em>Section.</em> 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q25">
+  <header>
+    <p class="qnum">Question 25 </p>
+    <p class="sect">Section 8.3</p>
+  </header>
+  <div class="prompt">\(90\%\) CI for \(p\): \(n=360\), \(79\%\) successes. Trilinear inequality, decimals to 3 places.</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[\mathbf{0.755 &lt; p &lt; 0.825}.\]
+      <p class="sect-line"><em>Section.</em> 8.3</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q26">
+  <header>
+    <p class="qnum">Question 26 </p>
+    <p class="sect">Section 7.3</p>
+  </header>
+  <div class="prompt">Sample size for a proportion. No prior \(\hat p\). \(95\%\) confidence, within \(5\%\) of true \(p\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+n=\left(\frac{1.96}{0.05}\right)^2(0.5)(0.5)=384.16\to\mathbf{n=385}
+\]
+(round up; worst case \(\hat p=0.5\)).
+      <p class="sect-line"><em>Section.</em> 7.3</p>
+    </div>
+  </details>
+</article>
+<article class="q optional" id="q27">
+  <header>
+    <p class="qnum">Question 27 <span class="tag optional">Optional</span></p>
+    <p class="sect">Section 8.1 notes</p>
+  </header>
+  <div class="prompt">Sample size for a mean. \(\sigma=27.4\), \(90\%\) confidence, within \(10\) of \(\mu\).</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+n=\left(1.645\cdot\frac{27.4}{10}\right)^2\approx 20.32\to\mathbf{n=21}
+\]
+(round up).
+      <p class="sect-line"><em>Section.</em> 8.1 notes</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q28">
+  <header>
+    <p class="qnum">Question 28 </p>
+    <p class="sect">Section 8.1</p>
+  </header>
+  <div class="prompt">\(90\%\) CI for mean precipitation: \(33\) to \(39\) inches (\(n=100\)). Which statement is <strong>false</strong>?</div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><p><strong>False statement:</strong> “\(90\%\) of random samples of size \(100\) will have sample means between \(33\) and \(39\).”</p>
+<p>True: midpoint \(\bar x=36\); we are \(90\%\) confident about \(\mu\); ME \(=3\).</p>
+      <p class="sect-line"><em>Section.</em> 8.1</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q29">
+  <header>
+    <p class="qnum">Question 29 </p>
+    <p class="sect">Section 8.2</p>
+  </header>
+  <div class="prompt">Chocolate chips: \(n=68\), \(\bar x=11.7\), \(s=3.5\), \(80\%\) CI. Round to 3 decimals.
+<p class="hint">Desmos: <code>tdist(67).inversecdf(0.90)</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body">\[
+t^{*}\approx 1.294,\quad \mathrm{EBM}\approx 0.549\Rightarrow\mathbf{11.151 &lt; \mu &lt; 12.249}.
+\]
+      <p class="sect-line"><em>Section.</em> 8.2</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q30">
+  <header>
+    <p class="qnum">Question 30 </p>
+    <p class="sect">Section 8.2</p>
+  </header>
+  <div class="prompt">Concentration: \(n=97\), \(\bar x=38.5\), \(s=11.4\), \(98\%\) CI.
+<ol type="a">
+<li>Which distribution?</li>
+<li>Interval (3 decimals)</li>
+<li>Interpretation percents</li>
+</ol>
+<p class="hint">Desmos: <code>tdist(96).inversecdf(0.99)</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><ol type="a">
+<li><strong>\(t\)</strong> distribution</li>
+<li><strong>35.762</strong> to <strong>41.238</strong> minutes</li>
+<li>About <strong>98%</strong> contain \(\mu\); about <strong>2%</strong> do not</li>
+</ol>
+      <p class="sect-line"><em>Section.</em> 8.2</p>
+    </div>
+  </details>
+</article>
+<article class="q" id="q31">
+  <header>
+    <p class="qnum">Question 31 </p>
+    <p class="sect">Section 8.2</p>
+  </header>
+  <div class="prompt">Missed class days for 15 students; \(95\%\) CI. Data: \(3,1,8,10,2,9,12,5,0,6,4,0,12,12,10\).
+(\(\bar x\approx 6.2667\), \(s\approx 4.4636\))
+<ol type="a">
+<li>Which distribution?</li>
+<li>Interval (3 decimals)</li>
+<li>Interpretation percents</li>
+</ol>
+<p class="hint">Desmos: <code>tdist(14).inversecdf(0.975)</code>.</p></div>
+  <details class="ans">
+    <summary>Show answer</summary>
+    <div class="ans-body"><ol type="a">
+<li><strong>\(t\)</strong> distribution</li>
+<li><strong>3.795</strong> to <strong>8.739</strong> days</li>
+<li>About <strong>95%</strong> contain \(\mu\); about <strong>5%</strong> do not</li>
+</ol>
+      <p class="sect-line"><em>Section.</em> 8.2</p>
+    </div>
+  </details>
+</article>
+  <footer>
+    <p>Instructor key also as PDF in the course materials store.
+    Course site: <a href="../">MATH 117 lecture decks</a>.</p>
+  </footer>
+</main>
+<script>
+  const showAll = document.getElementById('show-all');
+  const hideAll = document.getElementById('hide-all');
+  showAll.addEventListener('click', () => {
+    document.querySelectorAll('details.ans').forEach(d => d.open = true);
+  });
+  hideAll.addEventListener('click', () => {
+    document.querySelectorAll('details.ans').forEach(d => d.open = false);
+  });
+  // Friendly summary labels when open/closed
+  document.querySelectorAll('details.ans').forEach(d => {
+    const s = d.querySelector('summary');
+    const sync = () => { s.textContent = d.open ? 'Hide answer' : 'Show answer'; };
+    d.addEventListener('toggle', sync);
+    sync();
+  });
+</script>
+</body>
+</html>
