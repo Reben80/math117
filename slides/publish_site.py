@@ -105,7 +105,7 @@ DESMOS = [
      "https://www.desmos.com/notebook/alc4ousjbu"),
     ("4", "7.3", "7.3-sample-proportions", "Calculator",
      "Class graph. p-hat SE, normaldist for proportions, and sample size for p.",
-     "https://www.desmos.com/calculator/PLACEHOLDER_7_3"),
+     "https://www.desmos.com/calculator/b2mauih92w"),
     ("5", "8.1", "8.1-known-sigma", "Calculator",
      "Class graph. Exams, the error bound, and the pizza deliveries. Turn one folder on at a time.",
      "https://www.desmos.com/calculator/jrublef2f5"),
@@ -167,7 +167,7 @@ def landing():
                 "https://www.desmos.com/notebook/alc4ousjbu",
             ),
             "7.3-sample-proportions": (
-                "https://www.desmos.com/calculator/PLACEHOLDER_7_3",
+                "https://www.desmos.com/calculator/b2mauih92w",
                 None,
             ),
             "8.1-known-sigma": (
@@ -210,12 +210,35 @@ def landing():
             f'{tools}'
             f'</div>'
         )
+    # Exam 2 week is not a unit key in DECKS; keep review + 7.3 cards on the homepage.
+    exam2_cards = [
+        (
+            '<div class="card">'
+            '<a class="cardlink" href="units-4-5-review/">'
+            '<p class="num">Review</p>'
+            '<h2>Units 4–5 solutions</h2>'
+            '<p class="blurb">Click Show answer after you try each WAMAP review question. Desmos tips included.</p>'
+            '</a>'
+            '</div>'
+        ),
+        (
+            '<div class="card">'
+            '<a class="cardlink" href="7.3-sample-proportions/">'
+            '<p class="num">Section 7.3</p>'
+            '<h2>Sample proportions</h2>'
+            '<p class="blurb">Exam 2 prep for p-hat mean, SE, probabilities, and sample size.</p>'
+            '</a>'
+            '</div>'
+        ),
+    ]
     weeks = []
     for dates, title, source, due, unit in WEEKS:
         exam = title.startswith("Exam")
         klass = "week exam" if exam else "week"
         due_html = f'<p class="due">{due}</p>' if due else ""
         cards = cards_by_unit.get(unit, [])
+        if title == "Exam 2":
+            cards = list(exam2_cards)
         decks_html = f'<div class="grid">{"".join(cards)}</div>' if cards else ""
         weeks.append(
             f'<li class="{klass}">'
