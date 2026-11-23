@@ -9,14 +9,21 @@ import math
 import build_2_2_to_2_7 as b
 import build_6 as s
 
+# Saved in the instructor's Desmos account. Built from desmos_graphs.js (M117.build("7.3")).
+b.GRAPHS["7.3"] = "https://www.desmos.com/calculator/PLACEHOLDER_7_3"
 
-def calc_line(command, how, top, graph=None):
+
+def calc_line(command, how, top, graph="7.3"):
     """The monospace part is what students type. The rest is the Desmos box."""
     label = '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS</span>'
-    if graph and graph in b.GRAPHS:
+    if graph and graph in b.GRAPHS and "PLACEHOLDER" not in b.GRAPHS[graph]:
         label = (
             '<a href="' + b.GRAPHS[graph] + '" target="_blank" style="text-decoration:none;">'
             '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS ↗</span></a>'
+        )
+    elif graph and graph in b.GRAPHS:
+        label = (
+            '<span style="color:#2a6f7a;font-size:14px;font-weight:700;letter-spacing:0.12em;">DESMOS ↗</span>'
         )
     return b.text_block(
         '<p style="margin:0;color:#1c242c;font-size:20px;line-height:1.35;">'
@@ -58,12 +65,12 @@ def slides():
         ),
         b.text_block(
             '<p style="margin:0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">MEAN</p>'
-            '<p style="margin:8px 0 0;color:#1c242c;font-size:30px;">' + s.M(r"\mu_{\hat p}=p") + '</p>'
+            '<p style="margin:8px 0 0;color:#1c242c;font-size:30px;">' + s.M(r"\mu_{\hat{p}}=p") + '</p>'
             '<p style="margin:4px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">'
             'The average of all possible sample proportions equals the true population proportion.</p>'
             '<p style="margin:18px 0 0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">STANDARD ERROR</p>'
             '<p style="margin:8px 0 0;color:#1c242c;font-size:30px;">'
-            + s.M(r"\mathrm{SE}=\sigma_{\hat p}=\sqrt{\dfrac{p(1-p)}{n}}") + '</p>'
+            + s.M(r"\mathrm{SE}=\sigma_{\hat{p}}=\sqrt{\dfrac{p(1-p)}{n}}") + '</p>'
             '<p style="margin:4px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">'
             'How much p-hat typically moves from sample to sample. Larger n makes a smaller SE.</p>',
             64, 145, 620,
@@ -119,7 +126,7 @@ def slides():
             '<p style="margin:0;color:#2a6f7a;font-size:15px;font-weight:700;letter-spacing:0.12em;">MEAN OF p-HAT</p>'
             '<p style="margin:12px 0 0;color:#1c242c;font-size:36px;font-weight:650;">0.64</p>'
             '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">'
-            + s.m(r"\mu_{\hat p}=p") + '. Copy the true proportion.</p>',
+            + s.m(r"\mu_{\hat{p}}=p") + '. Copy the true proportion.</p>',
             200,
         ), 64, 150, 560, 200),
         b.text_block(b.card_shell(
@@ -130,7 +137,7 @@ def slides():
             'Round the SE to three decimals when asked.</p>',
             200,
         ), 656, 150, 560, 200),
-        calc_line("sqrt(0.64*0.36/210)", "gives about 0.03312 → 0.033", 420),
+        calc_line("sqrt(0.64*0.36/210)", "gives about 0.03312 → 0.033", 420, graph="7.3"),
         b.text_block(
             '<p style="margin:0;color:#5d6670;font-size:20px;line-height:1.35;">'
             'Exam-style: report the mean as 0.64 and the SE as 0.033. Do not replace p with a sample p-hat here — the true p is given.</p>',
@@ -198,7 +205,7 @@ def slides():
         b.activity_head(
             "Your turn · 4 minutes",
             "p = 0.25, n = 71",
-            "Find " + s.m(r"P(\hat p < 0.26)") + ". First write the SE, then use Desmos.",
+            "Find " + s.m(r"P(\hat{p} < 0.26)") + ". First write the SE, then use Desmos.",
         ),
         s.bell_at(
             64, 175, 680, 370, "SAMPLE PROPORTIONS",
@@ -230,13 +237,13 @@ def slides():
         ),
         b.text_block(
             '<p style="margin:0;color:#1c242c;font-size:28px;line-height:1.3;">'
-            + s.M(r"n=\left(\frac{z}{E}\right)^2\hat p\hat q") + '</p>'
+            + s.M(r"n=\left(\frac{z}{E}\right)^2\hat{p}\hat{q}") + '</p>'
             '<p style="margin:8px 0 0;color:#5d6670;font-size:20px;line-height:1.35;">'
             'E is the desired margin of error. z matches the confidence level '
             '(90%: 1.645, 95%: 1.96). '
-            + s.m(r"\hat q=1-\hat p") + '.</p>'
+            + s.m(r"\hat{q}=1-\hat{p}") + '.</p>'
             '<p style="margin:14px 0 0;color:#1c242c;font-size:22px;line-height:1.35;">'
-            'No prior estimate? Use ' + s.m(r"\hat p=\hat q=0.5") + '. That choice makes n as large as it needs to be.</p>',
+            'No prior estimate? Use ' + s.m(r"\hat{p}=\hat{q}=0.5") + '. That choice makes n as large as it needs to be.</p>',
             64, 140, 1150,
         ),
         b.text_block(b.card_shell(
@@ -287,6 +294,7 @@ def slides():
     ], "Answers: 1A, 2B, 3B. If they pick 0.25 for the SE, they forgot the square root and the division by n. "
        "If they pick 384, they rounded down. Exam 2 includes these skills on Units 4–5."))
     # 11 · Closing
+    closing_graph = "7.3" if "PLACEHOLDER" not in b.GRAPHS.get("7.3", "") else None
     out.append(b.closing(
         "Exam 2 prep",
         "Four moves for p-hat",
@@ -299,8 +307,9 @@ def slides():
         ("Exam 2", "Units 4 and 5. Sections 6.1, 6.2, 7.1, 8.1, 8.2, 8.3 — plus this 7.3 gap."),
         "Practice: Units 4–5 review Q9–Q12 and Q26. Then Exam 2 Q8, Q9, Q11, Q17.",
         "This deck is short on purpose. It does not replace 7.1 or 8.3. "
-        "Desmos commands are on the worked slides; use a blank calculator if you have no class graph. "
+        "Desmos commands on the worked slides open the class graph. "
         "Do not change the Exam 2 assignment itself.",
+        graph=closing_graph,
     ))
     return out
 

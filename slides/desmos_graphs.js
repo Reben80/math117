@@ -340,6 +340,30 @@ window.M117 = (function () {
       g.close();
       return { left: 78, right: 102, bottom: -0.02, top: 0.16 };
     },
+    "7.3": function (g) {
+      g.text("MATH 117 · 7.3 Sample proportions. SE = √[p(1−p)/n]. Put that SE inside normaldist for Left / Right / Inner. Sample size uses (z/E)² p̂q̂; no prior → 0.5.");
+      g.open("Worked · mean and SE, p = 0.64, n = 210");
+      g.ex("\\sqrt{0.64\\cdot 0.36/210}");
+      g.text("SE ≈ 0.03312 → 0.033. Mean of p-hat is just 0.64.");
+      g.close();
+      g.open("Worked · normal check, p = 0.6, n = 49", true);
+      g.ex("\\sqrt{0.6\\cdot 0.4/49}", { hidden: true });
+      g.text("SE ≈ 0.06999. np = 29.4 and n(1−p) = 19.6, both ≥ 10.");
+      g.close();
+      g.open("Worked · probability, p = 0.57, n = 580", true);
+      g.ex("N=\\operatorname{normaldist}\\left(0.57,\\sqrt{0.57\\cdot 0.43/580}\\right)", { hidden: true });
+      g.text("Inner from 324/580 to 336/580. About 0.3847. Counts must become shares first.");
+      g.close();
+      g.open("Your turn · p = 0.25, n = 71", true);
+      g.ex("\\operatorname{normaldist}\\left(0.25,\\sqrt{0.25\\cdot 0.75/71}\\right)", { hidden: true });
+      g.text("Left of 0.26 ≈ 0.5771. SE ≈ 0.0514.");
+      g.close();
+      g.open("Sample size · 90%, within 0.04", true);
+      g.ex("(1.645/0.04)^{2}\\cdot 0.25", { hidden: true });
+      g.text("422.816… round up → n = 423. No prior p-hat means use 0.5 × 0.5.");
+      g.close();
+      return { left: 0.50, right: 0.64, bottom: -2, top: 22 };
+    },
   };
 
   return {
