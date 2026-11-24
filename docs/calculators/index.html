@@ -14,13 +14,13 @@
     font-family: Montserrat, sans-serif;
   }
   main {
-    max-width: 720px;
+    max-width: 920px;
     margin: 0 auto;
-    padding: 56px 28px 96px;
+    padding: 28px 22px 48px;
   }
   .back {
     color: #2a6f7a;
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     text-decoration: none;
   }
@@ -28,46 +28,55 @@
     display: inline-block;
     background: #2a6f7a;
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.12em;
-    padding: 6px 12px;
-    margin: 22px 0 0;
+    padding: 4px 10px;
+    margin: 14px 0 0;
   }
   h1 {
-    margin: 16px 0 0;
-    font-size: 48px;
-    line-height: 1;
+    margin: 10px 0 0;
+    font-size: 36px;
+    line-height: 1.05;
     letter-spacing: -0.04em;
     font-weight: 700;
   }
   .lead {
-    margin: 16px 0 0;
+    margin: 8px 0 0;
     max-width: 560px;
     color: #5d6670;
-    font-size: 18px;
-    line-height: 1.45;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+  .pair {
+    margin-top: 22px;
+    display: grid;
+    gap: 22px;
   }
   section {
-    margin-top: 44px;
+    margin-top: 22px;
+    min-width: 0;
+  }
+  .pair > section {
+    margin-top: 0;
   }
   h2 {
     margin: 0;
     color: #2a6f7a;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.14em;
     text-transform: uppercase;
   }
   .rule {
     height: 1px;
-    margin: 12px 0 0;
+    margin: 8px 0 0;
     background: #d5e0de;
     border: 0;
   }
   ul {
     list-style: none;
-    margin: 10px 0 0;
+    margin: 4px 0 0;
     padding: 0;
   }
   li + li {
@@ -77,13 +86,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
-    padding: 14px 4px;
+    gap: 12px;
+    padding: 8px 2px;
     color: #1c242c;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1.3;
+    line-height: 1.25;
     text-decoration: none;
   }
   a.calc:hover {
@@ -95,25 +104,42 @@
   }
   .ext {
     flex: 0 0 auto;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     color: #7a8a88;
   }
   a.calc:hover .ext {
     color: #2a6f7a;
   }
+  .cols {
+    columns: 1;
+    column-gap: 28px;
+  }
+  .cols li {
+    break-inside: avoid;
+  }
   .note {
-    margin: 48px 0 0;
+    margin: 24px 0 0;
     color: #5d6670;
-    font-size: 15px;
-    line-height: 1.5;
+    font-size: 14px;
+    line-height: 1.45;
   }
   .note a {
     color: #2a6f7a;
   }
+  @media (min-width: 720px) {
+    .pair {
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    .cols {
+      columns: 2;
+    }
+  }
   @media (max-width: 520px) {
-    h1 { font-size: 36px; }
-    a.calc { font-size: 17px; }
+    h1 { font-size: 30px; }
+    a.calc { font-size: 15px; }
   }
 </style>
 </head>
@@ -124,32 +150,34 @@
   <h1>Available Calculators</h1>
   <p class="lead">Click a name to open that calculator in a new tab. These are the tools allowed for Exam&nbsp;2.</p>
 
-  <section aria-labelledby="main-calcs">
-    <h2 id="main-calcs">Main Calculators</h2>
-    <hr class="rule">
-    <ul>
-      <li><a class="calc" href="https://rsubedi.com/" target="_blank" rel="noopener">Subedi Calculators<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-      <li><a class="calc" href="https://stats.libretexts.org/Learning_Objects/02%3A_Interactive_Statistics/46%3A__Links_to_the_Calculators" target="_blank" rel="noopener">Links to ALL LibreText Calculators<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-      <li><a class="calc" href="https://www.desmos.com/testing/maryland/graphing" target="_blank" rel="noopener">Desmos<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-      <li><a class="calc" href="https://www.lock5stat.com/StatKey/" target="_blank" rel="noopener">StatKey<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-    </ul>
-  </section>
+  <div class="pair">
+    <section aria-labelledby="main-calcs">
+      <h2 id="main-calcs">Main Calculators</h2>
+      <hr class="rule">
+      <ul>
+        <li><a class="calc" href="https://rsubedi.com/" target="_blank" rel="noopener">Subedi Calculators<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+        <li><a class="calc" href="https://stats.libretexts.org/Learning_Objects/02%3A_Interactive_Statistics/46%3A__Links_to_the_Calculators" target="_blank" rel="noopener">Links to ALL LibreText Calculators<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+        <li><a class="calc" href="https://www.desmos.com/testing/maryland/graphing" target="_blank" rel="noopener">Desmos<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+        <li><a class="calc" href="https://www.lock5stat.com/StatKey/" target="_blank" rel="noopener">StatKey<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+      </ul>
+    </section>
 
-  <section aria-labelledby="desmos-templates">
-    <h2 id="desmos-templates">Desmos Templates</h2>
-    <hr class="rule">
-    <ul>
-      <li><a class="calc" href="https://www.desmos.com/calculator/dzzsivplow" target="_blank" rel="noopener">Descriptive Statistics<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-      <li><a class="calc" href="https://www.desmos.com/calculator/fttvykh4de" target="_blank" rel="noopener">Linear Regression<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-      <li><a class="calc" href="https://www.desmos.com/calculator/ycyozs899y" target="_blank" rel="noopener">Normal Distribution and the CLT<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-      <li><a class="calc" href="https://www.desmos.com/calculator/nutrlja3jx" target="_blank" rel="noopener">Confidence Intervals<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
-    </ul>
-  </section>
+    <section aria-labelledby="desmos-templates">
+      <h2 id="desmos-templates">Desmos Templates</h2>
+      <hr class="rule">
+      <ul>
+        <li><a class="calc" href="https://www.desmos.com/calculator/dzzsivplow" target="_blank" rel="noopener">Descriptive Statistics<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+        <li><a class="calc" href="https://www.desmos.com/calculator/fttvykh4de" target="_blank" rel="noopener">Linear Regression<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+        <li><a class="calc" href="https://www.desmos.com/calculator/ycyozs899y" target="_blank" rel="noopener">Normal Distribution and the CLT<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+        <li><a class="calc" href="https://www.desmos.com/calculator/nutrlja3jx" target="_blank" rel="noopener">Confidence Intervals<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
+      </ul>
+    </section>
+  </div>
 
   <section aria-labelledby="libretext-calcs">
     <h2 id="libretext-calcs">LibreText Calculators</h2>
     <hr class="rule">
-    <ul>
+    <ul class="cols">
       <li><a class="calc" href="https://stats.libretexts.org/Learning_Objects/02%3A_Interactive_Statistics/01%3A_Random_Number_Generator?adaptView" target="_blank" rel="noopener">Random Number Generator<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
       <li><a class="calc" href="https://stats.libretexts.org/Learning_Objects/02%3A_Interactive_Statistics/Bar_and_Pie_Chart_Creator" target="_blank" rel="noopener">Bar and Pie Chart Creator<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
       <li><a class="calc" href="https://stats.libretexts.org/Learning_Objects/02%3A_Interactive_Statistics/47%3A_One_Variable_Statistics_Calculator?adaptView" target="_blank" rel="noopener">One Variable Statistics Calculator<svg class="ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z"/></svg></a></li>
